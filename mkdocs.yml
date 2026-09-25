@@ -1,0 +1,54 @@
+site_name: xatc
+site_description: Automated FAA-style voice ATC for X-Plane 12
+docs_dir: docs
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.indexes
+    - navigation.top
+    - content.code.copy
+    - toc.follow
+
+markdown_extensions:
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Features:
+      - features/index.md
+      - Radio panel: features/radio-panel.md
+      - Controller positions & frequencies: features/controller-positions.md
+      - ATIS & weather: features/atis-weather.md
+      - Runway selection: features/runway-selection.md
+      - IFR clearance (CRAFT): features/ifr-clearance.md
+      - Taxi routing & hold-shorts: features/taxi-routing.md
+      - Tower takeoff clearance: features/tower-clearance.md
+      - Voice (Transcribe, Polly, PTT): features/voice.md
+      - VHF radio effect: features/radio-fx.md
+      - Intent parsing & LLM modes: features/intent-parsing.md
+      - Departure & Center (in progress): features/departure-center.md
+      - Conformance monitor (in progress): features/conformance-monitor.md
+      - Fuzzy ramp resolver (planned): features/fuzzy-ramp-resolver.md
+  - Roadmap: roadmap.md
