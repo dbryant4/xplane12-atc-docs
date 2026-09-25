@@ -83,6 +83,51 @@ curl http://localhost:8086/api/capabilities     # should return JSON
 
 Wait until X-Plane has **fully loaded the aircraft** before starting xatc.
 
+## Running on Windows
+
+For a real flight, `xatc` is meant to run **on the same Windows PC as X-Plane** (see ADR
+0006 in the repository) -- no SSH tunnel needed at all, since it reads X-Plane's Web API
+and its own data files locally. The SSH-tunnel setup in step 4 above is a **dev-only**
+option, for developing or testing `xatc` from a different machine than the one running
+X-Plane.
+
+**One-time setup** -- from PowerShell, in the repository root:
+
+```powershell
+scripts\setup-windows.ps1
+```
+
+This installs [uv](https://docs.astral.sh/uv/) if it isn't already on your `PATH`
+(printing the official install command rather than running it for you, so it never
+silently installs anything without you seeing it first), runs `uv sync --extra voice`,
+and finishes by running `xatc doctor` -- see below.
+
+**Every time you fly**, double-click `scripts\xatc-run.cmd`, or run it from a terminal
+with any extra flags:
+
+```powershell
+scripts\xatc-run.cmd --dest KPDX --cruise 35000
+```
+
+It sets `AWS_PROFILE=xatc` (you still need that profile configured once, per step 3
+above) and runs `xatc run --live --voice`, passing through anything you give it.
+
+### `xatc doctor`
+
+Checks that this machine is actually ready to fly, without guessing:
+
+```powershell
+uv run xatc doctor              # add --check-aws for a live (free, read-only) API check
+```
+
+It reports Python and `uv` versions, whether an X-Plane installation was found (and
+whether its `apt.dat`, `atc.dat` and CIFP data are actually there), whether X-Plane's
+Web API is reachable right now, whether AWS credentials resolve, whether a microphone
+is available and actually picking up sound, and where the settings file lives -- each as
+a pass/warn/fail line with a fix hint, plus a summary count. `--check-aws` additionally
+makes one free, read-only call each to Transcribe, Polly and Bedrock (Nova Lite) to
+confirm the account actually has access, not just that credentials resolve.
+
 ## 5. Run it
 
 From the repository root:
@@ -94,9 +139,11 @@ AWS_PROFILE=xatc uv run xatc run --live --voice \
 
 Then open **http://127.0.0.1:8000**. The header should show **X-Plane 12.x ·
 connected**. Hold the **PTT** button, or hold **Space** while the page has focus, to
-talk. If the panel doesn't respond after an update, hard-refresh it (Cmd+Shift+R). The
-first time you use push-to-talk, macOS asks for microphone permission for your terminal
-app.
+talk -- or, on Windows, add `--ptt-joystick "<device>:<button>"` to use a real yoke or
+joystick button instead (`xatc ptt-probe` finds the button number; see [Joystick/yoke
+push-to-talk](features/joystick-ptt.md)). If the panel doesn't respond after an update,
+hard-refresh it (Cmd+Shift+R). The first time you use push-to-talk, macOS asks for
+microphone permission for your terminal app.
 
 **Without X-Plane or AWS**, replay a recorded taxi and type your transmissions instead
 of speaking them:

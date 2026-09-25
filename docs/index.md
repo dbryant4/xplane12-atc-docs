@@ -55,7 +55,9 @@ between that can invent a clearance.
 
 ![Architecture: pilot and X-Plane on the outside, the radio panel/voice session and sim bridge in the middle, the deterministic ATC engine at the center, fed by world data and weather](assets/architecture.svg)
 
-That's the system today. For where it's heading (arrival, go-arounds, multi-sector Center and more), see the [eventual architecture](roadmap.md#where-its-heading).
+That's the system today (arrival is built, gate to gate -- this diagram predates it). For
+where it's heading (go-arounds, multi-sector Center and more), see the [eventual
+architecture](roadmap.md#where-its-heading).
 
 - **[Radio Panel UI](features/radio-panel.md)** -- the pilot's window into the system: a
   FastAPI + WebSocket app serving one dependency-free HTML/JS page.

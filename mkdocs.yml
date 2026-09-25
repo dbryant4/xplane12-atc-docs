@@ -50,11 +50,12 @@ nav:
       - Voice (Transcribe, Polly, PTT): features/voice.md
       - VHF radio effect: features/radio-fx.md
       - Intent parsing & LLM modes: features/intent-parsing.md
-      - Departure & Center (in progress): features/departure-center.md
-      - Arrival (in progress): features/arrival.md
+      - Departure & Center: features/departure-center.md
+      - Arrival: features/arrival.md
       - Conformance monitor: features/conformance-monitor.md
-      - Fuzzy ramp resolver (planned): features/fuzzy-ramp-resolver.md
+      - Fuzzy ramp resolver (taxi-in only): features/fuzzy-ramp-resolver.md
       - Any-airport data loading: features/any-airport-data.md
       - SimBrief import: features/simbrief-import.md
       - Post-flight debrief: features/debrief.md
+      - Joystick/yoke PTT (Windows only): features/joystick-ptt.md
   - Roadmap: roadmap.md
