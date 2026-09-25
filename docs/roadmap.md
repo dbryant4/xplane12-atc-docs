@@ -94,6 +94,17 @@ Roughly in the order the project is tackling it:
   engine actually pass a pilot's spoken location into it instead of always using the sim
   position outright.
 
+## Where it's heading
+
+The target architecture, once M4 (arrival) and its follow-ups land. Green is built today, amber
+is in progress, and dashed is later work. Everything runs on the Windows PC next to X-Plane,
+reading the sim's own data files; AWS only listens (Transcribe), speaks (Polly), and optionally
+helps classify what the pilot said (Nova Lite). The deterministic engine decides every word ATC says.
+
+[![Eventual xatc architecture: pilot on the left; on the Windows PC, X-Plane 12 and its data files feed the sim bridge, world data and weather, which feed the deterministic ATC engine with its phases, controllers, runway selector, clearance and SID selection, taxi router, arrival planner, conformance monitor and handoffs; phraseology and intent parsing sit beside it; the voice layer, radio panel and session services sit below; AWS Transcribe, Polly and Bedrock Nova Lite, SimBrief and the docs site are on the right, with later work (traffic, VFR, ICAO) dashed](assets/eventual-architecture.svg)](assets/eventual-architecture.svg)
+
+*Click the diagram to open it full size.*
+
 ## Longer term
 
 AI or multiplayer traffic (sequencing, traffic advisories), VFR support (pattern work,
