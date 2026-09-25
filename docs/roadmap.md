@@ -39,6 +39,27 @@ into the departure phase:
   `--departure`), live magnetic variation, station names read from apt.dat instead of a
   fixed table, and Center found by the aircraft's actual position instead of always
   Seattle. Verified end to end against a second real airport (KPDX), not just KSEA.
+- **[SID & departure procedures](features/sid-departure-procedures.md)** -- real ARINC
+  424 CIFP procedure data (KSEA and KPDX today) lets ATC actually assign a SID and
+  transition, spoken by name, instead of only ever echoing your filed one.
+- **[Readback checking](features/readback-checking.md)** -- an IFR clearance or taxi
+  readback is now checked field by field; get it wrong and you're corrected, not waved
+  through, and the flight doesn't advance until it's right.
+- **[Distance-based radio realism](features/radio-fx.md#signal-strength-by-distance)** --
+  signal strength and dropout probability now scale with distance and line-of-sight to
+  the controlling facility, so a distant Center sector sounds noticeably rougher than
+  Tower on the ramp.
+- **[SimBrief import](features/simbrief-import.md)** (`--simbrief-user`) -- fetches
+  callsign, aircraft type, route, cruise altitude and SID straight from a SimBrief OFP,
+  instead of the CLI-flag-only flight plan.
+- **[Post-flight debrief](features/debrief.md)** (`--debrief-dir`, `xatc debrief`) --
+  every transmission and conformance call logged to a session file, with a Markdown
+  summary (timeline, deviations by severity) written automatically or regenerated on
+  demand.
+
+This closes out the departure-phase milestone in full: ground ops, a full departure and
+enroute handoff chain, a real CIFP-assigned SID, and a checked readback, all the way
+through the initial enroute climb. Arrivals are next -- see below.
 
 See [Features](features/index.md) for the detailed, per-feature "available now" vs.
 "planned" breakdown.
@@ -47,21 +68,20 @@ See [Features](features/index.md) for the detailed, per-feature "available now" 
 
 Roughly in the order the project is tackling it:
 
+- **Approach and landing.** STAR/vectors, an approach clearance, a landing clearance,
+  and the handoff back to Ground once you're clear of the runway. Groundwork exists --
+  `xatc.atc.arrival_planner` already picks a STAR and an approach type/procedure from
+  CIFP data and the current weather -- but nothing in the engine calls it yet; this is
+  in progress, not available.
 - **Wire the fuzzy ramp resolver into taxi routing.** Already built and tested (see
   [Fuzzy ramp resolver](features/fuzzy-ramp-resolver.md)) -- what's left is having the
   engine actually pass a pilot's spoken location into it instead of always using the sim
   position outright.
-- **Approach and landing.** STAR/vectors, an approach clearance, a landing clearance,
-  and the handoff back to Ground once you're clear of the runway. None of this exists
-  yet -- the engine currently has no logic past the departure phase.
-- **Readback correction.** Actually checking a readback against what was issued,
-  instead of always accepting it.
-- **CIFP-based SID selection.** Clearances currently only echo a SID from your filed
-  flight plan; there's no procedure data to let ATC actually assign one.
-- **SimBrief flight-plan import**, instead of the current CLI-flag-only flight plan.
-- **Distance-based radio realism** -- signal strength and noise scaling with distance
-  and line-of-sight to the controlling facility, so a distant Center sector sounds
-  scratchier than Tower on the ramp.
+- **Relaxed-mode readback gating.** A readback problem restated without holding up the
+  flight over it, under the relaxed conformance-strictness setting -- designed, not yet
+  built (see [Readback checking](features/readback-checking.md)).
+- **A debrief readback section**, once the summary can point out exactly where a
+  readback was wrong or missing, not just conformance events.
 
 ## Longer term
 
