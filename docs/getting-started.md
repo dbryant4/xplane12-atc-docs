@@ -102,15 +102,17 @@ This installs [uv](https://docs.astral.sh/uv/) if it isn't already on your `PATH
 silently installs anything without you seeing it first), runs `uv sync --extra voice`,
 and finishes by running `xatc doctor` -- see below.
 
-**Every time you fly**, double-click `scripts\xatc-run.cmd`, or run it from a terminal
-with any extra flags:
+**Every time you fly**, double-click `scripts\xatc-run.cmd`. It sets `AWS_PROFILE=xatc`
+(you still need that profile configured once, per step 3 above) and runs `xatc` with
+whatever arguments you give it -- none, for the normal double-click case. With no
+arguments, xatc runs live from `settings.json` and opens the panel in your browser
+automatically; configure the flight plan, voice and everything else from the
+[Settings page](features/radio-panel.md#settings) there, not flags. Flags still work for
+a one-off override, e.g. from a terminal:
 
 ```powershell
-scripts\xatc-run.cmd --dest KPDX --cruise 35000
+scripts\xatc-run.cmd run --live --voice --dest KPDX --cruise 35000
 ```
-
-It sets `AWS_PROFILE=xatc` (you still need that profile configured once, per step 3
-above) and runs `xatc run --live --voice`, passing through anything you give it.
 
 ### `xatc doctor`
 
@@ -153,20 +155,30 @@ data-availability check, not a flight.
 
 ## 5. Run it
 
-From the repository root:
+From the repository root, with no arguments:
 
 ```bash
-AWS_PROFILE=xatc uv run xatc run --live --voice \
-  --callsign N547GA --aircraft-type GLF5 --dest KPDX --cruise 35000
+AWS_PROFILE=xatc uv run xatc
 ```
 
-Then open **http://127.0.0.1:8000**. The header should show **X-Plane 12.x ·
-connected**. Hold the **PTT** button, or hold **Space** while the page has focus, to
-talk -- or, on Windows, add `--ptt-joystick "<device>:<button>"` to use a real yoke or
-joystick button instead (`xatc ptt-probe` finds the button number; see [Joystick/yoke
-push-to-talk](features/joystick-ptt.md)). If the panel doesn't respond after an update,
-hard-refresh it (Cmd+Shift+R). The first time you use push-to-talk, macOS asks for
-microphone permission for your terminal app.
+This runs live from `settings.json` and opens the panel in your browser automatically.
+The first time, that file is empty, so open the **[Settings](features/radio-panel.md#settings)**
+page (the gear icon) and fill in the Flight, Voice and other tabs there -- everything
+saves as you go, so this is a one-time setup per machine.
+
+The header should show **X-Plane 12.x · connected**. Hold the **PTT** button, or hold
+**Space** while the page has focus, to talk -- or, on Windows, use [Joystick/yoke
+push-to-talk](features/joystick-ptt.md) (Voice tab's **Learn PTT button**) instead. If
+the panel doesn't respond after an update, hard-refresh it (Cmd+Shift+R). The first time
+you use push-to-talk, macOS asks for microphone permission for your terminal app.
+
+**Flags still work**, for development or a one-off override without touching
+`settings.json`:
+
+```bash
+uv run xatc run --live --voice \
+  --callsign N547GA --aircraft-type GLF5 --dest KPDX --cruise 35000
+```
 
 **Without X-Plane or AWS**, replay a recorded taxi and type your transmissions instead
 of speaking them:
@@ -176,7 +188,7 @@ uv run xatc run --replay fixtures/flights/ksea_taxi_out.jsonl --weather-fixture 
   --callsign N547GA --aircraft-type GLF5 --dest KPDX --cruise 35000
 ```
 
-Run `uv run xatc run --help` for every option.
+Run `uv run xatc run --help` for every flag.
 
 ## Demo script
 

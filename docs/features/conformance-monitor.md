@@ -30,6 +30,11 @@ an off-route call, since it's holding position as told. The off-route rule is su
 inside a runway's protected zone and whenever the clearance covers a line-up-and-wait or
 takeoff, so an incursion never doubles up with an off-route call for the same moment.
 
+The "taxiing without clearance" rule also catches an unapproved
+[pushback](pushback.md): moving more than 50 m from where the aircraft was parked, while
+still in a parked phase and without a pushback or taxi clearance, fires the same ladder
+-- pushback creep is exempt from the taxi *speed* check but not this distance check.
+
 ### Verification
 
 30 unit tests cover each rule's sustain boundary, the exact escalation timing, the reset
@@ -55,6 +60,10 @@ off the ground.
 | **Heading deviation** | More than the tolerance off the assigned magnetic heading, with wraparound at 360. Held to the tolerance once turned onto it; before that, a standard-rate-turn allowance. | Gentle → firm → "possible pilot deviation" |
 | **Speed deviation** | IAS above the tighter of 250 kt below 10,000 ft MSL (14 CFR 91.117(a)) and any assigned speed, plus tolerance -- see the heavy-jet exception below | Gentle → firm → "possible pilot deviation" |
 | **Wrong squawk** | The transponder code doesn't match the assigned code, or the mode is below ALT, for longer than a dial-in grace period | Gentle → firm only -- no pilot-deviation step |
+
+A code from [7500, 7600 or 7700](emergencies.md) is never flagged as a wrong squawk --
+those are handled as emergencies and lost-comms in their own right, not as a
+conformance deviation.
 
 Rules run in every airborne phase the engine reaches -- `TAKEOFF` once off the ground,
 `DEPARTURE`, `ENROUTE`, `DESCENT`, `APPROACH` -- and never on the ground, and never once
@@ -93,11 +102,11 @@ enforced regardless of category.
 
 Altitude source, conformance strictness (**relaxed** / **normal** / **checkride**, same
 three levels as the ground monitor, scaling every threshold at once), and the heavy-speed
-exception are all runtime settings: adjustable from the radio panel's options screen,
-persisted, and overridable for a single run with `--altitude-source`, `--strictness` and
-`--no-heavy-speed-exception`. A change applies from the next tick; switching altitude
-source specifically restarts altitude tracking so the switch itself can't cause an
-instant false bust.
+exception are all runtime settings: adjustable from the [Settings
+page](radio-panel.md#settings)'s ATC tab, persisted, and overridable for a single run
+with `--altitude-source`, `--strictness` and `--no-heavy-speed-exception`. A change
+applies from the next tick; switching altitude source specifically restarts altitude
+tracking so the switch itself can't cause an instant false bust.
 
 ### Verification
 
@@ -148,6 +157,11 @@ these three monitors; the engine raises it itself (`xatc.atc.conformance_core.Ra
 positions & frequencies](controller-positions.md#handoffs) for that mechanism -- it
 feeds the [debrief](debrief.md) the same way a real conformance event does, without
 being one.
+
+Once an [emergency, lost-comms code, or hijack code](emergencies.md) is active, all
+three monitors keep running and their events still reach the debrief -- but every
+spoken callout is suppressed, so a distracted pilot handling a real emergency doesn't
+also get called out for drifting off a taxi route or an altitude.
 
 ## Limitations
 
