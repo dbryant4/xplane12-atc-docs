@@ -32,7 +32,7 @@ a change takes effect, and the command-line flag that can override it for a sing
   - Precedence is **flag, then settings file, then default**.
   - A flag is **never written back** to the file.
   - While a flag is set, the Settings page shows that field read-only, marked *"set by command
-    line"*.
+    line"* -- for every section, including Connection, Voice and Advanced, not just Flight and ATC.
   - `--replay` and `--weather-fixture` exist only on the command line, because they're
     development tools.
 - **No secrets are stored.** xatc stores only the *name* of your AWS profile and region, never
@@ -46,6 +46,7 @@ The flight plan xatc builds your clearances from. Changes are **live while parke
 
 | Setting | Default | Flag | What it does |
 |---|---|---|---|
+| **Flight rules** (`flight_plan.flight_rules`) | IFR | `--flight-rules` | **IFR** flies a full clearance-to-landing flight. **VFR**, with destination set the same as departure, flies [pattern work](features/vfr-pattern.md) at a towered airport instead -- see the hint on the toggle itself. |
 | **Source** (`flight_plan.source`) | Manual | — | **Manual** uses the fields below. **SimBrief** fetches your latest OFP; use *Preview* to check it, then *Use this plan*. |
 | **SimBrief user** (`flight_plan.simbrief_user`) | blank | `--simbrief-user` | Your SimBrief username or numeric user ID. It's not a secret. |
 | **Callsign** (`flight_plan.callsign`) | blank | `--callsign` | As filed, e.g. `N547GA` or `ASA123`. **Blank uses the sim's tail number**, so normally you never type it. |
@@ -68,6 +69,10 @@ How xatc reaches X-Plane. Every change needs a **restart**.
 | **X-Plane port** (`connection.xplane_port`) | `8086` | `--xplane-port` | The Web API port (X-Plane: *Settings → Network*). |
 | **X-Plane folder** (`connection.xplane_root`) | blank | `--xplane-root` | Your X-Plane 12 install. **Blank auto-detects it** on Windows from `%LOCALAPPDATA%\x-plane_install_12.txt`. xatc reads airports, airspace, procedures and fixes straight from this folder, with Custom Scenery taking priority. |
 
+The `XATC_XPLANE_HOST`/`XATC_XPLANE_PORT` environment variables no longer affect `xatc
+run` -- use these settings (or `--xplane-host`/`--xplane-port`) instead. `xatc doctor`,
+`xatc smoke` and `xatc record` still honor them.
+
 ## Voice
 
 Push-to-talk speech in, ATC speech out. See [Voice](features/voice.md).
@@ -77,7 +82,7 @@ Push-to-talk speech in, ATC speech out. See [Voice](features/voice.md).
 | **Voice enabled** (`voice.enabled`) | off | `--voice` | restart | Turns on Amazon Transcribe (your speech) and Polly (ATC's replies). Off means text only: you type transmissions in the panel. |
 | **AWS profile** (`voice.aws_profile`) | `xatc` | — (`AWS_PROFILE`) | restart | The AWS CLI profile to use. Only the name is stored. |
 | **AWS region** (`voice.aws_region`) | `us-east-1` | `--aws-region` | restart | Where Transcribe, Polly and Bedrock are called. |
-| **Custom vocabulary** (`voice.vocabulary`) | blank | `--vocabulary` / `--no-vocabulary` | restart | A Transcribe custom vocabulary name (the project's is `xatc-aviation-en-US`, deployed with `cdk deploy`). It improves recognition of callsigns, fixes and procedure names. |
+| **Custom vocabulary** (`voice.vocabulary`) | `xatc-aviation-en-US` | `--vocabulary` / `--no-vocabulary` | restart | A Transcribe custom vocabulary name, deployed with `cdk deploy`. It improves recognition of callsigns, fixes and procedure names. **Blank, or `--no-vocabulary`, means none.** |
 | **PTT joystick button** (`voice.ptt_joystick`) | blank | `--ptt-joystick` | **live** | `"<device>:<button>"` for a yoke or joystick push-to-talk button. Use **Learn PTT button** and press it within 10 s. Windows only for now. See [Joystick PTT](features/joystick-ptt.md). |
 | **Radio effect** (`voice.radio_fx_preset`) | `realistic` | — | **live** | `clean` (no radio effect), `realistic` (VHF band-limit, compression, hiss, squelch) or `busy-day` (more noise). Signal strength also varies with distance. See [VHF radio effect](features/radio-fx.md). |
 
@@ -115,6 +120,7 @@ Rarely needed. Every change needs a **restart**.
 {
   "schema_version": 1,
   "flight_plan": {
+    "flight_rules": "IFR",
     "source": "manual",
     "simbrief_user": "",
     "callsign": "",

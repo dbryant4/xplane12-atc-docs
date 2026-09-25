@@ -1,13 +1,14 @@
 # Conformance monitor
 
-**Available now: ground, airborne and landing rules, all wired into the engine and
-speaking.**
+**Available now: ground, airborne, landing and pattern rules, all wired into the engine
+and speaking.**
 
-Three monitors watch whether the aircraft is actually doing what it's been cleared to
-do, and escalate a callout the way a real controller would when it isn't: one for
-ground movement, one for everything from the takeoff roll through approach, and one for
-the landing itself. All three are pure (no I/O, deterministic on `AircraftState.t`),
-and all three are checked every tick from `AtcEngine.on_tick`.
+Four monitors watch whether the aircraft is actually doing what it's been cleared to do,
+and escalate a callout the way a real controller would when it isn't: one for ground
+movement, one for everything from the takeoff roll through approach, one for the landing
+itself, and one for [VFR pattern work](vfr-pattern.md). All four are pure (no I/O,
+deterministic on `AircraftState.t`), and all four are checked every tick from
+`AtcEngine.on_tick`.
 
 ## Ground conformance
 
@@ -73,6 +74,11 @@ code) restarts that rule's ladder. Callouts are spoken from whichever position o
 aircraft right now: Tower, Departure, or the dynamically created Center/Approach
 position once a handoff has actually happened.
 
+A VFR flight bound for another airport (not [pattern work](vfr-pattern.md)) is the one
+exception: with no clearance to judge it against, none of these rules apply at all until
+[flight following](vfr-flight-following.md) is requested and radar contact is
+established -- and they stop again the moment service is terminated.
+
 ### What altitude ATC judges you on
 
 A real controller doesn't see the sim's true geometric altitude -- their radar shows
@@ -124,7 +130,7 @@ yet for the airborne rules -- only unit tests against synthetic and replayed sta
 
 | Rule | Fires when | Ladder |
 |---|---|---|
-| **Landing without clearance** | Touching down while arriving, without a landing clearance on file | Straight to "possible pilot deviation" -- no gentler step first, the same treatment a takeoff without clearance gets |
+| **Landing without clearance** | Touching down while arriving, without a landing clearance on file -- also fires for [pattern work](vfr-pattern.md), where every circuit needs its own landing clearance | Straight to "possible pilot deviation" -- no gentler step first, the same treatment a takeoff without clearance gets |
 | **Unreported go-around** | Descending to within 1,000 ft AGL, then climbing back away from the runway at a real, sustained climb rate, without ever having landed | Straight into the real missed-approach handling -- see below |
 
 Both are spoken from the destination's Tower. The go-around rule's escalation ladder
@@ -139,6 +145,20 @@ like a reported one, not just called out.
 ### Verification
 
 9 unit tests cover both rules' trigger conditions and escalation.
+
+## Pattern conformance
+
+`xatc.atc.conformance_pattern.PatternConformanceMonitor` --
+`src/xatc/atc/conformance_pattern.py`. Two rules specific to [VFR pattern
+work](vfr-pattern.md), spoken from Tower:
+
+| Rule | Fires when | Ladder |
+|---|---|---|
+| **Pattern altitude** | More than the tolerance off field elevation + 1,000 ft AGL (piston) or 1,500 ft (turbine/jet), once established at it this circuit -- suspended from the landing clearance onward, so a normal climb-out or descent to land never fires it | Gentle → firm → "possible pilot deviation" |
+| **Left the pattern** | Farther than the pattern limit from the airport with no call | "say intentions" straight to "possible pilot deviation" -- no gentler step first |
+
+Landing without a clearance in the pattern reuses [landing
+conformance](#landing-conformance)'s own rule, not a pattern-specific one.
 
 ## Spoken wording, corrected
 
