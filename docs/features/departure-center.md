@@ -25,13 +25,16 @@ Center:
 "contact Seattle Center one two eight point three"
 ```
 
-The Center frequency comes from a parsed `atc.dat` (X-Plane's own ARTCC boundary and
-frequency file) via `xatc.atc.center_selector.select_center_frequency` -- a documented
-placeholder rule (ADR 0003), since `atc.dat` doesn't actually encode real
-sector-to-frequency subdivisions within a block: it picks a frequency by a bearing wedge
-from the block's polygon centroid to the aircraft's position, not real controller sector
-geometry. If no Center block covers the aircraft's position at all, the handoff simply
-doesn't fire and the aircraft stays on Departure rather than guessing at a frequency.
+The Center **facility** is found from the aircraft's actual position
+(`xatc.world.xplane_data.artcc_for_position`, point-in-polygon containment against
+`atc.dat`'s own Center airspace blocks -- see [Any-airport data
+loading](any-airport-data.md)), not hardcoded to any one ARTCC. Its **frequency** then
+comes from `xatc.atc.center_selector.select_center_frequency` -- a documented placeholder
+rule (ADR 0003), since `atc.dat` doesn't actually encode real sector-to-frequency
+subdivisions within a block: it picks a frequency by a bearing wedge from the block's
+polygon centroid to the aircraft's position, not real controller sector geometry. If no
+Center block covers the aircraft's position at all, the handoff simply doesn't fire and
+the aircraft stays on Departure rather than guessing at a frequency.
 
 **The Center controller position is created dynamically**, the moment the handoff
 fires -- unlike ATIS/Clearance/Ground/Tower/Departure, which all come from the
@@ -58,8 +61,12 @@ fired) doesn't jump the phase; it gets "say again" instead.
 ## Configuration
 
 ```bash
-xatc run --atc-dat <path>   # ZSE's atc.dat; defaults to a bundled fixture
+xatc run --departure KPDX --atc-dat <path>   # an explicit atc.dat needs --departure too
 ```
+
+See [Any-airport data loading](any-airport-data.md) for the full precedence
+(`--apt-dat`/`--atc-dat`, then an X-Plane install via `--xplane-root`, then the bundled
+fixtures) and how the departure airport itself is chosen.
 
 ## Limitations
 
@@ -71,4 +78,4 @@ xatc run --atc-dat <path>   # ZSE's atc.dat; defaults to a bundled fixture
 - The Center frequency-selection rule is a deterministic placeholder (a bearing wedge),
   not real ARTCC sector geometry -- there's no source data for actual sector boundaries
   in `atc.dat`.
-- No Approach position or arrival logic yet at all -- see the [Roadmap](../roadmap.md).
+- No arrival or approach logic yet at all -- see the [Roadmap](../roadmap.md).

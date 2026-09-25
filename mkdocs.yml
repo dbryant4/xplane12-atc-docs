@@ -51,5 +51,5 @@ nav:
       - Departure & Center (in progress): features/departure-center.md
       - Conformance monitor: features/conformance-monitor.md
       - Fuzzy ramp resolver (planned): features/fuzzy-ramp-resolver.md
-      - Any-airport data loading (in progress): features/any-airport-data.md
+      - Any-airport data loading: features/any-airport-data.md
   - Roadmap: roadmap.md
