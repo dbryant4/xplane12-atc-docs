@@ -1,0 +1,342 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1030" width="1500" height="1030" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <title>xatc: eventual architecture</title>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#b45309"/>
+    </marker>
+    <style>
+      .t  { font-size: 13px; fill: #0f172a; }
+      .s  { font-size: 11.5px; fill: #334155; }
+      .xs { font-size: 10.5px; fill: #475569; }
+      .h  { font-size: 14px; font-weight: 700; fill: #0f172a; }
+      .hb { font-size: 16px; font-weight: 700; fill: #0f172a; }
+      .lbl { font-size: 10.5px; fill: #475569; font-style: italic; }
+      .box  { fill: #ffffff; stroke: #64748b; stroke-width: 1.3; rx: 8; }
+      .built { fill: #f0fdf4; stroke: #16a34a; stroke-width: 1.5; }
+      .prog  { fill: #fffbeb; stroke: #d97706; stroke-width: 1.5; }
+      .plan  { fill: #f8fafc; stroke: #94a3b8; stroke-width: 1.3; stroke-dasharray: 5 4; }
+      .aws   { fill: #fff7ed; stroke: #ea580c; stroke-width: 1.5; }
+      .ext   { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+      .line  { stroke: #475569; stroke-width: 1.6; fill: none; }
+      .lineA { stroke: #b45309; stroke-width: 1.6; fill: none; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1500" height="1030" fill="#ffffff"/>
+
+  <!-- Title -->
+  <text x="30" y="38" class="hb" font-size="22">xatc: eventual architecture</text>
+  <text x="30" y="60" class="s">Automated US FAA-style voice ATC for X-Plane 12. A deterministic ATC engine decides every word; AI models only listen, speak, and (optionally) help classify what the pilot said.</text>
+
+  <!-- Legend -->
+  <g transform="translate(1040,24)">
+    <rect x="0" y="0" width="16" height="12" class="built" rx="3"/><text x="22" y="10.5" class="xs">built</text>
+    <rect x="70" y="0" width="16" height="12" class="prog" rx="3"/><text x="92" y="10.5" class="xs">in progress (M4 and follow-ups)</text>
+    <rect x="280" y="0" width="16" height="12" class="plan" rx="3"/><text x="302" y="10.5" class="xs">planned</text>
+    <rect x="0" y="22" width="16" height="12" class="aws" rx="3"/><text x="22" y="32.5" class="xs">AWS</text>
+    <rect x="70" y="22" width="16" height="12" class="ext" rx="3"/><text x="92" y="32.5" class="xs">external / sim</text>
+  </g>
+
+  <!-- ============ PILOT ============ -->
+  <rect x="24" y="100" width="220" height="330" rx="10" fill="#f1f5f9" stroke="#94a3b8"/>
+  <text x="40" y="126" class="h">Pilot</text>
+  <rect x="40" y="140" width="188" height="62" rx="8" class="ext"/>
+  <text x="52" y="162" class="t">Headset</text>
+  <text x="52" y="180" class="s">mic in · radio audio out</text>
+  <text x="52" y="195" class="xs">(COM1/COM2 mix)</text>
+  <rect x="40" y="214" width="188" height="62" rx="8" class="ext"/>
+  <text x="52" y="236" class="t">Yoke / joystick button</text>
+  <text x="52" y="254" class="s">push-to-talk (or keyboard,</text>
+  <text x="52" y="269" class="s">or the on-screen button)</text>
+  <rect x="40" y="288" width="188" height="62" rx="8" class="ext"/>
+  <text x="52" y="310" class="t">Browser / tablet</text>
+  <text x="52" y="328" class="s">radio panel over the LAN</text>
+  <rect x="40" y="362" width="188" height="54" rx="8" class="ext"/>
+  <text x="52" y="384" class="t">Cockpit radios</text>
+  <text x="52" y="401" class="s">tuned in X-Plane itself</text>
+
+  <!-- ============ WINDOWS PC ============ -->
+  <rect x="270" y="84" width="910" height="916" rx="12" fill="#fafafa" stroke="#334155" stroke-width="1.6"/>
+  <text x="290" y="108" class="h">Windows PC next to X-Plane</text>
+  <text x="498" y="108" class="xs">(ADR 0006 · `xatc doctor`, setup-windows.ps1, xatc-run.cmd)</text>
+
+  <!-- X-Plane -->
+  <rect x="290" y="122" width="250" height="108" rx="8" class="ext"/>
+  <text x="304" y="144" class="h">X-Plane 12</text>
+  <text x="304" y="164" class="s">Web API :8086 (REST + WebSocket)</text>
+  <text x="304" y="181" class="s">position, speeds, COM1/2, TX radio,</text>
+  <text x="304" y="197" class="s">transponder, weather datarefs,</text>
+  <text x="304" y="213" class="s">pressure / indicated altitude</text>
+
+  <rect x="556" y="122" width="604" height="108" rx="8" class="ext"/>
+  <text x="570" y="144" class="h">X-Plane data files (read directly)</text>
+  <text x="570" y="165" class="s">• apt.dat: Global Airports + Custom Scenery, by scenery_packs.ini priority (*GLOBAL_AIRPORTS* marker)</text>
+  <text x="570" y="183" class="s">• 1200 atc data/atc.dat: ARTCC/TRACON airspace polygons and frequencies</text>
+  <text x="570" y="201" class="s">• default data/CIFP/&lt;ICAO&gt;.dat: SIDs, STARs, approaches · earth_fix.dat / earth_nav.dat: fix coordinates</text>
+  <text x="570" y="219" class="s">• Output/real weather/ METAR file (destination weather)</text>
+
+  <!-- xatc process -->
+  <rect x="290" y="250" width="870" height="716" rx="10" fill="#ffffff" stroke="#475569" stroke-dasharray="2 0" stroke-width="1.4"/>
+  <text x="306" y="273" class="h">xatc process</text>
+  <text x="420" y="273" class="xs">Python 3.12 · asyncio · contracts.py is the shared interface</text>
+
+  <!-- Row 1 -->
+  <rect x="306" y="288" width="196" height="118" rx="8" class="built"/>
+  <text x="318" y="309" class="h">Sim bridge</text>
+  <text x="318" y="328" class="s">Web API client (~10 Hz)</text>
+  <text x="318" y="344" class="s">two-way COM / TX sync</text>
+  <text x="318" y="360" class="s">record → JSONL</text>
+  <text x="318" y="376" class="s">replay (dev + tests)</text>
+  <text x="318" y="394" class="xs">sim/webapi.py · sim/replay.py</text>
+
+  <rect x="514" y="288" width="232" height="118" rx="8" class="built"/>
+  <text x="526" y="309" class="h">World data</text>
+  <text x="526" y="328" class="s">any-airport loader + cache</text>
+  <text x="526" y="344" class="s">nearest airport · ARTCC by position</text>
+  <text x="526" y="360" class="s">CIFP: X-Plane files → FAA fallback</text>
+  <rect x="526" y="366" width="210" height="18" rx="4" class="prog"/>
+  <text x="532" y="379" class="xs">fix coordinates from earth_fix/nav</text>
+  <text x="526" y="398" class="xs">world/xplane_data.py · cifp.py · xplane_cifp.py</text>
+
+  <rect x="758" y="288" width="200" height="118" rx="8" class="built"/>
+  <text x="770" y="309" class="h">Weather &amp; ATIS</text>
+  <text x="770" y="328" class="s">sim weather only (no web)</text>
+  <text x="770" y="344" class="s">datarefs near aircraft,</text>
+  <text x="770" y="360" class="s">METAR file for destination</text>
+  <text x="770" y="376" class="s">ATIS text + advancing letter</text>
+  <text x="770" y="394" class="xs">weather/service.py</text>
+
+  <rect x="970" y="288" width="174" height="118" rx="8" class="built"/>
+  <text x="982" y="309" class="h">Flight plan</text>
+  <text x="982" y="328" class="s">SimBrief OFP import</text>
+  <text x="982" y="344" class="s">or CLI flags</text>
+  <text x="982" y="360" class="s">callsign from sim tail</text>
+  <text x="982" y="376" class="s">number / type</text>
+  <text x="982" y="394" class="xs">flightplan/simbrief.py</text>
+
+  <!-- ATC ENGINE -->
+  <rect x="306" y="424" width="652" height="300" rx="10" fill="#f7fee7" stroke="#16a34a" stroke-width="2"/>
+  <text x="320" y="447" class="h">ATC engine (deterministic, ADR 0001)</text>
+  <text x="600" y="447" class="xs">atc/engine.py · on_tick · on_pilot_transmission · directory</text>
+
+  <!-- phases -->
+  <text x="320" y="470" class="s" font-weight="600">Phases</text>
+  <g font-size="10.5">
+    <rect x="370" y="458" width="54" height="18" rx="4" class="built"/><text x="376" y="471" class="xs">PARKED</text>
+    <rect x="428" y="458" width="72" height="18" rx="4" class="built"/><text x="434" y="471" class="xs">CLEARANCE</text>
+    <rect x="504" y="458" width="64" height="18" rx="4" class="built"/><text x="510" y="471" class="xs">TAXI_OUT</text>
+    <rect x="572" y="458" width="76" height="18" rx="4" class="built"/><text x="578" y="471" class="xs">HOLD_SHORT</text>
+    <rect x="652" y="458" width="62" height="18" rx="4" class="built"/><text x="658" y="471" class="xs">TAKEOFF</text>
+    <rect x="718" y="458" width="76" height="18" rx="4" class="built"/><text x="724" y="471" class="xs">DEPARTURE</text>
+    <rect x="798" y="458" width="68" height="18" rx="4" class="built"/><text x="804" y="471" class="xs">ENROUTE</text>
+    <rect x="870" y="458" width="68" height="18" rx="4" class="built"/><text x="876" y="471" class="xs">DESCENT</text>
+    <rect x="370" y="480" width="72" height="18" rx="4" class="built"/><text x="376" y="493" class="xs">APPROACH</text>
+    <rect x="446" y="480" width="64" height="18" rx="4" class="prog"/><text x="452" y="493" class="xs">LANDING</text>
+    <rect x="514" y="480" width="60" height="18" rx="4" class="prog"/><text x="520" y="493" class="xs">TAXI_IN</text>
+    <rect x="578" y="480" width="58" height="18" rx="4" class="prog"/><text x="584" y="493" class="xs">PARKED</text>
+    <text x="646" y="493" class="xs">driven by pilot intents + sim triggers</text>
+  </g>
+
+  <!-- positions -->
+  <text x="320" y="522" class="s" font-weight="600">Controllers</text>
+  <text x="400" y="522" class="s">ATIS · Clearance · Ground · Tower · Departure · Center (+ sectors) · Approach</text>
+  <text x="400" y="538" class="s">from apt.dat 1050–1056 + atc.dat · the tuned COM decides who answers</text>
+
+  <!-- engine sub-boxes -->
+  <rect x="320" y="552" width="150" height="76" rx="7" class="built"/>
+  <text x="330" y="571" class="t">Runway selector</text>
+  <text x="330" y="588" class="xs">apt.dat flow rules + wind,</text>
+  <text x="330" y="602" class="xs">live magnetic variation</text>
+  <text x="330" y="616" class="xs">runway_selector.py</text>
+
+  <rect x="478" y="552" width="150" height="76" rx="7" class="built"/>
+  <text x="488" y="571" class="t">Clearance + SID</text>
+  <text x="488" y="588" class="xs">CRAFT, squawk, filed SID</text>
+  <text x="488" y="602" class="xs">or route-matched SID</text>
+  <text x="488" y="616" class="xs">sid_selector.py</text>
+
+  <rect x="636" y="552" width="150" height="76" rx="7" class="built"/>
+  <text x="646" y="571" class="t">Taxi router</text>
+  <text x="646" y="588" class="xs">A* on the taxi graph,</text>
+  <text x="646" y="602" class="xs">hold-shorts, ramp resolver</text>
+  <text x="646" y="616" class="xs">taxigraph · ramp_resolver</text>
+
+  <rect x="794" y="552" width="150" height="76" rx="7" class="built"/>
+  <text x="804" y="571" class="t">Arrival planner</text>
+  <text x="804" y="588" class="xs">STAR, approach type,</text>
+  <text x="804" y="602" class="xs">top of descent, final</text>
+  <text x="804" y="616" class="xs">arrival_planner.py</text>
+
+  <rect x="320" y="636" width="308" height="78" rx="7" class="built"/>
+  <text x="330" y="655" class="t">Conformance monitor</text>
+  <text x="330" y="672" class="xs">ground: taxi w/o clearance, off route, incursion</text>
+  <text x="330" y="686" class="xs">airborne: altitude (Mode C), heading, speed, squawk</text>
+  <text x="330" y="700" class="xs">escalation ladder · relaxed / normal / checkride</text>
+  <rect x="540" y="642" width="80" height="16" rx="4" class="prog"/><text x="546" y="654" class="xs">+ landing rules</text>
+
+  <rect x="636" y="636" width="308" height="78" rx="7" class="built"/>
+  <text x="646" y="655" class="t">Handoffs</text>
+  <text x="646" y="672" class="xs">TWR → DEP → CTR → APP → TWR → GND, one-shot</text>
+  <text x="646" y="686" class="xs">check-in accepted only after a real handoff</text>
+  <rect x="646" y="692" width="290" height="16" rx="4" class="prog"/>
+  <text x="652" y="704" class="xs">"are you with me?" · Center sectors · go-arounds</text>
+
+  <!-- Phraseology + intent (right of engine) -->
+  <rect x="970" y="424" width="174" height="170" rx="8" class="built"/>
+  <text x="982" y="445" class="h">Phraseology</text>
+  <text x="982" y="464" class="s">FAA 7110.65 renderers</text>
+  <text x="982" y="480" class="s">numbers, callsigns,</text>
+  <text x="982" y="496" class="s">SID / STAR / navaid names</text>
+  <text x="982" y="512" class="s">readback checker +</text>
+  <text x="982" y="528" class="s">"negative, …" corrections</text>
+  <rect x="982" y="538" width="150" height="18" rx="4" class="prog"/>
+  <text x="988" y="551" class="xs">7110.65 audit + golden corpus</text>
+  <text x="982" y="580" class="xs">phraseology/</text>
+
+  <rect x="970" y="604" width="174" height="120" rx="8" class="built"/>
+  <text x="982" y="625" class="h">Intent parsing</text>
+  <text x="982" y="644" class="s">rules parser (intent.py)</text>
+  <text x="982" y="660" class="s">IntentRouter mode:</text>
+  <text x="982" y="676" class="s">disabled · fallback · primary</text>
+  <text x="982" y="692" class="s">Nova Lite: intent only,</text>
+  <text x="982" y="708" class="s">never ATC wording</text>
+
+  <!-- Row 3 -->
+  <rect x="306" y="742" width="316" height="210" rx="8" class="built"/>
+  <text x="318" y="764" class="h">Voice layer (ADR 0004)</text>
+  <text x="318" y="784" class="s">PTT: keyboard · on-screen</text>
+  <rect x="468" y="772" width="140" height="17" rx="4" class="prog"/><text x="474" y="784" class="xs">+ yoke / joystick button</text>
+  <text x="318" y="802" class="s">half-duplex session, priority queue</text>
+  <text x="318" y="820" class="s">Transcribe streaming client (speech → text)</text>
+  <text x="318" y="838" class="s">Polly client (text → speech, exact words)</text>
+  <text x="318" y="856" class="s">RadioFx VHF chain: band-limit, compression,</text>
+  <text x="318" y="872" class="s">hiss, squelch; signal strength by distance</text>
+  <text x="318" y="890" class="s">ATIS loops on the ATIS frequency</text>
+  <text x="318" y="908" class="s">COM1/COM2 monitor mix</text>
+  <text x="318" y="938" class="xs">voice/session.py · transcribe_stt.py · polly_tts.py · radio_fx.py</text>
+
+  <rect x="634" y="742" width="266" height="210" rx="8" class="built"/>
+  <text x="646" y="764" class="h">Radio panel (web UI)</text>
+  <text x="646" y="784" class="s">FastAPI + one WebSocket</text>
+  <text x="646" y="802" class="s">COM1 / COM2 active + standby,</text>
+  <text x="646" y="818" class="s">flip-flop, keypad, TX / RX lights</text>
+  <text x="646" y="836" class="s">frequency directory (handoff highlight)</text>
+  <text x="646" y="854" class="s">status: phase, squawk, runway, taxi…</text>
+  <text x="646" y="872" class="s">transcript + type-to-transmit</text>
+  <text x="646" y="890" class="s">options: LLM mode, altitude source,</text>
+  <text x="646" y="906" class="s">strictness, heavy-jet exception</text>
+  <text x="646" y="938" class="xs">ui/panel.py · ui/static/</text>
+
+  <rect x="912" y="742" width="232" height="210" rx="8" class="built"/>
+  <text x="924" y="764" class="h">Session services</text>
+  <text x="924" y="786" class="s">Settings (platformdirs JSON)</text>
+  <text x="924" y="804" class="s">Debrief recorder: JSONL log +</text>
+  <text x="924" y="820" class="s">Markdown timeline, deviations,</text>
+  <text x="924" y="836" class="s">readbacks (`xatc debrief`)</text>
+  <text x="924" y="858" class="s">`xatc doctor`: install, Web API,</text>
+  <text x="924" y="874" class="s">AWS profile, mic checks</text>
+  <text x="924" y="896" class="s">replay mode + scenario tests</text>
+  <text x="924" y="912" class="s">(MVP, M3 departure, M4 arrival)</text>
+  <text x="924" y="938" class="xs">settings.py · debrief.py · doctor.py</text>
+
+  <!-- ============ RIGHT: AWS + external ============ -->
+  <rect x="1206" y="100" width="270" height="360" rx="10" fill="#fffaf5" stroke="#ea580c" stroke-width="1.6"/>
+  <text x="1222" y="126" class="h">AWS (us-east-1)</text>
+  <text x="1378" y="126" class="xs">profile `xatc`</text>
+  <rect x="1222" y="140" width="238" height="70" rx="8" class="aws"/>
+  <text x="1234" y="162" class="t">Amazon Transcribe streaming</text>
+  <text x="1234" y="180" class="s">custom vocabulary</text>
+  <text x="1234" y="196" class="s">xatc-aviation-en-US</text>
+  <rect x="1222" y="220" width="238" height="56" rx="8" class="aws"/>
+  <text x="1234" y="242" class="t">Amazon Polly (neural)</text>
+  <text x="1234" y="260" class="s">speaks ATC text word for word</text>
+  <rect x="1222" y="286" width="238" height="70" rx="8" class="aws"/>
+  <text x="1234" y="308" class="t">Bedrock: Nova Lite</text>
+  <text x="1234" y="326" class="s">Converse, forced tool call →</text>
+  <text x="1234" y="342" class="s">a validated Intent (ADR 0005)</text>
+  <rect x="1222" y="366" width="238" height="80" rx="8" class="aws"/>
+  <text x="1234" y="388" class="t">IAM + vocabulary via CDK</text>
+  <text x="1234" y="406" class="s">infra/ XatcVoiceStack; the owner</text>
+  <text x="1234" y="422" class="s">runs `cdk deploy`; agents never</text>
+  <text x="1234" y="438" class="s">create resources or see keys</text>
+
+  <rect x="1206" y="480" width="270" height="72" rx="10" class="ext"/>
+  <text x="1222" y="504" class="h">SimBrief API</text>
+  <text x="1222" y="524" class="s">latest OFP by username / user id</text>
+  <text x="1222" y="540" class="s">(`--simbrief-user`)</text>
+
+  <rect x="1206" y="572" width="270" height="92" rx="10" class="ext"/>
+  <text x="1222" y="596" class="h">Docs site (public)</text>
+  <text x="1222" y="616" class="s">dbryant4/xplane12-atc-docs</text>
+  <text x="1222" y="632" class="s">MkDocs Material → GitHub Pages;</text>
+  <text x="1222" y="648" class="s">the code repo stays private</text>
+
+  <rect x="1206" y="684" width="270" height="268" rx="10" class="plan"/>
+  <text x="1222" y="708" class="h" fill="#475569">Later (M5 / M6)</text>
+  <text x="1222" y="732" class="s">• AI / multiplayer traffic:</text>
+  <text x="1236" y="748" class="s">sequencing, traffic advisories</text>
+  <text x="1222" y="770" class="s">• VFR: pattern work,</text>
+  <text x="1236" y="786" class="s">flight following</text>
+  <text x="1222" y="808" class="s">• ICAO phraseology</text>
+  <text x="1222" y="830" class="s">• Real recorded-flight scenario</text>
+  <text x="1236" y="846" class="s">tests (KSEA → KPDX)</text>
+  <text x="1222" y="868" class="s">• One-click Windows installer</text>
+  <text x="1222" y="890" class="s">• X-Plane command / dataref PTT</text>
+  <text x="1222" y="912" class="s">• Per-facility altimeter,</text>
+  <text x="1236" y="928" class="s">airspace speed limits</text>
+
+  <!-- ============ ARROWS ============ -->
+  <!-- X-Plane Web API <-> Sim bridge -->
+  <path class="line" d="M350,230 L350,288" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <text x="356" y="244" class="lbl">state · set COM</text>
+  <!-- data files -> world data / weather -->
+  <path class="line" d="M720,230 L720,288" marker-end="url(#arr)"/>
+  <text x="726" y="244" class="lbl">apt / atc / CIFP / fixes</text>
+  <path class="line" d="M930,230 L930,288" marker-end="url(#arr)"/>
+  <text x="936" y="244" class="lbl">METAR</text>
+  <!-- cockpit radios <-> X-Plane -->
+  <path class="line" d="M228,389 L262,389 L262,176 L290,176" marker-start="url(#arr)" marker-end="url(#arr)"/>
+
+  <!-- row1 -> engine -->
+  <path class="line" d="M404,406 L404,424" marker-end="url(#arr)"/>
+  <path class="line" d="M630,406 L630,424" marker-end="url(#arr)"/>
+  <path class="line" d="M858,406 L858,424" marker-end="url(#arr)"/>
+  <path class="line" d="M1057,406 L1057,414 L950,414 L950,424" marker-end="url(#arr)"/>
+  <text x="1064" y="419" class="lbl">FlightPlan</text>
+
+  <!-- engine <-> phraseology / intent -->
+  <path class="line" d="M958,509 L970,509" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <path class="line" d="M958,664 L970,664" marker-start="url(#arr)" marker-end="url(#arr)"/>
+
+  <!-- engine -> voice / panel / services -->
+  <path class="line" d="M464,724 L464,742" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <text x="338" y="737" class="lbl">AtcTransmission</text>
+  <path class="line" d="M766,724 L766,742" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <path class="line" d="M1028,724 L1028,742" marker-end="url(#arr)"/>
+  <!-- voice -> intent (transcript) -->
+  <path class="line" d="M622,760 L628,760 L628,732 L1100,732 L1100,724" marker-end="url(#arr)"/>
+  <text x="880" y="740" class="lbl">transcript → intent</text>
+
+  <!-- pilot <-> voice / panel -->
+    <path class="line" d="M40,171 L16,171 L16,960 L300,960 L300,860 L306,860" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <text x="22" y="956" class="lbl">mic audio in / radio audio out</text>
+  <path class="line" d="M40,245 L28,245 L28,948 L296,948 L296,790 L306,790" marker-end="url(#arr)"/>
+  <text x="34" y="944" class="lbl">PTT</text>
+  <path class="line" d="M228,319 L256,319 L256,1016" />
+  <path class="line" d="M256,1016 L767,1016 L767,952" marker-end="url(#arr)"/>
+  <path class="line" d="M256,319 L228,319" marker-end="url(#arr)"/>
+  <text x="264" y="1012" class="lbl">WebSocket (panel on the LAN)</text>
+
+  <!-- voice <-> AWS -->
+  <path class="lineA" d="M540,952 L540,972 L1190,972 L1190,175 L1222,175" marker-end="url(#arrB)"/>
+  <path class="lineA" d="M1222,248 L1196,248 L1196,978 L580,978 L580,952" marker-end="url(#arrB)"/>
+  <text x="900" y="966" class="lbl" fill="#b45309">audio → Transcribe → text</text>
+  <text x="900" y="991" class="lbl" fill="#b45309">text → Polly → speech</text>
+  <!-- intent <-> Bedrock -->
+  <path class="lineA" d="M1144,650 L1184,650 L1184,321 L1222,321" marker-start="url(#arrB)" marker-end="url(#arrB)"/>
+  <!-- simbrief -->
+  <path class="line" d="M1144,340 L1170,340 L1170,516 L1206,516" marker-start="url(#arr)" marker-end="url(#arr)"/>
+</svg>
