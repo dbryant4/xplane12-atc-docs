@@ -34,7 +34,7 @@
   <!-- Legend -->
   <g transform="translate(1040,24)">
     <rect x="0" y="0" width="16" height="12" class="built" rx="3"/><text x="22" y="10.5" class="xs">built</text>
-    <rect x="70" y="0" width="16" height="12" class="prog" rx="3"/><text x="92" y="10.5" class="xs">in progress (M4 and follow-ups)</text>
+    <rect x="70" y="0" width="16" height="12" class="prog" rx="3"/><text x="92" y="10.5" class="xs">next (M6: VFR)</text>
     <rect x="280" y="0" width="16" height="12" class="plan" rx="3"/><text x="302" y="10.5" class="xs">planned</text>
     <rect x="0" y="22" width="16" height="12" class="aws" rx="3"/><text x="22" y="32.5" class="xs">AWS</text>
     <rect x="70" y="22" width="16" height="12" class="ext" rx="3"/><text x="92" y="32.5" class="xs">external / sim</text>
@@ -97,7 +97,7 @@
   <text x="526" y="328" class="s">any-airport loader + cache</text>
   <text x="526" y="344" class="s">nearest airport · ARTCC by position</text>
   <text x="526" y="360" class="s">CIFP: X-Plane files → FAA fallback</text>
-  <rect x="526" y="366" width="210" height="18" rx="4" class="prog"/>
+  <rect x="526" y="366" width="210" height="18" rx="4" class="built"/>
   <text x="532" y="379" class="xs">fix coordinates from earth_fix/nav</text>
   <text x="526" y="398" class="xs">world/xplane_data.py · cifp.py · xplane_cifp.py</text>
 
@@ -112,7 +112,7 @@
   <rect x="970" y="288" width="174" height="118" rx="8" class="built"/>
   <text x="982" y="309" class="h">Flight plan</text>
   <text x="982" y="328" class="s">SimBrief OFP import</text>
-  <text x="982" y="344" class="s">or CLI flags</text>
+  <text x="982" y="344" class="s">or the Settings page</text>
   <text x="982" y="360" class="s">callsign from sim tail</text>
   <text x="982" y="376" class="s">number / type</text>
   <text x="982" y="394" class="xs">flightplan/simbrief.py</text>
@@ -134,10 +134,10 @@
     <rect x="798" y="458" width="68" height="18" rx="4" class="built"/><text x="804" y="471" class="xs">ENROUTE</text>
     <rect x="870" y="458" width="68" height="18" rx="4" class="built"/><text x="876" y="471" class="xs">DESCENT</text>
     <rect x="370" y="480" width="72" height="18" rx="4" class="built"/><text x="376" y="493" class="xs">APPROACH</text>
-    <rect x="446" y="480" width="64" height="18" rx="4" class="prog"/><text x="452" y="493" class="xs">LANDING</text>
-    <rect x="514" y="480" width="60" height="18" rx="4" class="prog"/><text x="520" y="493" class="xs">TAXI_IN</text>
-    <rect x="578" y="480" width="58" height="18" rx="4" class="prog"/><text x="584" y="493" class="xs">PARKED</text>
-    <text x="646" y="493" class="xs">driven by pilot intents + sim triggers</text>
+    <rect x="446" y="480" width="64" height="18" rx="4" class="built"/><text x="452" y="493" class="xs">LANDING</text>
+    <rect x="514" y="480" width="60" height="18" rx="4" class="built"/><text x="520" y="493" class="xs">TAXI_IN</text>
+    <rect x="578" y="480" width="58" height="18" rx="4" class="built"/><text x="584" y="493" class="xs">PARKED</text>
+    <rect x="640" y="480" width="70" height="18" rx="4" class="built"/><text x="646" y="493" class="xs">PUSHBACK</text><text x="716" y="493" class="xs">+ requests · emergencies · ATIS check</text>
   </g>
 
   <!-- positions -->
@@ -175,13 +175,13 @@
   <text x="330" y="672" class="xs">ground: taxi w/o clearance, off route, incursion</text>
   <text x="330" y="686" class="xs">airborne: altitude (Mode C), heading, speed, squawk</text>
   <text x="330" y="700" class="xs">escalation ladder · relaxed / normal / checkride</text>
-  <rect x="540" y="642" width="80" height="16" rx="4" class="prog"/><text x="546" y="654" class="xs">+ landing rules</text>
+  <rect x="540" y="642" width="80" height="16" rx="4" class="built"/><text x="546" y="654" class="xs">+ landing rules</text>
 
   <rect x="636" y="636" width="308" height="78" rx="7" class="built"/>
   <text x="646" y="655" class="t">Handoffs</text>
   <text x="646" y="672" class="xs">TWR → DEP → CTR → APP → TWR → GND, one-shot</text>
   <text x="646" y="686" class="xs">check-in accepted only after a real handoff</text>
-  <rect x="646" y="692" width="290" height="16" rx="4" class="prog"/>
+  <rect x="646" y="692" width="290" height="16" rx="4" class="built"/>
   <text x="652" y="704" class="xs">"are you with me?" · Center sectors · go-arounds</text>
 
   <!-- Phraseology + intent (right of engine) -->
@@ -192,7 +192,7 @@
   <text x="982" y="496" class="s">SID / STAR / navaid names</text>
   <text x="982" y="512" class="s">readback checker +</text>
   <text x="982" y="528" class="s">"negative, …" corrections</text>
-  <rect x="982" y="538" width="150" height="18" rx="4" class="prog"/>
+  <rect x="982" y="538" width="150" height="18" rx="4" class="built"/>
   <text x="988" y="551" class="xs">7110.65 audit + golden corpus</text>
   <text x="982" y="580" class="xs">phraseology/</text>
 
@@ -208,7 +208,7 @@
   <rect x="306" y="742" width="316" height="210" rx="8" class="built"/>
   <text x="318" y="764" class="h">Voice layer (ADR 0004)</text>
   <text x="318" y="784" class="s">PTT: keyboard · on-screen</text>
-  <rect x="468" y="772" width="140" height="17" rx="4" class="prog"/><text x="474" y="784" class="xs">+ yoke / joystick button</text>
+  <rect x="468" y="772" width="140" height="17" rx="4" class="built"/><text x="474" y="784" class="xs">+ yoke / joystick button</text>
   <text x="318" y="802" class="s">half-duplex session, priority queue</text>
   <text x="318" y="820" class="s">Transcribe streaming client (speech → text)</text>
   <text x="318" y="838" class="s">Polly client (text → speech, exact words)</text>
@@ -226,8 +226,8 @@
   <text x="646" y="836" class="s">frequency directory (handoff highlight)</text>
   <text x="646" y="854" class="s">status: phase, squawk, runway, taxi…</text>
   <text x="646" y="872" class="s">transcript + type-to-transmit</text>
-  <text x="646" y="890" class="s">options: LLM mode, altitude source,</text>
-  <text x="646" y="906" class="s">strictness, heavy-jet exception</text>
+  <text x="646" y="890" class="s">Settings page (ADR 0007): flight plan,</text>
+  <text x="646" y="906" class="s">connection, voice, ATC, advanced</text>
   <text x="646" y="938" class="xs">ui/panel.py · ui/static/</text>
 
   <rect x="912" y="742" width="232" height="210" rx="8" class="built"/>
@@ -237,7 +237,7 @@
   <text x="924" y="820" class="s">Markdown timeline, deviations,</text>
   <text x="924" y="836" class="s">readbacks (`xatc debrief`)</text>
   <text x="924" y="858" class="s">`xatc doctor`: install, Web API,</text>
-  <text x="924" y="874" class="s">AWS profile, mic checks</text>
+  <text x="924" y="874" class="s">AWS, mic · `xatc smoke --live`</text>
   <text x="924" y="896" class="s">replay mode + scenario tests</text>
   <text x="924" y="912" class="s">(MVP, M3 departure, M4 arrival)</text>
   <text x="924" y="938" class="xs">settings.py · debrief.py · doctor.py</text>
@@ -275,11 +275,12 @@
   <text x="1222" y="648" class="s">the code repo stays private</text>
 
   <rect x="1206" y="684" width="270" height="268" rx="10" class="plan"/>
-  <text x="1222" y="708" class="h" fill="#475569">Later (M5 / M6)</text>
+  <text x="1222" y="708" class="h" fill="#475569">Next and later</text>
   <text x="1222" y="732" class="s">• AI / multiplayer traffic:</text>
   <text x="1236" y="748" class="s">sequencing, traffic advisories</text>
-  <text x="1222" y="770" class="s">• VFR: pattern work,</text>
-  <text x="1236" y="786" class="s">flight following</text>
+  <rect x="1216" y="755" width="250" height="38" rx="5" class="prog"/>
+  <text x="1222" y="770" class="s" font-weight="600">• Next, M6 VFR (ADR 0008):</text>
+  <text x="1236" y="786" class="s">pattern work, flight following</text>
   <text x="1222" y="808" class="s">• ICAO phraseology</text>
   <text x="1222" y="830" class="s">• Real recorded-flight scenario</text>
   <text x="1236" y="846" class="s">tests (KSEA → KPDX)</text>
