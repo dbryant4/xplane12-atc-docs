@@ -110,10 +110,12 @@ yet for the airborne rules -- only unit tests against synthetic and replayed sta
 
 - **No landing or rollout rules.** Nothing airborne is checked past `ENROUTE` yet --
   the engine has no approach/landing phase to monitor (see the [Roadmap](../roadmap.md)).
-- **No readback correction** on either side (see the readback note on [IFR
-  clearance](ifr-clearance.md)) -- that's a related but separate gap.
 - **Heading after "resume own navigation" or a direct-to.** The engine never assigns a
   heading today, so there's nothing for the heading rule to clear in that case yet.
-- The two monitors' escalation state machines are still separate implementations
-  (a documented, intentional duplication pending a small shared consolidation module),
-  not yet unified.
+
+The two monitors' shared escalation logic (fire once, step up the ladder, reset after
+conforming) has since been factored into one common module,
+`xatc.atc.conformance_core`, that both `conformance.py` and `conformance_airborne.py`
+build on -- the earlier duplication between them is resolved. Readback checking is a
+related but separate mechanism from this monitor -- see [Readback
+checking](readback-checking.md).

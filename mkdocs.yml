@@ -43,6 +43,8 @@ nav:
       - ATIS & weather: features/atis-weather.md
       - Runway selection: features/runway-selection.md
       - IFR clearance (CRAFT): features/ifr-clearance.md
+      - SID & departure procedures: features/sid-departure-procedures.md
+      - Readback checking: features/readback-checking.md
       - Taxi routing & hold-shorts: features/taxi-routing.md
       - Tower takeoff clearance: features/tower-clearance.md
       - Voice (Transcribe, Polly, PTT): features/voice.md
@@ -52,4 +54,6 @@ nav:
       - Conformance monitor: features/conformance-monitor.md
       - Fuzzy ramp resolver (planned): features/fuzzy-ramp-resolver.md
       - Any-airport data loading: features/any-airport-data.md
+      - SimBrief import: features/simbrief-import.md
+      - Post-flight debrief: features/debrief.md
   - Roadmap: roadmap.md

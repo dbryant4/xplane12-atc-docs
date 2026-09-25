@@ -13,13 +13,14 @@ November five four seven Golf Alpha, IFR to Portland with information Alpha"*:
 
 ```
 November five four seven Golf Alpha, cleared to Portland International airport,
-via radar vectors, then as filed, climb and maintain five thousand,
+via the Summa Two departure, Pangl transition, then as filed,
+climb and maintain five thousand,
 expect one zero thousand ten minutes after departure,
 departure frequency one two five point four, squawk four five two one
 ```
 
-(or, when a SID is on file: *"...via the CASCO2 departure, then as filed..."* instead of
-*"via radar vectors."*)
+(or *"...via radar vectors, then as filed..."* when no SID fits -- see [SID & departure
+procedures](sid-departure-procedures.md) for how one's actually chosen.)
 
 ## How it decides
 
@@ -28,9 +29,10 @@ departure frequency one two five point four, squawk four five two one
 - The active departure runway comes from [runway selection](runway-selection.md).
 - **Initial altitude is always 5,000 ft** (or your filed cruise altitude if it's lower)
   -- there's no climb-gradient or airspace-based initial-altitude logic yet.
-- **The SID is whatever's on your filed flight plan, never assigned by ATC** -- there's
-  no CIFP SID parser in the project yet, so the engine can't pick one itself. No SID
-  filed means the clearance reads "via radar vectors" instead.
+- **The SID is chosen from real CIFP procedure data** for airports that have it (KSEA
+  and KPDX today) -- see [SID & departure procedures](sid-departure-procedures.md).
+  Without CIFP data for the airport, or when nothing in it fits the flight plan, the
+  clearance reads "via radar vectors" instead.
 - The filed route string itself (e.g. "SEA J1 BTG") is deliberately **never spoken** --
   it would just be spelled out letter by letter by the TTS, so the renderer always says
   "then as filed" instead.
@@ -42,20 +44,21 @@ departure frequency one two five point four, squawk four five two one
 
 ## Readback
 
-Any readback is currently accepted as correct -- there's no field-by-field comparison
-against what was actually issued. See [Conformance monitor](conformance-monitor.md) for
-what a real correction check would look like once it exists.
+Your readback is checked field by field against what was actually issued -- miss the
+altitude or squawk and you get corrected, not silently waved through. See [Readback
+checking](readback-checking.md) for exactly what's required, what's only a warning, and
+how ASR quirks are tolerated.
 
 ## Configuration
 
-The flight plan (callsign, aircraft type, destination, route, cruise altitude) comes
-from `xatc run`'s CLI flags today (`--callsign`, `--aircraft-type`, `--dest`, `--route`,
-`--cruise`) -- there's no SimBrief import yet.
+The flight plan (callsign, aircraft type, departure, destination, route, cruise
+altitude, SID) comes from `xatc run`'s CLI flags (`--callsign`, `--aircraft-type`,
+`--departure`, `--dest`, `--route`, `--cruise`), or from `--simbrief-user` to import it
+from a SimBrief OFP -- see [SimBrief import](simbrief-import.md). Explicit CLI flags
+override the matching SimBrief field.
 
 ## Limitations
 
-- No CIFP SID parser -- ATC never assigns a SID, only echoes whatever you filed.
 - `expect_minutes` is a hardcoded constant.
-- No readback correction.
 - The ATIS information letter you state back is tracked but not enforced -- any letter
   you say is accepted.
