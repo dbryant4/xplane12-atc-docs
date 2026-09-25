@@ -67,9 +67,9 @@ departure, then as filed"*.
 
 ## Limitations
 
-- Only SID selection for departure is covered here -- STAR/approach selection for
-  arrivals exists in the codebase (`xatc.atc.arrival_planner`) but isn't wired into the
-  engine yet; see the [Roadmap](../roadmap.md).
+- Only SID selection for departure is covered here -- STAR selection for arrivals is now
+  wired in too, as of the descent clearance (see [Arrival](arrival.md)), but approach
+  and landing still aren't; see the [Roadmap](../roadmap.md).
 - SID selection only considers the filed route's first fix and the filed SID itself --
   no aircraft-type-based SID restrictions (e.g. climb-gradient-only SIDs) are modeled.
 - Only KSEA and KPDX have CIFP fixtures today. Any other airport falls back to "via

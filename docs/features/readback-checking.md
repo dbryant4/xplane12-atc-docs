@@ -28,10 +28,15 @@ readback correct, departure frequency one one niner point two
 transmission against the `Clearance` ATC actually issued, for six kinds of instruction:
 `ifr_clearance`, `taxi`, `takeoff`, `altitude`, `heading`, `frequency`. Each kind has its
 own required-vs-warning breakdown -- for example, an IFR clearance readback *must*
-include the altitude and squawk code, but the clearance limit, SID, and departure
-frequency are only warned about if missing, not rejected outright. A taxi readback must
-include the assigned runway and *every* hold-short instruction it was given, but the
-full taxi route itself is only a warning.
+include the altitude and squawk code, but the clearance limit and departure frequency
+are only warned about if missing, not rejected outright. A taxi readback must include
+the assigned runway and *every* hold-short instruction it was given, but the full taxi
+route itself is only a warning.
+
+The SID is a special case: leaving it out is only a warning, but naming a *different*
+one is treated as wrong regardless -- read back "Bangr Nine departure" when you were
+actually cleared via the Summa Two, and you get corrected (*"negative, Summa Two
+departure"*), the same as getting an altitude or squawk wrong.
 
 The checker tolerates real ASR quirks rather than demanding an exact transcript: common
 homophones (*tree/fife/niner/won/fower* for digits), abbreviated forms ("one six left"
@@ -47,17 +52,23 @@ or `TAXI_OUT`) doesn't happen until the readback is correct. Altitude and freque
 instructions are also readback-checked, but don't gate a phase change on their own. A
 takeoff clearance is deliberately **not** readback-checked.
 
-Get it wrong, and the clearance stays pending -- ATC doesn't just move on, but it also
-doesn't automatically repeat the whole clearance verbatim; the correction only restates
-what was missing or wrong. If you reach the hold-short point with a taxi readback still
-outstanding, Ground proactively asks for it once, rather than letting things fall
-through to a plain "say again" at the runway.
+**Under normal or checkride strictness**, getting it wrong keeps the clearance pending --
+ATC doesn't just move on, but it also doesn't automatically repeat the whole clearance
+verbatim; the correction only restates what was missing or wrong. If you reach the
+hold-short point with a taxi readback still outstanding, Ground proactively asks for it
+once, rather than letting things fall through to a plain "say again" at the runway.
+
+**Under relaxed strictness** (the same [conformance monitor](conformance-monitor.md)
+setting that scales the ground/airborne rules), a readback problem no longer holds
+anything up: ATC still restates what was wrong or missing -- *"negative, climb and
+maintain five thousand, squawk six six six two"* -- but accepts the readback and the
+flight advances anyway, so a garbled ASR transcript can't get a pilot stuck in a loop.
+The wording differs slightly for a missing item in this mode: it states the actual value
+outright (*"hold short of runway one six left"*) instead of asking you to read it back
+again.
 
 ## Limitations
 
-- **No "relaxed" mode yet.** The plan is for a relaxed conformance-strictness setting to
-  still restate a readback problem without holding up the flight over it -- that's
-  designed but not built.
 - Only the six kinds above are checked; nothing else (e.g. a wrong-frequency
   acknowledgment) is readback-verified.
 - Takeoff clearances are exempt by design, not an oversight -- a real "cleared for
@@ -69,6 +80,12 @@ through to a plain "say again" at the runway.
 
 Unit tests cover the ASR normalization rules and each readback kind's required/warning
 split directly, plus extensive coverage threaded through the engine's own test suite --
-confirming a wrong or incomplete readback actually blocks the phase advance, a correct
-one advances it and restates any warned-about omission, and the hold-short reminder
-fires when a taxi readback was never corrected.
+confirming a wrong or incomplete readback actually blocks the phase advance under
+normal/checkride strictness, a correct one advances it and restates any warned-about
+omission, relaxed strictness accepts a bad readback while still restating the problem
+(with the missing-item wording difference), a wrong SID is treated as wrong rather than
+just a missing warning, and the hold-short reminder fires when a taxi readback was never
+corrected.
+
+Every readback the engine checks is also recorded for the [post-flight
+debrief](debrief.md), which now has a dedicated Readbacks section.

@@ -38,12 +38,13 @@ It contains:
   monitor](conformance-monitor.md)'s own escalation levels), each entry naming the rule,
   the reason, and the runway or taxiway involved where relevant. A flight with no
   conformance calls at all just says so plainly.
+- A **Readbacks** section: a count of how many of the flight's [readbacks](readback-checking.md)
+  were correct out of the total checked, then one line per problem readback naming what
+  kind it was and exactly what was wrong or missing. A flight with none checked, or none
+  with a problem, says so plainly rather than an empty section.
 
 ## Limitations
 
-- **No readback section yet.** The summary doesn't currently call out where a
-  [readback](readback-checking.md) was wrong or missing, even though that data is
-  available in principle -- a dedicated readback section is planned but not built.
 - The log format only exists for `xatc run`; there's no equivalent for the replay-only
   `xatc panel` command.
 

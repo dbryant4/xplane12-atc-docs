@@ -53,13 +53,27 @@ into the departure phase:
   callsign, aircraft type, route, cruise altitude and SID straight from a SimBrief OFP,
   instead of the CLI-flag-only flight plan.
 - **[Post-flight debrief](features/debrief.md)** (`--debrief-dir`, `xatc debrief`) --
-  every transmission and conformance call logged to a session file, with a Markdown
-  summary (timeline, deviations by severity) written automatically or regenerated on
-  demand.
+  every transmission, conformance call, and now readback logged to a session file, with
+  a Markdown summary (timeline, deviations by severity, readback pass rate and problems)
+  written automatically or regenerated on demand.
+- **Relaxed-mode readback gating** -- under relaxed conformance strictness, a wrong or
+  missing readback item is restated but no longer blocks the flight from advancing, so a
+  garbled ASR transcript can't get a pilot stuck in a loop (see [Readback
+  checking](features/readback-checking.md)).
 
 This closes out the departure-phase milestone in full: ground ops, a full departure and
 enroute handoff chain, a real CIFP-assigned SID, and a checked readback, all the way
-through the initial enroute climb. Arrivals are next -- see below.
+through the initial enroute climb.
+
+**Arrivals (M4) are underway**, in the same three-slice pattern the departure phase
+used (Tower, then Departure, then Center):
+
+- **M4-1, done: [descent and the STAR clearance](features/arrival.md).** Center starts
+  the aircraft down a little before its own top of descent, with a real CIFP-assigned
+  STAR and transition when one fits ("descend via the Kratr Three arrival, Buwzo
+  transition") or a plain altitude when it doesn't, followed by the destination's ATIS
+  letter and altimeter.
+- **M4-2 and M4-3: not started** -- see What's next.
 
 See [Features](features/index.md) for the detailed, per-feature "available now" vs.
 "planned" breakdown.
@@ -68,20 +82,17 @@ See [Features](features/index.md) for the detailed, per-feature "available now" 
 
 Roughly in the order the project is tackling it:
 
-- **Approach and landing.** STAR/vectors, an approach clearance, a landing clearance,
-  and the handoff back to Ground once you're clear of the runway. Groundwork exists --
-  `xatc.atc.arrival_planner` already picks a STAR and an approach type/procedure from
-  CIFP data and the current weather -- but nothing in the engine calls it yet; this is
-  in progress, not available.
+- **M4-2: approach handoff and approach clearance.** Center hands off to the
+  destination's Approach position around 40 nm out (or on reaching the STAR's last
+  fix); Approach gives the altimeter, then vectors or "expect &lt;approach&gt;", then a
+  clearance once established on the approach course. A new `APPROACH` phase. Not started.
+- **M4-3: tower landing clearance, runway exit, and taxi-in.** Approach hands off to
+  Tower near the runway; Tower clears to land; rollout and exit move to `TAXI_IN`, and
+  Ground gives a taxi-in route to parking. Not started.
 - **Wire the fuzzy ramp resolver into taxi routing.** Already built and tested (see
   [Fuzzy ramp resolver](features/fuzzy-ramp-resolver.md)) -- what's left is having the
   engine actually pass a pilot's spoken location into it instead of always using the sim
   position outright.
-- **Relaxed-mode readback gating.** A readback problem restated without holding up the
-  flight over it, under the relaxed conformance-strictness setting -- designed, not yet
-  built (see [Readback checking](features/readback-checking.md)).
-- **A debrief readback section**, once the summary can point out exactly where a
-  readback was wrong or missing, not just conformance events.
 
 ## Longer term
 
