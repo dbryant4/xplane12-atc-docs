@@ -73,9 +73,11 @@ fixtures) and how the departure airport itself is chosen.
 - No step climbs beyond the two capped handoff altitudes (Departure's 10,000 ft cap,
   then straight to full cruise at Center) -- a real Departure/Center climbs an aircraft
   incrementally.
-- No direct-to clearances, crossing restrictions, or "descend via the STAR" calls --
-  Center's only current behavior is the initial check-in climb.
+- No direct-to clearances or crossing restrictions.
 - The Center frequency-selection rule is a deterministic placeholder (a bearing wedge),
   not real ARTCC sector geometry -- there's no source data for actual sector boundaries
   in `atc.dat`.
-- No arrival or approach logic yet at all -- see the [Roadmap](../roadmap.md).
+- Center does start the arrival down with a "descend via the STAR" (or a plain altitude)
+  call once you're getting close to the destination -- see [Arrival](arrival.md) --
+  but nothing past that first call exists yet: no approach handoff, approach clearance,
+  or landing clearance.

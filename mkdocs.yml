@@ -51,6 +51,7 @@ nav:
       - VHF radio effect: features/radio-fx.md
       - Intent parsing & LLM modes: features/intent-parsing.md
       - Departure & Center (in progress): features/departure-center.md
+      - Arrival (in progress): features/arrival.md
       - Conformance monitor: features/conformance-monitor.md
       - Fuzzy ramp resolver (planned): features/fuzzy-ramp-resolver.md
       - Any-airport data loading: features/any-airport-data.md
