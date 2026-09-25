@@ -1,9 +1,8 @@
 # Controller positions & frequencies
 
 **Available now** (ATIS, Clearance, Ground, Tower, Departure, Approach, Center, and the
-Tower→Departure→Center handoff chain). Approach appears in the frequency directory when
-an airport's own `apt.dat` provides one, but nothing routes traffic through it yet -- see
-[Departure & Center](departure-center.md).
+full gate-to-gate handoff chain -- see [Departure & Center](departure-center.md) and
+[Arrival](arrival.md)).
 
 ## What it does
 
@@ -51,8 +50,30 @@ real Departure climbs you in steps, which isn't modeled yet).
 
 Departure hands off to Center the same way, once you're near that capped altitude --
 see [Departure & Center](departure-center.md) for the details, including how the Center
-frequency itself is chosen and why check-ins are only accepted after a handoff has
-actually fired.
+frequency itself is chosen, Center-to-Center handoffs across a real ARTCC boundary, and
+why check-ins are only accepted after a handoff has actually fired. The same handoff
+chain continues through arrival -- Center to Approach, Approach to Tower, Tower to
+Ground -- see [Arrival](arrival.md).
+
+### Check-in reminders
+
+Every handoff above -- including the one a go-around triggers -- now expects a check-in.
+Go 60 seconds without one on the new frequency and the position that handed you off
+tries again:
+
+```
+"are you with me? contact Seattle Departure one one niner point two"
+```
+
+Silence for another 60 seconds gets one more, more urgent, repeat of the same call.
+After two reminders, nothing further -- there's no lost-comm procedure. Checking in (or,
+on Ground, simply making a taxi request) on the new frequency cancels any reminder still
+pending. The second unanswered reminder also raises a `NO_CHECKIN` event
+(`xatc.atc.conformance_core.RadioRule`), recorded in the [post-flight
+debrief](debrief.md)'s Deviations section the same way a real conformance call would be,
+even though it isn't produced by any of the three [conformance
+monitors](conformance-monitor.md) -- the engine raises it itself, the moment it re-sends
+the second reminder.
 
 ## Wrong-frequency redirects
 
@@ -84,12 +105,8 @@ which airport and `atc.dat` to actually read (`--departure`, `--apt-dat`, `--atc
 
 ## Limitations
 
-- **No arrival or approach logic.** An Approach position exists in the frequency
-  directory once apt.dat provides one, but nothing routes traffic through it -- no
-  vectors, sequencing, approach clearance, or landing clearance yet. See [Any-airport
-  data loading](any-airport-data.md) and the [Roadmap](../roadmap.md).
-- No "are you with me?" reminder if you never check in after a handoff, and no lost-comm
-  behavior.
+- No lost-comm procedure -- two unanswered check-in reminders and the engine simply
+  stops calling (see above).
 - Redirects only cover three intents; everything else on a wrong staffed frequency is
   silence, not a redirect.
 - Single aircraft only -- there's no sequencing or traffic awareness in who owns you.

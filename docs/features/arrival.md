@@ -1,12 +1,13 @@
 # Arrival (descent, approach, landing)
 
-**Available now: gate-to-gate.** Descent, the approach handoff and clearance, the
-landing clearance, and taxi-in to a stand all work end to end. Only the go-around case
-(M4-4) is still open.
+**Available now: gate-to-gate, including a go-around.** Descent, the approach handoff
+and clearance, the landing clearance, taxi-in to a stand, parking, and a missed
+approach if you go around all work end to end.
 
-Arrivals were built in three slices, the same pattern the departure phase used (Tower,
-then Departure, then Center): descent and the STAR clearance first, then the approach
-handoff and clearance, then the landing clearance and taxi-in. All three are done.
+Arrivals were built in four slices, the same pattern the departure phase used (Tower,
+then Departure, then Center): descent and the STAR clearance, the approach handoff and
+clearance, the landing clearance and taxi-in, then go-around/missed-approach handling
+and parking. All four are done -- M4 is complete.
 
 ## Descent (M4-1)
 
@@ -121,7 +122,43 @@ taxi to Charlie one zero via Tango, Kilo, cross runway three
 
 The landing runway itself is exempt from the taxi route's usual runway-crossing
 avoidance, so any *other* runway the route crosses on the way to the stand still gets its
-own "cross runway X" clause.
+own "cross runway X" clause -- and, like a taxi-*out* crossing, has to be read back
+correctly (a new `taxi_in` [readback kind](readback-checking.md)) before the flight is
+considered clear to keep going.
+
+## Go-around and missed approach (M4-4)
+
+Say "going around" (or "missed approach") in `APPROACH` or `LANDING` and ATC actually
+sends you around, instead of just noticing and asking what your intentions are:
+
+```
+roger, fly the published missed approach, contact Portland Approach one one eight
+point one
+```
+
+-- using the approach's own charted missed-approach procedure and altitude when CIFP
+data has one, or a generic "fly runway heading, climb and maintain \<altitude\>" when it
+doesn't. Calling it in while already back on Approach's own frequency (before Tower ever
+took the handoff) skips the "contact" clause and re-sequences you immediately instead:
+
+```
+roger, fly heading two five zero, climb and maintain three thousand, vectors ILS
+runway two eight right approach
+```
+
+Either way, the flight phase drops back to `APPROACH`, the landing clearance is
+cleared, and the whole approach-handoff-and-clearance sequence from above runs again
+for another try -- you get vectored around, cleared for the approach again, handed to
+Tower at the FAF again, and cleared to land again, exactly the same way as the first
+attempt. Calling "going around" outside `APPROACH`/`LANDING` just gets "say again" --
+there's nothing to go around from yet.
+
+## Parking
+
+Once the aircraft actually stops at its cleared stand (or the nearest gate) with the
+parking brake set or the engines shut down, the flight phase becomes `PARKED` again --
+the same phase the flight started in. **Nothing is transmitted.** Real Ground doesn't
+say anything when you park; you're just done.
 
 ## Landing conformance
 
@@ -132,32 +169,33 @@ alongside the existing [ground and airborne rules](conformance-monitor.md):
   clearance on file goes straight to "possible pilot deviation" -- no gentler step first,
   the same way a takeoff without clearance does.
 - **An unreported go-around**: coming down to within 1,000 ft AGL and then climbing back
-  away from the runway at a real climb rate, sustained, without ever having landed --
-  first "say intentions", then "possible pilot deviation" if it keeps climbing away
-  without a word.
+  away from the runway at a real climb rate, sustained, without ever having landed.
 
-Both are spoken from the destination's Tower.
+Both are spoken from the destination's Tower -- except the go-around rule doesn't
+actually say "say intentions" anymore now that a real go-around exists: firing it now
+directly triggers the missed-approach handling above instead, so an unreported go-around
+gets the exact same "fly the published missed approach" treatment as one you called in,
+rather than a callout asking what you're doing.
 
 ## Limitations
 
-- **Go-around handling (M4-4) isn't built yet.** The landing-conformance rule above
-  notices an *unreported* go-around and asks for intentions, but there's no actual
-  go-around clearance, missed-approach procedure, or re-sequencing back into the
-  pattern -- see the [Roadmap](../roadmap.md).
 - No direct-to clearances or crossing restrictions anywhere in the arrival phase.
-- The Center-to-Approach frequency and the Approach/Tower callsigns still come from the
-  same deterministic placeholder rule (a bearing wedge into `atc.dat`'s frequency list)
-  [Departure & Center](departure-center.md) already documents for the enroute handoff --
-  not real ARTCC/TRACON sector geometry.
+- Center's frequency *within* whichever ARTCC facility is currently talking to you --
+  and the Approach/Tower callsigns -- still come from the same deterministic placeholder
+  rule (a bearing wedge into `atc.dat`'s frequency list) [Departure &
+  Center](departure-center.md) documents; not real TRACON/Center sector geometry. *Which*
+  ARTCC facility you're on, though, is real -- see [Departure &
+  Center](departure-center.md#center-to-center-handoffs) for Center-to-Center handoffs
+  crossing an actual ARTCC boundary.
 
 ## Verification
 
-Unit tests (`tests/atc/test_engine_arrival.py`, 32 tests) cover the descent, approach
-handoff and clearance, and landing/taxi-in logic individually, against real KSEA/KPDX
-CIFP and weather data. `tests/atc/test_conformance_landing.py` (9 tests) covers both
-landing-conformance rules. A full scripted KSEA-to-KPDX arrival
-(`tests/scenarios/test_m4_arrival.py`, 7 tests) flies the real engine and the real intent
-parser (no stubs) end to end -- descent, Approach check-in and clearance, Tower check-in
-and landing, rollout, and taxi to a named gate -- and asserts the *exact, complete*
-transmission sequence: any extra or missing call, including a conformance callout that
-shouldn't have fired, fails the test.
+Unit tests (`tests/atc/test_engine_arrival.py`, 50 tests) cover the descent, approach
+handoff and clearance, landing/taxi-in, go-around/missed-approach, and parking logic
+individually, against real KSEA/KPDX CIFP and weather data. `tests/atc/
+test_conformance_landing.py` (9 tests) covers both landing-conformance rules. A full
+scripted KSEA-to-KPDX arrival (`tests/scenarios/test_m4_arrival.py`, 8 tests) flies the
+real engine and the real intent parser (no stubs) end to end -- descent, Approach
+check-in and clearance, Tower check-in and landing, rollout, taxi to a named gate, and
+parking -- and asserts the *exact, complete* transmission sequence: any extra or missing
+call, including a conformance callout that shouldn't have fired, fails the test.

@@ -25,13 +25,17 @@ readback correct, departure frequency one one niner point two
 ## What's checked, and how strictly
 
 `xatc.phraseology.readback.check_readback(issued, kind, pilot_text)` compares a pilot's
-transmission against the `Clearance` ATC actually issued, for six kinds of instruction:
-`ifr_clearance`, `taxi`, `takeoff`, `altitude`, `heading`, `frequency`. Each kind has its
-own required-vs-warning breakdown -- for example, an IFR clearance readback *must*
-include the altitude and squawk code, but the clearance limit and departure frequency
-are only warned about if missing, not rejected outright. A taxi readback must include
-the assigned runway and *every* hold-short instruction it was given, but the full taxi
-route itself is only a warning.
+transmission against the `Clearance` ATC actually issued, for seven kinds of
+instruction: `ifr_clearance`, `taxi`, `taxi_in`, `takeoff`, `altitude`, `heading`,
+`frequency`. Each kind has its own required-vs-warning breakdown -- for example, an IFR
+clearance readback *must* include the altitude and squawk code, but the clearance limit
+and departure frequency are only warned about if missing, not rejected outright. A taxi
+readback must include the assigned runway and *every* hold-short instruction it was
+given, but the full taxi route itself is only a warning. A `taxi_in` readback (Ground's
+taxi-to-parking instruction, once you're on the ground after landing -- see
+[Arrival](arrival.md)) requires *every* runway it crosses on the way to the stand to be
+read back, the same all-required treatment hold-shorts get on the way out; miss one and
+you get *"read back runway crossing"*.
 
 The SID is a special case: leaving it out is only a warning, but naming a *different*
 one is treated as wrong regardless -- read back "Bangr Nine departure" when you were
@@ -69,7 +73,7 @@ again.
 
 ## Limitations
 
-- Only the six kinds above are checked; nothing else (e.g. a wrong-frequency
+- Only the seven kinds above are checked; nothing else (e.g. a wrong-frequency
   acknowledgment) is readback-verified.
 - Takeoff clearances are exempt by design, not an oversight -- a real "cleared for
   takeoff" readback is short enough that a full check adds little value over what the

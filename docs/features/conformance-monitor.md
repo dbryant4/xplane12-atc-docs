@@ -116,12 +116,16 @@ yet for the airborne rules -- only unit tests against synthetic and replayed sta
 | Rule | Fires when | Ladder |
 |---|---|---|
 | **Landing without clearance** | Touching down while arriving, without a landing clearance on file | Straight to "possible pilot deviation" -- no gentler step first, the same treatment a takeoff without clearance gets |
-| **Unreported go-around** | Descending to within 1,000 ft AGL, then climbing back away from the runway at a real, sustained climb rate, without ever having landed | "Say intentions" → "possible pilot deviation" if it keeps climbing away without a word |
+| **Unreported go-around** | Descending to within 1,000 ft AGL, then climbing back away from the runway at a real, sustained climb rate, without ever having landed | Straight into the real missed-approach handling -- see below |
 
-Both are spoken from the destination's Tower. The go-around rule notices an
-*unreported* go-around and asks for it to be reported -- there's no actual go-around
-clearance or missed-approach handling yet (M4-4, still open -- see the
-[Roadmap](../roadmap.md)).
+Both are spoken from the destination's Tower. The go-around rule's escalation ladder
+still exists internally (a gentler "say intentions" step before "possible pilot
+deviation"), but firing it no longer speaks that wording: it's intercepted and sent
+straight into [go-around and missed-approach
+handling](arrival.md#go-around-and-missed-approach-m4-4) instead, the same "fly the
+published missed approach" (or a runway-heading climb) treatment a pilot calling
+"going around" out loud gets -- an unreported go-around is caught and handled exactly
+like a reported one, not just called out.
 
 ### Verification
 
@@ -138,9 +142,15 @@ instead of *"on taxiway Bravo"*). Both are covered by a golden-string test suite
 (`tests/phraseology/test_golden_phraseology.py`) that pins the exact expected wording
 for one example of each transmission type, citing the FAA paragraph it follows.
 
+A fourth, related event -- **no check-in after a handoff** -- isn't a rule on any of
+these three monitors; the engine raises it itself (`xatc.atc.conformance_core.RadioRule
+.NO_CHECKIN`) the same moment it re-transmits a handoff reminder. See [Controller
+positions & frequencies](controller-positions.md#handoffs) for that mechanism -- it
+feeds the [debrief](debrief.md) the same way a real conformance event does, without
+being one.
+
 ## Limitations
 
-- **M4-4 (go-around) isn't built.** See above.
 - **Heading after "resume own navigation" or a direct-to.** The engine never assigns a
   heading today, so there's nothing for the heading rule to clear in that case yet.
 

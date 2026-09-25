@@ -56,7 +56,38 @@ flight phase to `ENROUTE`.
 right phase isn't enough by itself. The engine also checks that
 `Clearance.expected_next_freq_khz` still points at the exact frequency you're checking
 in on, so a check-in transmission heard too early (before Departure's own handoff has
-fired) doesn't jump the phase; it gets "say again" instead.
+fired) doesn't jump the phase; it gets "say again" instead. A handoff also starts a
+[check-in reminder](controller-positions.md#check-in-reminders) if you never answer it.
+
+## Center-to-Center handoffs
+
+Fly far enough enroute or on a descent and you can cross into a genuinely different
+ARTCC's airspace -- Center now hands you off across that real boundary, not just once
+for the whole flight:
+
+```
+"contact Oakland Center one two six point four"
+```
+
+*Which* Center facility you're on is real: `artcc_for_position` re-checks the aircraft's
+position against `atc.dat`'s actual Center polygons every tick, and a handoff fires once
+a genuinely different facility has covered the aircraft for a sustained 30 seconds (so
+briefly clipping a border doesn't trigger one). *Within* one facility, an altitude band
+change (crossing into a different `FT`/`FL` block that happens to use a different
+frequency) hands off the same way, immediately. A same-facility, same-band frequency
+change from the bearing-wedge rule alone (see below) only ever triggers while `ENROUTE`
+-- never while descending -- and only after 10 minutes on the current one, so a track
+that clips several wedges close together doesn't chatter. Once you're within 60 nm of
+the destination and descending, Center stops handing off sector to sector at all --
+Approach is next.
+
+Checking in on the new Center repeats your assigned altitude only if you didn't already
+report it within 300 ft:
+
+```
+"Oakland Center, roger"                                   (you reported the assigned altitude)
+"Oakland Center, roger, maintain flight level three five zero"   (you didn't)
+```
 
 ## Configuration
 
@@ -74,10 +105,9 @@ fixtures) and how the departure airport itself is chosen.
   then straight to full cruise at Center) -- a real Departure/Center climbs an aircraft
   incrementally.
 - No direct-to clearances or crossing restrictions.
-- The Center frequency-selection rule is a deterministic placeholder (a bearing wedge),
-  not real ARTCC sector geometry -- there's no source data for actual sector boundaries
-  in `atc.dat`.
-- Center does start the arrival down with a "descend via the STAR" (or a plain altitude)
-  call once you're getting close to the destination -- see [Arrival](arrival.md) --
-  but nothing past that first call exists yet: no approach handoff, approach clearance,
-  or landing clearance.
+- *Which* ARTCC facility is real (see above), but the frequency chosen *within* it is
+  still the same deterministic placeholder (a bearing wedge from the block's polygon
+  centroid) -- there's no source data for actual named-sector boundaries inside one
+  facility in `atc.dat`, ARTCC or TRACON.
+- Center starts the aircraft down for arrival and hands off all the way through landing
+  and taxi-in -- see [Arrival](arrival.md) for the full descent-through-parking chain.
