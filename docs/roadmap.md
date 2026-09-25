@@ -21,16 +21,22 @@ into the departure phase:
 - An optional Nova Lite LLM fallback for understanding unclear transmissions --
   switchable at runtime (disabled / backup / primary), never involved in generating
   what ATC actually says. Fully wired in, not just scaffolding.
-- The ground rules for a [conformance monitor](features/conformance-monitor.md) --
-  taxiing without clearance, straying off the assigned route, runway incursions, and
-  takeoff without clearance, each with a real escalation ladder and a strictness
-  setting, verified against a real recorded flight with zero false positives. Not yet
-  connected to the engine, so none of it reaches a pilot today.
+- A [conformance monitor](features/conformance-monitor.md), wired into the engine and
+  speaking today -- ground rules (taxiing without clearance, straying off the assigned
+  route, runway incursions, takeoff without clearance) and airborne rules (altitude,
+  heading, speed, squawk against the current clearance), each with a real escalation
+  ladder, a shared strictness setting, a selectable altitude source (Mode C by default,
+  matching what a real controller's radar shows), and a 91.117(d) heavy-jet speed
+  exception -- all adjustable from the radio panel's options screen.
 - A [fuzzy ramp/parking resolver](features/fuzzy-ramp-resolver.md) -- understands a
   spoken ramp or gate reference, tolerant of ASR mistakes, weighted by real distance
   from the aircraft. Also not yet connected to anything: [taxi
   routing](features/taxi-routing.md) still always starts from the aircraft's live sim
   position regardless.
+- [Any-airport data loading](features/any-airport-data.md) -- locating a real X-Plane
+  installation and reading its own apt.dat/atc.dat directly (any scenery pack, not just
+  the bundled KSEA/ZSE fixtures), so `xatc` can eventually fly anywhere its scenery
+  covers. The data-loading layer works; the engine itself still always departs KSEA.
 
 See [Features](features/index.md) for the detailed, per-feature "available now" vs.
 "planned" breakdown.
@@ -39,16 +45,18 @@ See [Features](features/index.md) for the detailed, per-feature "available now" 
 
 Roughly in the order the project is tackling it:
 
-- **Wire the conformance monitor into the engine.** The ground rules, escalation
-  ladder, and strictness levels are already built and well-tested (see [Conformance
-  monitor](features/conformance-monitor.md)) -- what's left is calling it from
-  `on_tick`, routing its events through phraseology for real spoken wording, and
-  deciding a few open design questions (an explicit runway-crossing-clearance field, an
-  IMC/ILS-hold flag, exactly how severity maps to priority).
-- **Wire the fuzzy ramp resolver into taxi routing.** Also already built and tested
-  (see [Fuzzy ramp resolver](features/fuzzy-ramp-resolver.md)) -- what's left is having
-  the engine actually pass a pilot's spoken location into it instead of always using the
-  sim position outright.
+- **Wire any-airport data loading into the engine.** The data layer -- locating an
+  X-Plane install, reading any scenery's apt.dat/atc.dat, finding the nearest airport,
+  and resolving the ARTCC for a position (see [Any-airport data
+  loading](features/any-airport-data.md)) -- is built and tested. What's left is having
+  the engine actually depart from the nearest airport (a `--departure` override plus
+  `nearest_airport`) and hand off to the right Center (`artcc_for_position`) instead of
+  the hardcoded KSEA/KZSE, plus proving station-name and magnetic-variation handling
+  against a second real airport fixture.
+- **Wire the fuzzy ramp resolver into taxi routing.** Already built and tested (see
+  [Fuzzy ramp resolver](features/fuzzy-ramp-resolver.md)) -- what's left is having the
+  engine actually pass a pilot's spoken location into it instead of always using the sim
+  position outright.
 - **Approach and landing.** STAR/vectors, an approach clearance, a landing clearance,
   and the handoff back to Ground once you're clear of the runway. None of this exists
   yet -- the engine currently has no logic past the departure phase.
@@ -57,9 +65,6 @@ Roughly in the order the project is tackling it:
 - **CIFP-based SID selection.** Clearances currently only echo a SID from your filed
   flight plan; there's no procedure data to let ATC actually assign one.
 - **SimBrief flight-plan import**, instead of the current CLI-flag-only flight plan.
-- **Any-airport generalization.** The engine, runway selector, and taxi router are all
-  airport-agnostic in design, but magnetic variation and a couple of other constants are
-  currently hardcoded for KSEA specifically.
 - **Distance-based radio realism** -- signal strength and noise scaling with distance
   and line-of-sight to the controlling facility, so a distant Center sector sounds
   scratchier than Tower on the ramp.

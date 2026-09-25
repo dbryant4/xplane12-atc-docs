@@ -16,7 +16,8 @@ plan, and marked by what actually runs today.
 | [VHF radio effect](radio-fx.md) | Available now |
 | [Intent parsing & LLM modes](intent-parsing.md) | Available now (rules parser, Nova Lite fallback, and the options screen) |
 | [Departure & Center](departure-center.md) | Available now, through initial enroute climb |
-| [Conformance monitor](conformance-monitor.md) | In progress -- ground rules built, not yet wired into the engine |
+| [Conformance monitor](conformance-monitor.md) | Available now -- ground and airborne rules, both wired into the engine |
 | [Fuzzy ramp resolver](fuzzy-ramp-resolver.md) | In progress -- built, not yet wired into taxi routing |
+| [Any-airport data loading](any-airport-data.md) | In progress -- data loading works, the engine still only departs KSEA |
 
 See the [Roadmap](../roadmap.md) for what's coming next and in what order.
