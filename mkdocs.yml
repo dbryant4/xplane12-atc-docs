@@ -64,4 +64,5 @@ nav:
       - Emergencies and special squawks: features/emergencies.md
       - Pushback: features/pushback.md
       - VFR pattern work: features/vfr-pattern.md
+      - VFR flight following: features/vfr-flight-following.md
   - Roadmap: roadmap.md

@@ -74,6 +74,11 @@ code) restarts that rule's ladder. Callouts are spoken from whichever position o
 aircraft right now: Tower, Departure, or the dynamically created Center/Approach
 position once a handoff has actually happened.
 
+A VFR flight bound for another airport (not [pattern work](vfr-pattern.md)) is the one
+exception: with no clearance to judge it against, none of these rules apply at all until
+[flight following](vfr-flight-following.md) is requested and radar contact is
+established -- and they stop again the moment service is terminated.
+
 ### What altitude ATC judges you on
 
 A real controller doesn't see the sim's true geometric altitude -- their radar shows
@@ -149,7 +154,7 @@ work](vfr-pattern.md), spoken from Tower:
 
 | Rule | Fires when | Ladder |
 |---|---|---|
-| **Pattern altitude** | More than the tolerance off field elevation + 1,000 ft, once established at it this circuit -- suspended from the landing clearance onward, so a normal climb-out or descent to land never fires it | Gentle → firm → "possible pilot deviation" |
+| **Pattern altitude** | More than the tolerance off field elevation + 1,000 ft AGL (piston) or 1,500 ft (turbine/jet), once established at it this circuit -- suspended from the landing clearance onward, so a normal climb-out or descent to land never fires it | Gentle → firm → "possible pilot deviation" |
 | **Left the pattern** | Farther than the pattern limit from the airport with no call | "say intentions" straight to "possible pilot deviation" -- no gentler step first |
 
 Landing without a clearance in the pattern reuses [landing

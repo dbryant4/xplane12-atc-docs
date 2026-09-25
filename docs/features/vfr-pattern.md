@@ -22,7 +22,8 @@ file, it defaults to **left**, the standard direction (AIM 4-3-3).
 
 Once you're airborne (not just cleared -- actually off the ground), the phase becomes
 **PATTERN** -- there's no Departure handoff for pattern work, you stay with Tower the
-whole time. Climbing through 400 ft AGL, Tower says **"report midfield downwind."**
+whole time. Climbing through 40% of the way to pattern altitude -- 400 ft AGL for a
+piston, 600 ft for a turbine or jet -- Tower says **"report midfield downwind."**
 
 Call it out -- *"midfield right downwind, touch and go"* or *"...full stop"* -- and
 Tower replies:
@@ -47,7 +48,7 @@ monitor](conformance-monitor.md), spoken from Tower:
 
 | Rule | Fires when | Ladder |
 |---|---|---|
-| **Pattern altitude** | More than the tolerance (200 ft at normal strictness) off field elevation + 1,000 ft, once established at it this circuit -- suspended once you're cleared to land, so climb-out and the descent to land don't trigger it | *"check altitude, pattern altitude one thousand"* → *"maintain pattern altitude, one thousand"* → "possible pilot deviation" |
+| **Pattern altitude** | More than the tolerance (200 ft at normal strictness) off field elevation + **1,000 ft AGL for a piston, 1,500 ft for a turbine or jet** (by ICAO type designator; unknown types default to piston), once established at it this circuit -- suspended once you're cleared to land, so climb-out and the descent to land don't trigger it | *"check altitude, pattern altitude one thousand"* → *"maintain pattern altitude, one thousand"* → "possible pilot deviation" |
 | **Leaving the pattern** | Farther than the pattern limit from the airport (3 nm normal, 4 relaxed, 2.5 checkride) with no call | *"say intentions"* → "possible pilot deviation" (no gentler first step) |
 | **Landing without a clearance** | Touching down in the pattern without a landing clearance on file -- the same rule an [arrival](arrival.md) landing without clearance gets | Straight to "possible pilot deviation" |
 
@@ -64,3 +65,6 @@ never fires.
 - **Class B/C/D entry calls and sequencing.** With one aircraft in the pattern, it's
   always "number one" -- there's no traffic to sequence behind, and no airspace-entry
   clearance beyond what Tower already handles.
+
+A VFR flight whose destination is a *different* airport doesn't fly the pattern at all
+-- see [VFR flight following](vfr-flight-following.md).

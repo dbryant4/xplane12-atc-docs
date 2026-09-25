@@ -30,5 +30,6 @@ plan, and marked by what actually runs today.
 | [Emergencies and special squawks](emergencies.md) | Available now (7500/7600/7700) |
 | [Pushback](pushback.md) | Available now |
 | [VFR pattern work](vfr-pattern.md) | Available now, at a towered airport (M6-1) |
+| [VFR flight following](vfr-flight-following.md) | Available now (M6-2) |
 
 See the [Roadmap](../roadmap.md) for what's coming next and in what order.
