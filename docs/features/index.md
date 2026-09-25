@@ -17,9 +17,9 @@ plan, and marked by what actually runs today.
 | [Voice (Transcribe, Polly, PTT)](voice.md) | Available now |
 | [VHF radio effect](radio-fx.md) | Available now (with distance-based signal strength) |
 | [Intent parsing & LLM modes](intent-parsing.md) | Available now (rules parser, Nova Lite fallback, and the options screen) |
-| [Departure & Center](departure-center.md) | Available now, through initial enroute climb |
-| [Arrival](arrival.md) | Available now, gate to gate (go-around not yet handled) |
-| [Conformance monitor](conformance-monitor.md) | Available now -- ground and airborne rules, both wired into the engine |
+| [Departure & Center](departure-center.md) | Available now, including Center-to-Center ARTCC handoffs |
+| [Arrival](arrival.md) | Available now, gate to gate, including go-around |
+| [Conformance monitor](conformance-monitor.md) | Available now -- ground, airborne and landing rules, all wired into the engine |
 | [Fuzzy ramp resolver](fuzzy-ramp-resolver.md) | Available now for taxi-in (M4-3); not yet wired into taxi-out |
 | [Any-airport data loading](any-airport-data.md) | Available now |
 | [SimBrief import](simbrief-import.md) | Available now |

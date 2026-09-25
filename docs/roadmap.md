@@ -70,15 +70,18 @@ into the departure phase:
   handful of local fix names that don't read naturally letter by letter -- see [SID &
   departure procedures](features/sid-departure-procedures.md#pronunciation) and
   [Conformance monitor](features/conformance-monitor.md).
-- **Windows setup** (`xatc doctor`, `scripts/setup-windows.ps1`, `xatc-run.cmd`) -- see
-  [Getting Started](getting-started.md#running-on-windows).
+- **Windows setup** (`xatc doctor`, `scripts/setup-windows.ps1`, `xatc-run.cmd`) and a
+  hands-on **`xatc smoke --live`** check against a real running X-Plane instance (the
+  Web API, COM tuning, live weather, a joystick-button watch, and optionally a real
+  Polly phrase through the speakers) -- see [Getting
+  Started](getting-started.md#running-on-windows).
 
 This closes out the departure-phase milestone in full: ground ops, a full departure and
 enroute handoff chain, a real CIFP-assigned SID, and a checked readback, all the way
 through the initial enroute climb.
 
-**[Arrivals (M4)](features/arrival.md) are done, gate to gate**, in the same
-three-slice pattern the departure phase used (Tower, then Departure, then Center):
+**[Arrivals (M4) are complete](features/arrival.md), gate to gate**, in four slices,
+the same pattern the departure phase used (Tower, then Departure, then Center):
 
 - **M4-1: descent and the STAR clearance.** Center starts the aircraft down a little
   before its own top of descent, with a real CIFP-assigned STAR and transition when one
@@ -91,8 +94,22 @@ three-slice pattern the departure phase used (Tower, then Departure, then Center
 - **M4-3: landing clearance, runway exit, and taxi-in.** Approach hands off to Tower at
   the approach's charted final approach fix; Tower clears to land, with wind (7110.65
   3-10-5); once clear of the runway, Tower hands off to Ground, which taxis to a named
-  stand or the nearest gate. Landing-specific conformance rules (landing without
-  clearance, an unreported go-around) round it out.
+  stand or the nearest gate, with every runway crossing on the way read back the same
+  as a taxi-out crossing is.
+- **M4-4: go-around and parking.** Call "going around" (or don't -- the landing
+  conformance monitor catches an unreported one too) and ATC actually sends you around
+  with a real missed-approach clearance, then re-sequences you for another attempt at
+  the same approach. Reach your stand with the parking brake set or the engines off and
+  the flight goes quiet -- real Ground doesn't say anything when you park.
+
+Two more things landed alongside M4: **check-in reminders** (any handoff -- Tower,
+Departure, Center, Approach, Ground, including after a go-around -- gets an "are you
+with me?" repeat after 60 seconds of silence, then one more, more urgent, repeat after
+another 60; see [Controller positions & frequencies](features/controller-positions.md#check-in-reminders)),
+and **Center-to-Center handoffs** (crossing into a genuinely different ARTCC's real
+airspace, from `atc.dat`'s own Center polygons, now hands you off across that boundary
+instead of staying on one facility for the whole flight -- see [Departure &
+Center](features/departure-center.md#center-to-center-handoffs)).
 
 See [Features](features/index.md) for the detailed, per-feature "available now" vs.
 "planned" breakdown.
@@ -101,9 +118,20 @@ See [Features](features/index.md) for the detailed, per-feature "available now" 
 
 Roughly in the order the project is tackling it:
 
-- **M4-4: go-around.** The landing-conformance rule already notices an *unreported*
-  go-around and asks for intentions, but there's no actual go-around clearance, missed
-  approach handling, or re-sequencing back into the pattern yet.
+- **M5-1: ATIS-letter check on initial contact** (in review). If the pilot reports an
+  outdated ATIS letter (or none at all) when first checking in with Clearance, Ground or
+  Approach, ATC adds "information &lt;current&gt; is current, &lt;altimeter&gt;" or
+  "advise you have information &lt;X&gt;" (7110.65 2-9-3) -- the letter is already
+  tracked, just not checked against yet.
+- **M5-2: pilot requests en route.** "Request direct &lt;fix&gt;", "request higher/
+  lower", "request flight level &lt;n&gt;", and weather deviations, each with a real
+  ATC response instead of going unhandled.
+- **M5-3: emergencies and special squawks.** Mayday/pan-pan, and squawks 7700/7600/7500,
+  each with the FAA-style response and priority handling this project doesn't model at
+  all yet.
+- **M5-4: pushback on Ground.** A `PUSHBACK` phase and "push back approved, tail
+  &lt;direction&gt;" before taxi, for a gate departure that doesn't already start facing
+  out.
 - **Wire the fuzzy ramp resolver into taxi routing for departure.** Taxi-*in* (M4-3)
   already resolves a spoken stand; taxi-*out* (the original departure-phase gap) still
   always starts from the aircraft's live sim position regardless of what the pilot says

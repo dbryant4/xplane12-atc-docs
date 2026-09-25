@@ -128,6 +128,29 @@ a pass/warn/fail line with a fix hint, plus a summary count. `--check-aws` addit
 makes one free, read-only call each to Transcribe, Polly and Bedrock (Nova Lite) to
 confirm the account actually has access, not just that credentials resolve.
 
+### `xatc smoke --live`
+
+`xatc doctor` checks static setup; `xatc smoke --live` is the hands-on follow-up, run
+against a real, running X-Plane session (an aircraft actually loaded) to sanity-check
+the parts doctor can't:
+
+```powershell
+uv run xatc smoke --live              # add --voice to also test the speaker path
+```
+
+It samples live `AircraftState` for a few seconds (printing every field, and flagging
+`pressure_altitude_ft`/`indicated_altitude_ft` by name if the sim build doesn't expose
+them), round-trips a COM1 standby frequency change and back, pulls one live weather
+reading, and watches X-Plane's raw `sim/joystick/joystick_button_values` dataref for a
+few seconds so you can confirm which button index your yoke or joystick actually reports
+(useful alongside [joystick PTT](features/joystick-ptt.md)'s own `xatc ptt-probe`, and a
+step toward reading PTT straight from X-Plane with no extra library at all -- see
+joystick-ptt.md's own note on that). With `--voice`, it also sends one real phrase
+through Polly and the VHF radio effect to your actual speakers -- Polly and the effect
+chain only, no Transcribe or microphone involved. Like `xatc doctor`, it prints a
+pass/warn/fail report and never builds an `AtcEngine` -- it's a connectivity and
+data-availability check, not a flight.
+
 ## 5. Run it
 
 From the repository root:
