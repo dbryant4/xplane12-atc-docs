@@ -19,7 +19,7 @@ plan, and marked by what actually runs today.
 | [Intent parsing & LLM modes](intent-parsing.md) | Available now (rules parser, Nova Lite fallback, and the Settings page's ATC tab) |
 | [Departure & Center](departure-center.md) | Available now, including Center-to-Center ARTCC handoffs |
 | [Arrival](arrival.md) | Available now, gate to gate, including go-around |
-| [Conformance monitor](conformance-monitor.md) | Available now -- ground, airborne and landing rules, all wired into the engine |
+| [Conformance monitor](conformance-monitor.md) | Available now -- ground, airborne, landing and pattern rules, all wired into the engine |
 | [Fuzzy ramp resolver](fuzzy-ramp-resolver.md) | Available now for taxi-in (M4-3); not yet wired into taxi-out |
 | [Any-airport data loading](any-airport-data.md) | Available now |
 | [SimBrief import](simbrief-import.md) | Available now |
@@ -29,5 +29,6 @@ plan, and marked by what actually runs today.
 | [En-route pilot requests](enroute-requests.md) | Available now (direct-to, altitude, deviation, unable) |
 | [Emergencies and special squawks](emergencies.md) | Available now (7500/7600/7700) |
 | [Pushback](pushback.md) | Available now |
+| [VFR pattern work](vfr-pattern.md) | Available now, at a towered airport (M6-1) |
 
 See the [Roadmap](../roadmap.md) for what's coming next and in what order.

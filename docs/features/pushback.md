@@ -17,8 +17,15 @@ parked heading.
 
 Pushback has to be requested -- it's never automatic -- and it's only available while
 the aircraft is still on the ground and hasn't started taxiing yet: ask after taxi has
-begun and you'll get *"say again"* instead. You don't need an IFR clearance in hand
-first; pushback and the clearance readback can happen in either order.
+begun and you'll get *"say again"* instead.
+
+**IFR flights need their clearance first.** Ask for pushback (or taxi) before you've
+gotten your IFR clearance and Ground won't approve it -- you'll get *"clearance on one
+two eight point zero"* (Clearance Delivery's frequency) instead, and nothing changes
+until you go get it. A field with no separate Clearance Delivery has Ground issue the
+clearance itself rather than send you somewhere that doesn't exist. **VFR flights skip
+this entirely** -- there's no IFR clearance to wait for, so Ground approves pushback and
+taxi straight away.
 
 ## Conformance tie-in
 
@@ -28,7 +35,5 @@ clearance rule](conformance-monitor.md#ground-conformance) that catches an unaut
 taxi -- slow pushback creep stays under the taxi *speed* threshold, but not this
 distance check. Once pushback (or taxi) is actually approved, the check stops applying.
 
-## Limitations
-
-- Pushback doesn't currently require an IFR clearance to already be issued -- a
-  "clearance first" requirement is queued as a follow-up, not yet built.
+See also: [VFR pattern work](vfr-pattern.md), which always uses this no-clearance-needed
+Ground path.

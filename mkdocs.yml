@@ -63,4 +63,5 @@ nav:
       - En-route pilot requests: features/enroute-requests.md
       - Emergencies and special squawks: features/emergencies.md
       - Pushback: features/pushback.md
+      - VFR pattern work: features/vfr-pattern.md
   - Roadmap: roadmap.md

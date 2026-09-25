@@ -19,7 +19,16 @@ Two related codes get their own handling:
 
 A squawk code is only answered once, the first time you dial it in -- leaving it set
 doesn't repeat the call. Declaring an emergency by voice or by squawk both count as the
-same event, so whichever comes first is the one that triggers the response.
+same event, so whichever comes first is the one that triggers the response. A special
+code only counts with the transponder **on or in ALT** -- dialing 7700 in while it's off
+or in standby isn't seen, the same as a real controller's radar.
+
+## Cancelling
+
+Say *"cancel mayday,"* *"cancel emergency,"* or *"cancelling pan-pan"* to end it -- ATC
+answers with a plain *"roger,"* and every suppressed conformance callout starts speaking
+again immediately (unless a special squawk is still dialed in, which keeps them quiet on
+its own).
 
 ## Everything else goes quiet
 
@@ -32,10 +41,6 @@ squawk" conformance violation.
 
 ## Limitations
 
-- Detection isn't gated on transponder mode -- squawking 7700 with the transponder off
-  or in standby still triggers the response today.
-- There's no way to cancel an emergency once declared (voice or squawk) -- it stays
-  active, and callouts stay suppressed, for the rest of the flight.
 - No automated test exercises declaring an emergency *during* a pushback specifically,
   though the code checks for one ahead of the pushback-acknowledgement shortcut, so it
   takes priority regardless of phase.

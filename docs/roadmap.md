@@ -15,7 +15,7 @@ covers, with a deterministic engine deciding every word ATC says.
 | **M3: departure** | ✅ done | [Tower takeoff clearance](features/tower-clearance.md); [Tower → Departure → Center](features/departure-center.md); a CIFP-assigned [SID](features/sid-departure-procedures.md); [readback checking](features/readback-checking.md); the [conformance monitor](features/conformance-monitor.md) |
 | **M4: arrival** | ✅ done | [Descent via a STAR, approach clearance, landing clearance, taxi-in, go-around and parking](features/arrival.md) |
 | **M5: realism** | ✅ done | ATIS-letter checks, en-route pilot requests, emergencies and special squawks, pushback (details below) |
-| **M6: VFR** | ⏭ next | Pattern work at towered airports, then VFR flight following |
+| **M6: VFR** | 🔶 M6-1 done | Pattern work at a towered airport (M6-1, details below); VFR flight following next (M6-2) |
 
 ### M5: the most common "real ATC" interactions
 - **ATIS-letter check.** Report an old letter on first contact with Clearance, Ground or
@@ -27,13 +27,27 @@ covers, with a deterministic engine deciding every word ATC says.
   - "request higher / lower / flight level &lt;n&gt;" gets a new altitude.
   - Weather deviations are approved with "advise when able to proceed direct …".
   - "unable" takes back the last instruction and restates the one before it.
-- **Emergencies.** "Mayday" or "pan-pan" (or squawking 7700) gets "say souls on board and
-  fuel remaining". 7600 (lost comms) gets "if you hear this transmission, ident". 7500
-  gets one discreet verification. Conformance callouts go quiet during an emergency but
-  are still logged for the [debrief](features/debrief.md).
+- **Emergencies.** "Mayday" or "pan-pan" (or squawking 7700, transponder on or in ALT)
+  gets "say souls on board and fuel remaining". 7600 (lost comms) gets "if you hear this
+  transmission, ident". 7500 gets one discreet verification. "Cancel mayday" ends it and
+  restores conformance callouts, which otherwise go quiet during an emergency -- still
+  logged for the [debrief](features/debrief.md#the-markdown-summary)'s own Radio events
+  section.
 - **Pushback.** "request pushback" gets "push back approved, tail &lt;direction&gt;". The
   direction comes from the taxilane behind your stand and which way it leads to the
-  departure runway.
+  departure runway. An IFR flight needs its clearance first -- ask before you have it
+  and Ground answers "clearance on &lt;frequency&gt;" instead.
+
+### M6-1: VFR pattern work at a towered airport
+- **Set VFR** on the Settings Flight tab with the destination the same as departure (ADR
+  0008), and Ground taxis you out with no IFR clearance at all.
+- **Closed traffic.** "cleared for takeoff, make right closed traffic" -- the side comes
+  from the airport's own `1101` pattern data, left by default.
+- **The circuit.** Climb through 400 ft and Tower says "report midfield downwind"; call
+  it and get "cleared for the option" (touch-and-go/stop-and-go/option) or "cleared to
+  land" (full stop, the default) -- "number one" either way, since it's always just you.
+- **Pattern-altitude and leaving-the-pattern conformance**, plus landing-without-
+  clearance reused for every circuit -- see [VFR pattern work](features/vfr-pattern.md).
 
 ### Also built along the way
 - **[Any airport](features/any-airport-data.md).** Airport, procedure and airspace data
@@ -59,20 +73,10 @@ See [Features](features/index.md) for the per-feature "available now" breakdown.
 
 ## What's next
 
-1. **Small follow-ups**, happening now:
-   - a "Radio events" section in the debrief
-   - "cancel mayday" / "cancel pan-pan"
-   - special squawk codes only count while the transponder is on
-   - Ground won't approve pushback or taxi before you have your IFR clearance
-     ("clearance on one two eight point zero")
-2. **M6-1: VFR pattern work** at a towered airport. It starts with a design decision
-   (ADR 0008) on how a flight is marked VFR. Then: taxi without an IFR clearance,
-   "cleared for takeoff, make left closed traffic", "report midfield downwind",
-   "cleared for the option" or "cleared to land", and pattern-altitude conformance.
-3. **M6-2: VFR flight following.** "request flight following to &lt;airport&gt;" gets a
+1. **M6-2: VFR flight following.** "request flight following to &lt;airport&gt;" gets a
    squawk and radar contact, then handoffs, then "radar service terminated, squawk VFR"
    near the destination.
-4. **First live flights on the Windows PC**: a real KSEA departure recording to replace
+2. **First live flights on the Windows PC**: a real KSEA departure recording to replace
    the synthetic scenario tests, and confirming joystick PTT and the new altitude
    datarefs on real hardware.
 
