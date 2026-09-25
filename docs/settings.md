@@ -46,7 +46,7 @@ The flight plan xatc builds your clearances from. Changes are **live while parke
 
 | Setting | Default | Flag | What it does |
 |---|---|---|---|
-| **Flight rules** (`flight_plan.flight_rules`) | IFR | `--flight-rules` | **IFR** flies a full clearance-to-landing flight. **VFR**, with destination set the same as departure, flies [pattern work](features/vfr-pattern.md) at a towered airport instead -- see the hint on the toggle itself. |
+| **Flight rules** (`flight_plan.flight_rules`) | IFR | `--flight-rules` | **IFR** flies a full clearance-to-landing flight. **VFR** with destination = departure flies [pattern work](features/vfr-pattern.md); VFR to another airport departs with "frequency change approved" and can request [flight following](features/vfr-flight-following.md) -- see the hint on the toggle itself. |
 | **Source** (`flight_plan.source`) | Manual | — | **Manual** uses the fields below. **SimBrief** fetches your latest OFP; use *Preview* to check it, then *Use this plan*. |
 | **SimBrief user** (`flight_plan.simbrief_user`) | blank | `--simbrief-user` | Your SimBrief username or numeric user ID. It's not a secret. |
 | **Callsign** (`flight_plan.callsign`) | blank | `--callsign` | As filed, e.g. `N547GA` or `ASA123`. **Blank uses the sim's tail number**, so normally you never type it. |
