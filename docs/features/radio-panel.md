@@ -2,6 +2,10 @@
 
 **Available now.**
 
+![The xatc radio panel mid-session at KSEA](../assets/radio-panel.png)
+
+*The radio panel after a clearance and taxi exchange at KSEA: COM2 is transmitting on Seattle Ground, the Status section shows what's been issued (squawk, runway 16L, taxi via B, hold short of 16L), and the transcript shows each pilot call and ATC reply, including the readback checks.*
+
 ## What it does
 
 A local web app (FastAPI + one WebSocket) serves a single, dependency-free HTML/JS
