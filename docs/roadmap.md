@@ -60,20 +60,39 @@ into the departure phase:
   missing readback item is restated but no longer blocks the flight from advancing, so a
   garbled ASR transcript can't get a pilot stuck in a loop (see [Readback
   checking](features/readback-checking.md)).
+- **[Joystick/yoke push-to-talk](features/joystick-ptt.md)** (`--ptt-joystick`, `xatc
+  ptt-probe`) -- a hardware PTT button alongside the on-screen button and the browser's
+  keyboard binding. Windows only for now.
+- **A phraseology audit against FAA JO 7110.65** -- a golden-string test suite citing the
+  exact paragraph each piece of wording follows, which caught and fixed two real bugs
+  (an airborne conformance callout reading raw digits instead of spoken numbers, and a
+  ground callout reading a bare taxiway letter) plus added pronunciation overrides for a
+  handful of local fix names that don't read naturally letter by letter -- see [SID &
+  departure procedures](features/sid-departure-procedures.md#pronunciation) and
+  [Conformance monitor](features/conformance-monitor.md).
+- **Windows setup** (`xatc doctor`, `scripts/setup-windows.ps1`, `xatc-run.cmd`) -- see
+  [Getting Started](getting-started.md#running-on-windows).
 
 This closes out the departure-phase milestone in full: ground ops, a full departure and
 enroute handoff chain, a real CIFP-assigned SID, and a checked readback, all the way
 through the initial enroute climb.
 
-**Arrivals (M4) are underway**, in the same three-slice pattern the departure phase
-used (Tower, then Departure, then Center):
+**[Arrivals (M4)](features/arrival.md) are done, gate to gate**, in the same
+three-slice pattern the departure phase used (Tower, then Departure, then Center):
 
-- **M4-1, done: [descent and the STAR clearance](features/arrival.md).** Center starts
-  the aircraft down a little before its own top of descent, with a real CIFP-assigned
-  STAR and transition when one fits ("descend via the Kratr Three arrival, Buwzo
-  transition") or a plain altitude when it doesn't, followed by the destination's ATIS
-  letter and altimeter.
-- **M4-2 and M4-3: not started** -- see What's next.
+- **M4-1: descent and the STAR clearance.** Center starts the aircraft down a little
+  before its own top of descent, with a real CIFP-assigned STAR and transition when one
+  fits ("descend via the Kratr Three arrival, Buwzo transition") or a plain altitude
+  when it doesn't, followed by the destination's ATIS letter and altimeter.
+- **M4-2: approach handoff and approach clearance.** Center hands off to the
+  destination's Approach position around 40 nm out (or on reaching the STAR's last fix);
+  Approach gives the altimeter, then vectors or "expect &lt;approach&gt;", then the
+  actual approach clearance (7110.65 4-8-1) once established.
+- **M4-3: landing clearance, runway exit, and taxi-in.** Approach hands off to Tower at
+  the approach's charted final approach fix; Tower clears to land, with wind (7110.65
+  3-10-5); once clear of the runway, Tower hands off to Ground, which taxis to a named
+  stand or the nearest gate. Landing-specific conformance rules (landing without
+  clearance, an unreported go-around) round it out.
 
 See [Features](features/index.md) for the detailed, per-feature "available now" vs.
 "planned" breakdown.
@@ -82,17 +101,13 @@ See [Features](features/index.md) for the detailed, per-feature "available now" 
 
 Roughly in the order the project is tackling it:
 
-- **M4-2: approach handoff and approach clearance.** Center hands off to the
-  destination's Approach position around 40 nm out (or on reaching the STAR's last
-  fix); Approach gives the altimeter, then vectors or "expect &lt;approach&gt;", then a
-  clearance once established on the approach course. A new `APPROACH` phase. Not started.
-- **M4-3: tower landing clearance, runway exit, and taxi-in.** Approach hands off to
-  Tower near the runway; Tower clears to land; rollout and exit move to `TAXI_IN`, and
-  Ground gives a taxi-in route to parking. Not started.
-- **Wire the fuzzy ramp resolver into taxi routing.** Already built and tested (see
-  [Fuzzy ramp resolver](features/fuzzy-ramp-resolver.md)) -- what's left is having the
-  engine actually pass a pilot's spoken location into it instead of always using the sim
-  position outright.
+- **M4-4: go-around.** The landing-conformance rule already notices an *unreported*
+  go-around and asks for intentions, but there's no actual go-around clearance, missed
+  approach handling, or re-sequencing back into the pattern yet.
+- **Wire the fuzzy ramp resolver into taxi routing for departure.** Taxi-*in* (M4-3)
+  already resolves a spoken stand; taxi-*out* (the original departure-phase gap) still
+  always starts from the aircraft's live sim position regardless of what the pilot says
+  -- see [Fuzzy ramp resolver](features/fuzzy-ramp-resolver.md).
 
 ## Where it's heading
 

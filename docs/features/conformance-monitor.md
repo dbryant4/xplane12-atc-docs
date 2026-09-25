@@ -1,12 +1,13 @@
 # Conformance monitor
 
-**Available now: ground and airborne rules, both wired into the engine and speaking.**
+**Available now: ground, airborne and landing rules, all wired into the engine and
+speaking.**
 
-Two monitors watch whether the aircraft is actually doing what it's been cleared to do,
-and escalate a callout the way a real controller would when it isn't: one for ground
-movement, one for everything from the takeoff roll onward. Both are pure (no I/O,
-deterministic on `AircraftState.t`), and both are checked every tick from
-`AtcEngine.on_tick`.
+Three monitors watch whether the aircraft is actually doing what it's been cleared to
+do, and escalate a callout the way a real controller would when it isn't: one for
+ground movement, one for everything from the takeoff roll through approach, and one for
+the landing itself. All three are pure (no I/O, deterministic on `AircraftState.t`),
+and all three are checked every tick from `AtcEngine.on_tick`.
 
 ## Ground conformance
 
@@ -55,12 +56,13 @@ off the ground.
 | **Speed deviation** | IAS above the tighter of 250 kt below 10,000 ft MSL (14 CFR 91.117(a)) and any assigned speed, plus tolerance -- see the heavy-jet exception below | Gentle → firm → "possible pilot deviation" |
 | **Wrong squawk** | The transponder code doesn't match the assigned code, or the mode is below ALT, for longer than a dial-in grace period | Gentle → firm only -- no pilot-deviation step |
 
-Rules run only in the airborne phases the engine currently reaches -- `TAKEOFF` once off
-the ground, `DEPARTURE`, `ENROUTE` -- and never on the ground. A new assignment (a
-different altitude, heading, speed limit, or squawk code) restarts that rule's ladder.
-Callouts are spoken from whichever position owns the aircraft right now: Tower once
-airborne, Departure, or the dynamically created Center position once a handoff has
-actually happened.
+Rules run in every airborne phase the engine reaches -- `TAKEOFF` once off the ground,
+`DEPARTURE`, `ENROUTE`, `DESCENT`, `APPROACH` -- and never on the ground, and never once
+in `LANDING` (see [landing conformance](#landing-conformance) below, which takes over at
+that point). A new assignment (a different altitude, heading, speed limit, or squawk
+code) restarts that rule's ladder. Callouts are spoken from whichever position owns the
+aircraft right now: Tower, Departure, or the dynamically created Center/Approach
+position once a handoff has actually happened.
 
 ### What altitude ATC judges you on
 
@@ -106,16 +108,44 @@ vice versa), and the heavy-jet exception. A further 7 tests cover the altitude-s
 helper directly. Unlike the ground monitor, there's no real recorded-flight replay check
 yet for the airborne rules -- only unit tests against synthetic and replayed states.
 
+## Landing conformance
+
+`xatc.atc.conformance_landing.LandingConformanceMonitor` --
+`src/xatc/atc/conformance_landing.py`. Two rules, specific to the moment of landing:
+
+| Rule | Fires when | Ladder |
+|---|---|---|
+| **Landing without clearance** | Touching down while arriving, without a landing clearance on file | Straight to "possible pilot deviation" -- no gentler step first, the same treatment a takeoff without clearance gets |
+| **Unreported go-around** | Descending to within 1,000 ft AGL, then climbing back away from the runway at a real, sustained climb rate, without ever having landed | "Say intentions" → "possible pilot deviation" if it keeps climbing away without a word |
+
+Both are spoken from the destination's Tower. The go-around rule notices an
+*unreported* go-around and asks for it to be reported -- there's no actual go-around
+clearance or missed-approach handling yet (M4-4, still open -- see the
+[Roadmap](../roadmap.md)).
+
+### Verification
+
+9 unit tests cover both rules' trigger conditions and escalation.
+
+## Spoken wording, corrected
+
+A phraseology audit against FAA JO 7110.65 caught two real bugs in what these monitors
+actually said, both now fixed: the airborne monitor's altitude/heading/speed/squawk
+callouts were built from raw numbers instead of routed through phraseology (`"climb and
+maintain 5000"` instead of *"climb and maintain five thousand"*), and the ground
+monitor's off-route-suppression callout spoke a bare taxiway letter (`"on taxiway B"`
+instead of *"on taxiway Bravo"*). Both are covered by a golden-string test suite
+(`tests/phraseology/test_golden_phraseology.py`) that pins the exact expected wording
+for one example of each transmission type, citing the FAA paragraph it follows.
+
 ## Limitations
 
-- **No landing or rollout rules.** Nothing airborne is checked past `ENROUTE` yet --
-  the engine has no approach/landing phase to monitor (see the [Roadmap](../roadmap.md)).
+- **M4-4 (go-around) isn't built.** See above.
 - **Heading after "resume own navigation" or a direct-to.** The engine never assigns a
   heading today, so there's nothing for the heading rule to clear in that case yet.
 
-The two monitors' shared escalation logic (fire once, step up the ladder, reset after
-conforming) has since been factored into one common module,
-`xatc.atc.conformance_core`, that both `conformance.py` and `conformance_airborne.py`
-build on -- the earlier duplication between them is resolved. Readback checking is a
-related but separate mechanism from this monitor -- see [Readback
-checking](readback-checking.md).
+The three monitors' shared escalation logic (fire once, step up the ladder, reset after
+conforming) is factored into one common module, `xatc.atc.conformance_core`, that
+`conformance.py`, `conformance_airborne.py` and `conformance_landing.py` all build on.
+Readback checking is a related but separate mechanism from these monitors -- see
+[Readback checking](readback-checking.md).
