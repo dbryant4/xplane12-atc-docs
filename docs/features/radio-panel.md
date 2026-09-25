@@ -53,6 +53,8 @@ identically either way.
 
 ## Settings
 
+For every setting's default, flag and when it takes effect, see the **[Settings reference](../settings.md)**.
+
 Everything xatc needs to fly is configured from one place: click the gear icon to open
 the **Settings** page (ADR 0007 in the repository), which replaced an earlier one-tab
 options modal. It's organized into five tabs, each with its own **Save** button so

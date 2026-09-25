@@ -36,6 +36,7 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Getting Started: getting-started.md
+  - Settings reference: settings.md
   - Features:
       - features/index.md
       - Radio panel: features/radio-panel.md

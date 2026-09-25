@@ -213,3 +213,5 @@ uv run xatc record --out flight.jsonl  # record a live X-Plane session as a repl
 
 CI runs the suite on Python 3.12 and 3.14, with the voice extra, on Windows, and
 synthesizes the `infra/` CDK app.
+
+Every option is described in the **[Settings reference](settings.md)**.
