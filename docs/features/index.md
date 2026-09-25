@@ -16,7 +16,7 @@ plan, and marked by what actually runs today.
 | [Tower takeoff clearance](tower-clearance.md) | Available now (line-up-and-wait not wired up) |
 | [Voice (Transcribe, Polly, PTT)](voice.md) | Available now |
 | [VHF radio effect](radio-fx.md) | Available now (with distance-based signal strength) |
-| [Intent parsing & LLM modes](intent-parsing.md) | Available now (rules parser, Nova Lite fallback, and the options screen) |
+| [Intent parsing & LLM modes](intent-parsing.md) | Available now (rules parser, Nova Lite fallback, and the Settings page's ATC tab) |
 | [Departure & Center](departure-center.md) | Available now, including Center-to-Center ARTCC handoffs |
 | [Arrival](arrival.md) | Available now, gate to gate, including go-around |
 | [Conformance monitor](conformance-monitor.md) | Available now -- ground, airborne and landing rules, all wired into the engine |
@@ -25,5 +25,9 @@ plan, and marked by what actually runs today.
 | [SimBrief import](simbrief-import.md) | Available now |
 | [Post-flight debrief](debrief.md) | Available now |
 | [Joystick/yoke push-to-talk](joystick-ptt.md) | Available now (Windows only; refused on macOS) |
+| [ATIS letter check](atis-letter-check.md) | Available now |
+| [En-route pilot requests](enroute-requests.md) | Available now (direct-to, altitude, deviation, unable) |
+| [Emergencies and special squawks](emergencies.md) | Available now (7500/7600/7700) |
+| [Pushback](pushback.md) | Available now |
 
 See the [Roadmap](../roadmap.md) for what's coming next and in what order.

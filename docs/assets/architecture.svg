@@ -23,7 +23,7 @@
   <text x="310" y="65" text-anchor="middle" class="title">Radio Panel UI</text>
   <text x="310" y="85" text-anchor="middle" class="sub">FastAPI + WebSocket, browser</text>
   <text x="310" y="102" text-anchor="middle" class="sub">COM1/COM2, PTT, directory,</text>
-  <text x="310" y="118" text-anchor="middle" class="sub">transcript, options screen</text>
+  <text x="310" y="118" text-anchor="middle" class="sub">transcript, Settings page</text>
 
   <!-- Voice session -->
   <rect x="200" y="230" width="220" height="150" class="box" />

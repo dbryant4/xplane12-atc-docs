@@ -58,6 +58,10 @@ Push-to-talk itself is bound in the [radio panel](radio-panel.md): the on-screen
 button, or holding **Space** while the page has focus (ignored while typing in a text
 field, so Space still types spaces there).
 
+The `voice` extra pulls in `botocore[crt]`, which AWS CLI v2's `aws login` credentials
+need on Windows (see [Getting Started](../getting-started.md) step 3) -- installing the
+voice extra is enough, nothing extra to configure.
+
 ## The Nova 2 Sonic spike
 
 An earlier spike (`xatc.voice.spike_nova`) tried Amazon Nova 2 Sonic as a single

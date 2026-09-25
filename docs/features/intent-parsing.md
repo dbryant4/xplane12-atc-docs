@@ -1,7 +1,7 @@
 # Intent parsing & LLM modes
 
-**Available now** -- the rules-based parser, an optional LLM fallback, and the options
-screen are all real and wired together end to end.
+**Available now** -- the rules-based parser, an optional LLM fallback, and the Settings
+page's ATC tab are all real and wired together end to end.
 
 ## The rules-based parser
 
@@ -53,13 +53,13 @@ A live classifier call blocks for up to about 1.5 seconds in Backup/Primary mode
 acceptable at this project's current traffic scale (one aircraft), not something that's
 been made asynchronous.
 
-## The options screen
+## The Settings page
 
-The gear icon in the [radio panel](radio-panel.md) has three radio buttons -- Disabled,
-Backup, Primary -- matching the modes above, applying immediately, plus an LLM status
-line (call count, average response time, last error). This is real, live-switchable
-state now: selecting a mode calls `IntentRouter.set_mode`, persists it to a small local
-settings file, and every connected panel sees the update via the same broadcast
+The [Settings page](radio-panel.md#settings)'s ATC tab has three radio buttons --
+Disabled, Backup, Primary -- matching the modes above, applying immediately, plus an LLM
+status line (call count, average response time, last error). This is real,
+live-switchable state now: selecting a mode calls `IntentRouter.set_mode`, persists it
+to `settings.json`, and every connected panel sees the update via the same broadcast
 [sim_status](radio-panel.md) and other session state already uses.
 
 `xatc run --intent-mode {disabled,fallback,primary}` sets it for one run without
@@ -80,9 +80,10 @@ managed policy.
 
 - A live classifier call can add up to ~1.5s of latency in Backup/Primary mode; the
   engine call is synchronous, not asynchronous.
-- Several `IntentType` values (`REQUEST_PUSHBACK`, `REQUEST_ALTITUDE`,
-  `REQUEST_DIRECT`, `REQUEST_APPROACH`) exist in the shared contract but nothing
-  produces them yet, rules or LLM.
+- `IntentType.REQUEST_APPROACH` exists in the shared contract but nothing produces it
+  yet, rules or LLM. `REQUEST_PUSHBACK` ([pushback](pushback.md)), `REQUEST_ALTITUDE`,
+  `REQUEST_DIRECT`, `REQUEST_DEVIATION`, and `UNABLE` ([en-route
+  requests](enroute-requests.md)) are all wired now.
 - The engine doesn't yet pass which controller position a transmission arrived on into
   the classifier, even though both the router and the classifier already accept it --
   a small follow-up on the engine side, not required for this to work today.
