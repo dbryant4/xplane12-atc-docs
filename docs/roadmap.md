@@ -33,10 +33,12 @@ into the departure phase:
   from the aircraft. Also not yet connected to anything: [taxi
   routing](features/taxi-routing.md) still always starts from the aircraft's live sim
   position regardless.
-- [Any-airport data loading](features/any-airport-data.md) -- locating a real X-Plane
-  installation and reading its own apt.dat/atc.dat directly (any scenery pack, not just
-  the bundled KSEA/ZSE fixtures), so `xatc` can eventually fly anywhere its scenery
-  covers. The data-loading layer works; the engine itself still always departs KSEA.
+- [Any-airport data loading](features/any-airport-data.md) -- `xatc` now flies any
+  airport its scenery (or the bundled fixtures) covers: a real X-Plane install's own
+  apt.dat/atc.dat, the departure airport nearest the aircraft (or an explicit
+  `--departure`), live magnetic variation, station names read from apt.dat instead of a
+  fixed table, and Center found by the aircraft's actual position instead of always
+  Seattle. Verified end to end against a second real airport (KPDX), not just KSEA.
 
 See [Features](features/index.md) for the detailed, per-feature "available now" vs.
 "planned" breakdown.
@@ -45,14 +47,6 @@ See [Features](features/index.md) for the detailed, per-feature "available now" 
 
 Roughly in the order the project is tackling it:
 
-- **Wire any-airport data loading into the engine.** The data layer -- locating an
-  X-Plane install, reading any scenery's apt.dat/atc.dat, finding the nearest airport,
-  and resolving the ARTCC for a position (see [Any-airport data
-  loading](features/any-airport-data.md)) -- is built and tested. What's left is having
-  the engine actually depart from the nearest airport (a `--departure` override plus
-  `nearest_airport`) and hand off to the right Center (`artcc_for_position`) instead of
-  the hardcoded KSEA/KZSE, plus proving station-name and magnetic-variation handling
-  against a second real airport fixture.
 - **Wire the fuzzy ramp resolver into taxi routing.** Already built and tested (see
   [Fuzzy ramp resolver](features/fuzzy-ramp-resolver.md)) -- what's left is having the
   engine actually pass a pilot's spoken location into it instead of always using the sim

@@ -1,17 +1,21 @@
 # Controller positions & frequencies
 
-**Available now** (ATIS, Clearance, Ground, Tower, Departure, Center, and the
-Tower→Departure→Center handoff chain). **Approach: still planned** -- see [Departure &
-Center](departure-center.md).
+**Available now** (ATIS, Clearance, Ground, Tower, Departure, Approach, Center, and the
+Tower→Departure→Center handoff chain). Approach appears in the frequency directory when
+an airport's own `apt.dat` provides one, but nothing routes traffic through it yet -- see
+[Departure & Center](departure-center.md).
 
 ## What it does
 
 `xatc.atc.positions.build_positions` turns an airport's parsed `apt.dat` frequency rows
 into one `ControllerPosition` per facility kind it finds: ATIS, Clearance, Ground,
-Tower, and (from row 1056, no `atc.dat` needed) Departure. Each position gets a stable
-id (`KSEA_GND`, `KSEA_TWR`, ...) and a callsign built from the airport's own name plus
-the position type -- "Seattle Ground", "Seattle Tower", "Seattle Clearance", derived
-from the first word of KSEA's apt.dat name ("Seattle-Tacoma Intl").
+Tower, Departure (row 1056) and Approach (row 1055) -- no `atc.dat` needed for any of
+these. A combined "APP/DEP" row supplies whichever of Departure/Approach the airport's
+own rows don't otherwise give it. Each position gets a stable id (`KSEA_GND`,
+`KSEA_TWR`, ...) and a callsign built from that frequency row's own name where one is
+readable (role words and the airport's own identifier stripped, with a couple of casing
+fixups like NorCal/SoCal), falling back to the first word of the airport's own apt.dat
+name otherwise -- "Seattle Ground", "Seattle Tower", "Seattle Clearance" for KSEA.
 
 **Center is different**: it isn't in that static, apt.dat-derived set at all. It's
 created dynamically, the moment Departure hands off to it, from a parsed `atc.dat` (the
@@ -73,13 +77,17 @@ table keyed on `Phase`, not a real distance/relevance calculation.
 
 ## Configuration
 
-`apt.dat`/`--apt-dat` for the airport-based positions; `atc.dat`/`--atc-dat` for
-Center's frequency selection. Both default to bundled fixtures.
+The airport-based positions come from `apt.dat`, and Center's frequency selection from
+`atc.dat` -- see [Any-airport data loading](any-airport-data.md) for how `xatc` picks
+which airport and `atc.dat` to actually read (`--departure`, `--apt-dat`, `--atc-dat`,
+`--xplane-root`, in that precedence).
 
 ## Limitations
 
-- No Approach position or arrival logic exists yet -- see [Departure &
-  Center](departure-center.md).
+- **No arrival or approach logic.** An Approach position exists in the frequency
+  directory once apt.dat provides one, but nothing routes traffic through it -- no
+  vectors, sequencing, approach clearance, or landing clearance yet. See [Any-airport
+  data loading](any-airport-data.md) and the [Roadmap](../roadmap.md).
 - No "are you with me?" reminder if you never check in after a handoff, and no lost-comm
   behavior.
 - Redirects only cover three intents; everything else on a wrong staffed frequency is
