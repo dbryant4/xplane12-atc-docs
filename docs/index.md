@@ -16,6 +16,10 @@ See [Intent parsing & LLM modes](features/intent-parsing.md) for the one narrow,
 optional exception -- an LLM can help *understand* an unclear pilot transmission, never
 *generate* what ATC says back.
 
+![The xatc radio panel mid-session at KSEA](assets/radio-panel.png)
+
+*The radio panel after a clearance and taxi exchange at KSEA: COM2 is transmitting on Seattle Ground, the Status section shows what's been issued (squawk, runway 16L, taxi via B, hold short of 16L), and the transcript shows each pilot call and ATC reply, including the readback checks.*
+
 ## What it's like to fly
 
 A typical session at KSEA, gate to hold-short:
