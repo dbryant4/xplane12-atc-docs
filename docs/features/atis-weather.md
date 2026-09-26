@@ -49,10 +49,8 @@ reading has crossed*, not the raw values:
 - a gust appears or disappears altogether, or changes by 10 kt or more once already
   present
 - altimeter changes 0.02 inHg or more
-
-`AtisGenerator` also treats the active runway changing as significant on its own, but
-this doesn't currently happen live -- the engine's own call into it doesn't pass which
-runway is in use, so this trigger only fires for a caller that supplies one.
+- the active runway changes (fed by [runway hysteresis](#runway-hysteresis) below, so a
+  real runway change -- not a momentary flicker -- is always a fresh letter)
 
 Comparisons are always against the reading the letter last actually advanced on, not the
 immediately-previous call -- so a slow drift (altimeter creeping up 0.01 inHg at a time)
@@ -94,10 +92,15 @@ to keep coming back the same way for a few minutes before it's adopted, except w
 once rather than waiting out the sustain window (a stale runway shouldn't get a takeoff
 clearance).
 
-**This class is implemented and tested, but the engine doesn't use it yet** -- all three
-places `engine.py` picks a runway still call the bare `select_runways` directly, so the
-live engine doesn't currently get the hysteresis benefit described here; only the ATIS
-letter's own smoothing (above) is wired in from that flight.
+**This is live.** A shared `RunwaySelector` backs every runway pick for the departure
+airport -- the ATIS broadcast and whatever Ground/Clearance actually assigns come from
+the exact same instance, so they can't disagree even mid-hysteresis -- and a second,
+separate instance does the same for the destination's arrival planning. The arrival-side
+selector resets the moment real destination weather (a METAR) first replaces the
+aircraft's own weather as its stand-in, so an early guess from the wrong airport's wind
+can't anchor the arrival runway for minutes once the real reading is in. For [VFR pattern
+work](vfr-pattern.md) (departure and destination are the same field), both sides share
+one selector, since it's the same runway question either way.
 
 ## Configuration
 
@@ -114,4 +117,3 @@ sim weather continuously instead.
 - ATIS is delivered as a looping voice broadcast on its own frequency; it isn't
   currently woven into what Clearance/Ground/Tower say beyond confirming the letter you
   state back.
-- `RunwaySelector`'s hysteresis (above) isn't wired into the live engine yet.
