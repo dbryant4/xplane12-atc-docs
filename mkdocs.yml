@@ -24,6 +24,14 @@ theme:
     - content.code.copy
     - toc.follow
 
+# Versioned docs (mike): each app release X.Y gets its own copy of the site under /X.Y/,
+# "dev" tracks main, and the "latest" alias is the default. This turns on Material's
+# version selector next to the site title. See docs/versions.md and scripts/publish-docs.sh.
+extra:
+  version:
+    provider: mike
+    alias: true
+
 markdown_extensions:
   - admonition
   - tables
@@ -71,3 +79,4 @@ nav:
       - VFR Class B/C/D airspace entry: features/vfr-airspace-entry.md
       - Traffic advisories (not yet live): features/traffic-advisories.md
   - Roadmap: roadmap.md
+  - Versions: versions.md
