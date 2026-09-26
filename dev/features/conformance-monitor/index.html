@@ -1,0 +1,2282 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Automated FAA-style voice ATC for X-Plane 12">
+      
+      
+      
+      
+        <link rel="prev" href="../arrival/">
+      
+      
+        <link rel="next" href="../fuzzy-ramp-resolver/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Conformance monitor - xatc</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#conformance-monitor" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="xatc" class="md-header__button md-logo" aria-label="xatc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            xatc
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Conformance monitor
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../getting-started/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../settings/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Settings reference
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Features
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../roadmap/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Roadmap
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../versions/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Versions
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="xatc" class="md-nav__button md-logo" aria-label="xatc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    xatc
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../settings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Settings reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Features
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Features
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../radio-panel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Radio panel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../controller-positions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Controller positions & frequencies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../flight-state/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flight state across restarts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../live-sim-robustness/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live-sim robustness
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../atis-weather/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ATIS & weather
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../runway-selection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Runway selection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ifr-clearance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IFR clearance (CRAFT)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sid-departure-procedures/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SID & departure procedures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../readback-checking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Readback checking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../taxi-routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Taxi routing & hold-shorts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tower-clearance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tower takeoff clearance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../voice/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Voice (Transcribe, Polly, PTT)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../radio-fx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VHF radio effect
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../intent-parsing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Intent parsing & LLM modes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../departure-center/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Departure & Center
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../route-tracking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Route tracking (next fix)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arrival/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arrival
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conformance monitor
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conformance monitor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ground-conformance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ground conformance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ground conformance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-four-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The four rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#airborne-conformance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Airborne conformance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Airborne conformance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-four-rules_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The four rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-altitude-atc-judges-you-on" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What altitude ATC judges you on
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#heavy-jet-exception" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Heavy-jet exception
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#landing-conformance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Landing conformance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Landing conformance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#verification_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pattern-conformance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern conformance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#airspace-conformance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Airspace conformance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spoken-wording-corrected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spoken wording, corrected
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fuzzy-ramp-resolver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fuzzy ramp resolver (taxi-in only)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../any-airport-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Any-airport data loading
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simbrief-import/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SimBrief import
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../debrief/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Post-flight debrief
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../joystick-ptt/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Push-to-talk from hardware
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../atis-letter-check/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ATIS letter check
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../enroute-requests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    En-route pilot requests
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../emergencies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Emergencies and special squawks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pushback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pushback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vfr-pattern/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VFR pattern work
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vfr-flight-following/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VFR flight following
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vfr-airspace-entry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VFR Class B/C/D airspace entry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../traffic-advisories/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Traffic advisories (not yet live)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../versions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Versions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ground-conformance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ground conformance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ground conformance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-four-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The four rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#airborne-conformance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Airborne conformance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Airborne conformance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-four-rules_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The four rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-altitude-atc-judges-you-on" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What altitude ATC judges you on
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#heavy-jet-exception" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Heavy-jet exception
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#landing-conformance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Landing conformance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Landing conformance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#verification_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pattern-conformance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern conformance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#airspace-conformance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Airspace conformance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spoken-wording-corrected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spoken wording, corrected
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="conformance-monitor">Conformance monitor<a class="headerlink" href="#conformance-monitor" title="Permanent link">&para;</a></h1>
+<p><strong>Available now: ground, airborne, landing, pattern and airspace rules, all wired into
+the engine and speaking.</strong></p>
+<p>Five monitors watch whether the aircraft is actually doing what it's been cleared to do,
+and escalate a callout the way a real controller would when it isn't: one for ground
+movement, one for everything from the takeoff roll through approach, one for the landing
+itself, one for <a href="../vfr-pattern/">VFR pattern work</a>, and one for <a href="../vfr-airspace-entry/">VFR Class B/C/D
+airspace entry</a>. All five are pure (no I/O, deterministic on
+<code>AircraftState.t</code>), and all five are checked every tick from <code>AtcEngine.on_tick</code>.</p>
+<h2 id="ground-conformance">Ground conformance<a class="headerlink" href="#ground-conformance" title="Permanent link">&para;</a></h2>
+<p><code>xatc.atc.conformance.ConformanceMonitor</code> -- <code>src/xatc/atc/conformance.py</code>.</p>
+<h3 id="the-four-rules">The four rules<a class="headerlink" href="#the-four-rules" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Fires when</th>
+<th>Escalation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Taxiing without clearance</strong></td>
+<td>Moving on the ground before <code>taxi_cleared</code> is set, sustained past a short threshold</td>
+<td>Gentle → firm → "possible pilot deviation"</td>
+</tr>
+<tr>
+<td><strong>Off the taxi route</strong></td>
+<td>Cleared to taxi, but farther from the assigned route than tolerance allows, sustained</td>
+<td>Gentle → firm → "possible pilot deviation"</td>
+</tr>
+<tr>
+<td><strong>Runway incursion</strong></td>
+<td>Inside a runway's protected zone without a clearance that allows it -- fires immediately, no sustain time</td>
+<td>"Hold position!" straight to "possible pilot deviation"</td>
+</tr>
+<tr>
+<td><strong>Takeoff without clearance</strong></td>
+<td>On runway pavement, aligned with it, moving, without a takeoff clearance</td>
+<td>"Stop immediately" straight to "possible pilot deviation"</td>
+</tr>
+</tbody>
+</table>
+<p>Runway ids are canonicalized everywhere the runway-incursion rule looks them up, fixing
+a real bug where an <code>apt.dat</code> file that spells the same runway inconsistently between
+its own row and its hold-short rows (e.g. KLAX's "6R" vs. "06R") could falsely flag a
+legitimate, correctly-flown runway crossing as an incursion, or name the wrong runway
+end in the incursion event's own text.</p>
+<p>Every rule fires once when a violation is established, steps up exactly one severity
+level for each interval the violation continues (never repeating a step), and resets
+once the aircraft has been back in conformance for a short recovery window -- so a brief
+dip doesn't restart the ladder. A stopped aircraft (under 1 kt) doesn't keep escalating
+an off-route call, since it's holding position as told. The off-route rule is suppressed
+inside a runway's protected zone and whenever the clearance covers a line-up-and-wait or
+takeoff, so an incursion never doubles up with an off-route call for the same moment.</p>
+<p>The "taxiing without clearance" rule also catches an unapproved
+<a href="../pushback/">pushback</a>: moving more than 50 m from where the aircraft was parked, while
+still in a parked phase and without a pushback or taxi clearance, fires the same ladder
+-- pushback creep is exempt from the taxi <em>speed</em> check but not this distance check.</p>
+<h3 id="verification">Verification<a class="headerlink" href="#verification" title="Permanent link">&para;</a></h3>
+<p>30 unit tests cover each rule's sustain boundary, the exact escalation timing, the reset
+window, strictness scaling, and runway-crossing edge cases. A real recorded KSEA taxi-out
+flight, replayed with a matching clearance, produces <strong>zero false-positive events at
+every strictness level</strong> -- and the same replay with no taxi clearance at all correctly
+fires the taxi-without-clearance rule. That verification runs two ways: directly against
+<code>ConformanceMonitor</code>, and end to end through the wired-up <code>AtcEngine</code>, which is what
+actually ships.</p>
+<h2 id="airborne-conformance">Airborne conformance<a class="headerlink" href="#airborne-conformance" title="Permanent link">&para;</a></h2>
+<p><code>xatc.atc.conformance_airborne.AirborneConformanceMonitor</code> --
+<code>src/xatc/atc/conformance_airborne.py</code>. Runs alongside the ground monitor, checking
+altitude, heading, speed and squawk against the current clearance once the aircraft is
+off the ground.</p>
+<h3 id="the-four-rules_1">The four rules<a class="headerlink" href="#the-four-rules_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Fires when</th>
+<th>Ladder</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Altitude deviation</strong></td>
+<td>More than the tolerance off the assigned altitude once the aircraft has reached it (an overshoot counts -- passing through the target reaches it). Before that, only moving the wrong way from it, or missing a climb/descent allowance, fires. A normal climb or descent toward a new assignment never fires.</td>
+<td>Gentle → firm → "possible pilot deviation"</td>
+</tr>
+<tr>
+<td><strong>Heading deviation</strong></td>
+<td>More than the tolerance off the assigned magnetic heading, with wraparound at 360. Held to the tolerance once turned onto it; before that, a standard-rate-turn allowance.</td>
+<td>Gentle → firm → "possible pilot deviation"</td>
+</tr>
+<tr>
+<td><strong>Speed deviation</strong></td>
+<td>IAS above the tighter of 250 kt below 10,000 ft MSL (14 CFR 91.117(a)) and any assigned speed, plus tolerance -- see the heavy-jet exception below</td>
+<td>Gentle → firm → "possible pilot deviation"</td>
+</tr>
+<tr>
+<td><strong>Wrong squawk</strong></td>
+<td>The transponder code doesn't match the assigned code, or the mode doesn't report altitude, for longer than a dial-in grace period</td>
+<td>Gentle → firm only -- no pilot-deviation step</td>
+</tr>
+</tbody>
+</table>
+<p>A code from <a href="../emergencies/">7500, 7600 or 7700</a> is never flagged as a wrong squawk --
+those are handled as emergencies and lost-comms in their own right, not as a
+conformance deviation. "Doesn't report altitude" means the transponder is off, standby,
+on (Mode A only, no altitude), or in test mode -- <strong>ALT, ground, TA and TA/RA all count
+as reporting altitude</strong> and never trigger this rule on their own, since a real Mode C/S
+transponder reports pressure altitude in every one of those modes (a modern
+airliner-style panel normally sits in TA/RA in flight).</p>
+<p>Rules run in every airborne phase the engine reaches -- <code>TAKEOFF</code> once off the ground,
+<code>DEPARTURE</code>, <code>ENROUTE</code>, <code>DESCENT</code>, <code>APPROACH</code> -- and never on the ground, and never once
+in <code>LANDING</code> (see <a href="#landing-conformance">landing conformance</a> below, which takes over at
+that point). A new assignment (a different altitude, heading, speed limit, or squawk
+code) restarts that rule's ladder. Callouts are spoken from whichever position owns the
+aircraft right now: Tower, Departure, or the dynamically created Center/Approach
+position once a handoff has actually happened.</p>
+<p>A VFR flight bound for another airport (not <a href="../vfr-pattern/">pattern work</a>) is the one
+exception: with no clearance to judge it against, none of these rules apply at all until
+<a href="../vfr-flight-following/">flight following</a> is requested and radar contact is
+established -- and they stop again the moment service is terminated.</p>
+<h3 id="what-altitude-atc-judges-you-on">What altitude ATC judges you on<a class="headerlink" href="#what-altitude-atc-judges-you-on" title="Permanent link">&para;</a></h3>
+<p>A real controller doesn't see the sim's true geometric altitude -- their radar shows
+pressure altitude corrected by the local altimeter setting (Mode C), and non-standard
+temperature can put that several hundred feet away from true MSL. <code>atc_altitude_ft</code>
+(<code>xatc.atc.altitude</code>) computes the altitude the monitor actually uses, from a runtime
+<strong>altitude source</strong> setting:</p>
+<ul>
+<li><strong>Mode C</strong> (default): pressure altitude, corrected below 18,000 ft by the local
+  altimeter setting; a raw flight level at or above it.</li>
+<li><strong>Indicated</strong>: the pilot's own altimeter, wrong setting and all.</li>
+<li><strong>True altitude</strong>: the sim's geometric MSL elevation (the original, pre-setting
+  behavior).</li>
+</ul>
+<p>If the sim doesn't report the needed dataref (an old recording, or a sim version that
+doesn't expose it), this falls back to true MSL and logs once, not on every tick.</p>
+<h3 id="heavy-jet-exception">Heavy-jet exception<a class="headerlink" href="#heavy-jet-exception" title="Permanent link">&para;</a></h3>
+<p>14 CFR 91.117(d) lets an aircraft exceed 250 kt below 10,000 ft if its minimum safe
+airspeed requires it. With the <strong>heavy-speed exception</strong> on (the default), a Heavy or
+Super-category aircraft (<code>xatc.world.aircraft_types</code>, a curated ICAO-designator table
+sourced from FAA JO 7360.1) skips <em>only</em> that 250 kt limit -- an assigned speed is still
+enforced regardless of category.</p>
+<h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h3>
+<p>Altitude source, conformance strictness (<strong>relaxed</strong> / <strong>normal</strong> / <strong>checkride</strong>, same
+three levels as the ground monitor, scaling every threshold at once), and the heavy-speed
+exception are all runtime settings: adjustable from the <a href="../radio-panel/#settings">Settings
+page</a>'s ATC tab, persisted, and overridable for a single run
+with <code>--altitude-source</code>, <code>--strictness</code> and <code>--no-heavy-speed-exception</code>. A change
+applies from the next tick; switching altitude source specifically restarts altitude
+tracking so the switch itself can't cause an instant false bust.</p>
+<h3 id="verification_1">Verification<a class="headerlink" href="#verification_1" title="Permanent link">&para;</a></h3>
+<p>53 unit tests cover each rule's capture/before-capture behavior, wraparound, escalation
+timing, a new assignment restarting the ladder, strictness scaling, altitude-source
+correctness (including cases where Mode C catches a bust that true MSL would miss, and
+vice versa), and the heavy-jet exception. A further 7 tests cover the altitude-source
+helper directly. Unlike the ground monitor, there's no real recorded-flight replay check
+yet for the airborne rules -- only unit tests against synthetic and replayed states.</p>
+<h2 id="landing-conformance">Landing conformance<a class="headerlink" href="#landing-conformance" title="Permanent link">&para;</a></h2>
+<p><code>xatc.atc.conformance_landing.LandingConformanceMonitor</code> --
+<code>src/xatc/atc/conformance_landing.py</code>. Two rules, specific to the moment of landing:</p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Fires when</th>
+<th>Ladder</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Landing without clearance</strong></td>
+<td>Touching down while arriving, without a landing clearance on file -- also fires for <a href="../vfr-pattern/">pattern work</a>, where every circuit needs its own landing clearance</td>
+<td>Straight to "possible pilot deviation" -- no gentler step first, the same treatment a takeoff without clearance gets</td>
+</tr>
+<tr>
+<td><strong>Unreported go-around</strong></td>
+<td>Descending to within 1,000 ft AGL, then climbing back away from the runway at a real, sustained climb rate, without ever having landed</td>
+<td>Straight into the real missed-approach handling -- see below</td>
+</tr>
+</tbody>
+</table>
+<p>Both are spoken from the destination's Tower. The go-around rule's escalation ladder
+still exists internally (a gentler "say intentions" step before "possible pilot
+deviation"), but firing it no longer speaks that wording: it's intercepted and sent
+straight into <a href="../arrival/#go-around-and-missed-approach-m4-4">go-around and missed-approach
+handling</a> instead, the same "fly the
+published missed approach" (or a runway-heading climb) treatment a pilot calling
+"going around" out loud gets -- an unreported go-around is caught and handled exactly
+like a reported one, not just called out.</p>
+<h3 id="verification_2">Verification<a class="headerlink" href="#verification_2" title="Permanent link">&para;</a></h3>
+<p>9 unit tests cover both rules' trigger conditions and escalation.</p>
+<h2 id="pattern-conformance">Pattern conformance<a class="headerlink" href="#pattern-conformance" title="Permanent link">&para;</a></h2>
+<p><code>xatc.atc.conformance_pattern.PatternConformanceMonitor</code> --
+<code>src/xatc/atc/conformance_pattern.py</code>. Two rules specific to <a href="../vfr-pattern/">VFR pattern
+work</a>, spoken from Tower:</p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Fires when</th>
+<th>Ladder</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pattern altitude</strong></td>
+<td>More than the tolerance off field elevation + 1,000 ft AGL (piston) or 1,500 ft (turbine/jet), once established at it this circuit -- suspended from the landing clearance onward, so a normal climb-out or descent to land never fires it</td>
+<td>Gentle → firm → "possible pilot deviation"</td>
+</tr>
+<tr>
+<td><strong>Left the pattern</strong></td>
+<td>Farther than the pattern limit from the airport with no call</td>
+<td>"say intentions" straight to "possible pilot deviation" -- no gentler step first</td>
+</tr>
+</tbody>
+</table>
+<p>Landing without a clearance in the pattern reuses <a href="#landing-conformance">landing
+conformance</a>'s own rule, not a pattern-specific one.</p>
+<h2 id="airspace-conformance">Airspace conformance<a class="headerlink" href="#airspace-conformance" title="Permanent link">&para;</a></h2>
+<p><code>xatc.atc.conformance_airspace.AirspaceConformanceMonitor</code> --
+<code>src/xatc/atc/conformance_airspace.py</code>. VFR-only rules for entering Class B, C or D
+airspace -- IFR flights are never checked, since 14 CFR 91.131/130/129 only bind VFR.
+Runs whenever the loaded <code>atc.dat</code> has a Class B, C or D airspace and its controlling
+position is staffed, independent of flight phase. See <a href="../vfr-airspace-entry/">VFR Class B/C/D airspace
+entry</a> for the full pilot-facing behavior.</p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Fires when</th>
+<th>Ladder</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Class B without clearance</strong></td>
+<td>Inside a Class B's lateral boundary without ever having requested/received "cleared into the Class Bravo airspace"</td>
+<td>Gentle → firm → "possible pilot deviation"</td>
+</tr>
+<tr>
+<td><strong>Class B altitude limit</strong></td>
+<td>More than the strictness tolerance above a Class B clearance's own "maintain VFR at or below" altitude</td>
+<td><em>"check altitude, maintain VFR at or below..."</em> → <em>"maintain VFR at or below..."</em> → "possible pilot deviation"</td>
+</tr>
+<tr>
+<td><strong>Class C without contact</strong></td>
+<td>Inside a Class C's boundary before the controlling facility has used the aircraft's callsign in a transmission (two-way contact -- no explicit request needed)</td>
+<td>Gentle → firm → "possible pilot deviation"</td>
+</tr>
+<tr>
+<td><strong>Class D without contact</strong></td>
+<td>Same as Class C, for a Class D tower's boundary</td>
+<td>Gentle → firm → "possible pilot deviation"</td>
+</tr>
+</tbody>
+</table>
+<h2 id="spoken-wording-corrected">Spoken wording, corrected<a class="headerlink" href="#spoken-wording-corrected" title="Permanent link">&para;</a></h2>
+<p>A phraseology audit against FAA JO 7110.65 caught two real bugs in what these monitors
+actually said, both now fixed: the airborne monitor's altitude/heading/speed/squawk
+callouts were built from raw numbers instead of routed through phraseology (<code>"climb and
+maintain 5000"</code> instead of <em>"climb and maintain five thousand"</em>), and the ground
+monitor's off-route-suppression callout spoke a bare taxiway letter (<code>"on taxiway B"</code>
+instead of <em>"on taxiway Bravo"</em>). Both are covered by a golden-string test suite
+(<code>tests/phraseology/test_golden_phraseology.py</code>) that pins the exact expected wording
+for one example of each transmission type, citing the FAA paragraph it follows.</p>
+<p>A related event -- <strong>no check-in after a handoff</strong> -- isn't a rule on any of these
+monitors; the engine raises it itself (<code>xatc.atc.conformance_core.RadioRule
+.NO_CHECKIN</code>) the same moment it re-transmits a handoff reminder. See <a href="../controller-positions/#handoffs">Controller
+positions &amp; frequencies</a> for that mechanism -- it
+feeds the <a href="../debrief/">debrief</a> the same way a real conformance event does, without
+being one.</p>
+<p>Once an <a href="../emergencies/">emergency, lost-comms code, or hijack code</a> is active, every
+monitor keeps running and their events still reach the debrief -- but every spoken
+callout is suppressed, so a distracted pilot handling a real emergency doesn't also get
+called out for drifting off a taxi route or an altitude.</p>
+<p>All five monitors' shared escalation logic (fire once, step up the ladder, reset after
+conforming) is factored into one common module, <code>xatc.atc.conformance_core</code>, that
+<code>conformance.py</code>, <code>conformance_airborne.py</code>, <code>conformance_landing.py</code>,
+<code>conformance_pattern.py</code> and <code>conformance_airspace.py</code> all build on. Readback checking
+is a related but separate mechanism from these monitors -- see <a href="../readback-checking/">Readback
+checking</a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.indexes", "navigation.top", "content.code.copy", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

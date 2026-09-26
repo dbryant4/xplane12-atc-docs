@@ -1,0 +1,2064 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Automated FAA-style voice ATC for X-Plane 12">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../settings/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Getting Started - xatc</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#getting-started" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="xatc" class="md-header__button md-logo" aria-label="xatc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            xatc
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Getting Started
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../settings/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Settings reference
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../features/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Features
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../roadmap/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Roadmap
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../versions/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Versions
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="xatc" class="md-nav__button md-logo" aria-label="xatc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    xatc
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Install
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-deploy-the-voice-infrastructure-one-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Deploy the voice infrastructure (one time)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-aws-credentials-that-stay-fresh-one-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. AWS credentials that stay fresh (one time)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-reach-x-plane" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Reach X-Plane
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-on-windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running on Windows
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Running on Windows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xatc-doctor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        xatc doctor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xatc-smoke-live" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        xatc smoke --live
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-run-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Run it
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#demo-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Demo script
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Development
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../settings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Settings reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../features/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Features
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Features
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/radio-panel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Radio panel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/controller-positions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Controller positions & frequencies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/flight-state/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flight state across restarts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/live-sim-robustness/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live-sim robustness
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/atis-weather/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ATIS & weather
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/runway-selection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Runway selection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/ifr-clearance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IFR clearance (CRAFT)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/sid-departure-procedures/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SID & departure procedures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/readback-checking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Readback checking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/taxi-routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Taxi routing & hold-shorts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/tower-clearance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tower takeoff clearance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/voice/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Voice (Transcribe, Polly, PTT)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/radio-fx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VHF radio effect
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/intent-parsing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Intent parsing & LLM modes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/departure-center/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Departure & Center
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/route-tracking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Route tracking (next fix)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/arrival/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arrival
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/conformance-monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conformance monitor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/fuzzy-ramp-resolver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fuzzy ramp resolver (taxi-in only)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/any-airport-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Any-airport data loading
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/simbrief-import/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SimBrief import
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/debrief/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Post-flight debrief
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/joystick-ptt/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Push-to-talk from hardware
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/atis-letter-check/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ATIS letter check
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/enroute-requests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    En-route pilot requests
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/emergencies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Emergencies and special squawks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/pushback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pushback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/vfr-pattern/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VFR pattern work
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/vfr-flight-following/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VFR flight following
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/vfr-airspace-entry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VFR Class B/C/D airspace entry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/traffic-advisories/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Traffic advisories (not yet live)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../versions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Versions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Install
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-deploy-the-voice-infrastructure-one-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Deploy the voice infrastructure (one time)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-aws-credentials-that-stay-fresh-one-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. AWS credentials that stay fresh (one time)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-reach-x-plane" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Reach X-Plane
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-on-windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running on Windows
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Running on Windows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xatc-doctor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        xatc doctor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xatc-smoke-live" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        xatc smoke --live
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-run-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Run it
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#demo-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Demo script
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Development
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This mirrors the repository's own <code>README.md</code> and <code>infra/README.md</code>, which are the
+up-to-date source of truth for exact commands and flags. If anything here looks out
+of date, trust the repo.</p>
+</div>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>X-Plane 12.1.1+</strong>, with its built-in Web API on port 8086 (on by default). It can
+  run on a different machine than xatc itself -- see <a href="#4-reach-x-plane">Reach X-Plane</a>
+  below.</li>
+<li><strong>Python 3.14+</strong> and <a href="https://docs.astral.sh/uv/">uv</a> -- the only supported version (ADR 0011).</li>
+<li><strong>An AWS account</strong>, for voice only -- Amazon Transcribe and Polly in <code>us-east-1</code>, plus
+  the AWS CLI v2.</li>
+<li><strong>Node.js 22+</strong> and the AWS CDK CLI (<code>npm install -g aws-cdk</code>), only to deploy the
+  voice infrastructure once.</li>
+</ul>
+<p>Everything except the AWS account is optional if you only want text mode: type
+transmissions instead of speaking them, against a replayed flight, with no X-Plane and
+no AWS at all.</p>
+<h2 id="1-install">1. Install<a class="headerlink" href="#1-install" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>sync<span class="w"> </span>--extra<span class="w"> </span>voice<span class="w">        </span><span class="c1"># drop --extra voice if you only want text mode</span>
+uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w">                </span><span class="c1"># optional: check that everything passes</span>
+</code></pre></div>
+<h2 id="2-deploy-the-voice-infrastructure-one-time">2. Deploy the voice infrastructure (one time)<a class="headerlink" href="#2-deploy-the-voice-infrastructure-one-time" title="Permanent link">&para;</a></h2>
+<p>This provisions two things in your AWS account, from a small CDK app in <code>infra/</code>:</p>
+<ul>
+<li>An Amazon Transcribe <strong>custom vocabulary</strong> (<code>xatc-aviation-en-US</code>) tuned for aviation
+  phraseology -- the NATO phonetic alphabet, "niner", facility and position names,
+  runway/taxiway callouts. See <a href="../features/voice/">Voice</a> for how xatc uses it.</li>
+<li>An IAM managed policy scoped to exactly what the voice layer needs
+  (<code>polly:SynthesizeSpeech</code>, <code>transcribe:StartStreamTranscription</code>,
+  <code>transcribe:GetVocabulary</code>). It's <strong>not attached to anyone automatically</strong> -- attaching
+  it to your own IAM user is a decision only you should make.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>infra<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>uv<span class="w"> </span>sync
+npx<span class="w"> </span>cdk<span class="w"> </span>bootstrap<span class="w">            </span><span class="c1"># one time per AWS account and region</span>
+npx<span class="w"> </span>cdk<span class="w"> </span>deploy
+</code></pre></div>
+<p><code>cdk deploy</code> prints the policy's ARN when it finishes. Attach it yourself:</p>
+<div class="highlight"><pre><span></span><code>aws<span class="w"> </span>iam<span class="w"> </span>attach-user-policy<span class="w"> </span>--user-name<span class="w"> </span>&lt;your-iam-user&gt;<span class="w"> </span>--policy-arn<span class="w"> </span>&lt;VoicePolicyArn<span class="w"> </span>from<span class="w"> </span>the<span class="w"> </span>deploy<span class="w"> </span>output&gt;
+</code></pre></div>
+<h2 id="3-aws-credentials-that-stay-fresh-one-time">3. AWS credentials that stay fresh (one time)<a class="headerlink" href="#3-aws-credentials-that-stay-fresh-one-time" title="Permanent link">&para;</a></h2>
+<p>Don't export short-lived keys into your shell -- keys from <code>aws login</code> or SSO expire
+after about 15 minutes, and push-to-talk then fails with <em>"security token ... expired"</em>.
+Instead, add a profile that asks the AWS CLI for fresh credentials whenever they're
+needed:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">printf</span><span class="w"> </span><span class="s1">'\n[profile xatc]\ncredential_process = aws configure export-credentials --profile default --format process\nregion = us-east-1\n'</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.aws/config
+</code></pre></div>
+<p>Replace <code>--profile default</code> with whichever profile you sign in with, and check it with:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">AWS_PROFILE</span><span class="o">=</span>xatc<span class="w"> </span>aws<span class="w"> </span>sts<span class="w"> </span>get-caller-identity
+</code></pre></div>
+<p>If your shell already has <code>AWS_ACCESS_KEY_ID</code>, <code>AWS_SECRET_ACCESS_KEY</code> or
+<code>AWS_SESSION_TOKEN</code> exported, <code>unset</code> them first -- they take priority over the profile.</p>
+<h2 id="4-reach-x-plane">4. Reach X-Plane<a class="headerlink" href="#4-reach-x-plane" title="Permanent link">&para;</a></h2>
+<p>X-Plane's Web API only listens on its own machine. If X-Plane runs on a different
+computer than xatc, forward the port over SSH:</p>
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>-fN<span class="w"> </span>-L<span class="w"> </span><span class="m">8086</span>:127.0.0.1:8086<span class="w"> </span>&lt;user&gt;@&lt;xplane-host&gt;
+curl<span class="w"> </span>http://localhost:8086/api/capabilities<span class="w">     </span><span class="c1"># should return JSON</span>
+</code></pre></div>
+<p>Wait until X-Plane has <strong>fully loaded the aircraft</strong> before starting xatc.</p>
+<h2 id="running-on-windows">Running on Windows<a class="headerlink" href="#running-on-windows" title="Permanent link">&para;</a></h2>
+<p>For a real flight, <code>xatc</code> is meant to run <strong>on the same Windows PC as X-Plane</strong> (see ADR
+0006 in the repository) -- no SSH tunnel needed at all, since it reads X-Plane's Web API
+and its own data files locally. The SSH-tunnel setup in step 4 above is a <strong>dev-only</strong>
+option, for developing or testing <code>xatc</code> from a different machine than the one running
+X-Plane.</p>
+<p><strong>One-time setup</strong> -- from PowerShell, in the repository root:</p>
+<div class="highlight"><pre><span></span><code><span class="n">scripts</span><span class="p">\</span><span class="n">setup-windows</span><span class="p">.</span><span class="n">ps1</span>
+</code></pre></div>
+<p>This installs <a href="https://docs.astral.sh/uv/">uv</a> if it isn't already on your <code>PATH</code>
+(printing the official install command rather than running it for you, so it never
+silently installs anything without you seeing it first), runs <code>uv sync --extra voice</code>,
+and finishes by running <code>xatc doctor</code> -- see below.</p>
+<p><strong>Every time you fly</strong>, double-click <code>scripts\xatc-run.cmd</code>. It sets <code>AWS_PROFILE=xatc</code>
+(you still need that profile configured once, per step 3 above) and runs <code>xatc</code> with
+whatever arguments you give it -- none, for the normal double-click case. With no
+arguments, xatc runs live from <code>settings.json</code> and opens the panel in your browser
+automatically; configure the flight plan, voice and everything else from the
+<a href="../features/radio-panel/#settings">Settings page</a> there, not flags. Flags still work for
+a one-off override, e.g. from a terminal:</p>
+<div class="highlight"><pre><span></span><code><span class="n">scripts</span><span class="p">\</span><span class="n">xatc-run</span><span class="p">.</span><span class="n">cmd</span> <span class="n">run</span> <span class="p">-</span><span class="n">-live</span> <span class="p">-</span><span class="n">-voice</span> <span class="p">-</span><span class="n">-dest</span> <span class="n">KPDX</span> <span class="p">-</span><span class="n">-cruise</span> <span class="n">35000</span>
+</code></pre></div>
+<h3 id="xatc-doctor"><code>xatc doctor</code><a class="headerlink" href="#xatc-doctor" title="Permanent link">&para;</a></h3>
+<p>Checks that this machine is actually ready to fly, without guessing:</p>
+<div class="highlight"><pre><span></span><code><span class="n">uv</span> <span class="n">run</span> <span class="n">xatc</span> <span class="n">doctor</span>              <span class="c"># add --check-aws for a live (free, read-only) API check</span>
+</code></pre></div>
+<p>It reports the Python and <code>uv</code> versions (failing below Python 3.14, the only supported
+version -- ADR 0011), whether an X-Plane installation was found (and
+whether its <code>apt.dat</code>, <code>atc.dat</code> and CIFP data are actually there), whether X-Plane's
+Web API is reachable right now, whether AWS credentials resolve, whether a microphone
+is available and actually picking up sound, and where the settings file lives -- each as
+a pass/warn/fail line with a fix hint, plus a summary count. <code>--check-aws</code> additionally
+makes one free, read-only call each to Transcribe, Polly and Bedrock (Nova Lite) to
+confirm the account actually has access, not just that credentials resolve.</p>
+<h3 id="xatc-smoke-live"><code>xatc smoke --live</code><a class="headerlink" href="#xatc-smoke-live" title="Permanent link">&para;</a></h3>
+<p><code>xatc doctor</code> checks static setup; <code>xatc smoke --live</code> is the hands-on follow-up, run
+against a real, running X-Plane session (an aircraft actually loaded) to sanity-check
+the parts doctor can't:</p>
+<div class="highlight"><pre><span></span><code><span class="n">uv</span> <span class="n">run</span> <span class="n">xatc</span> <span class="n">smoke</span> <span class="p">-</span><span class="n">-live</span>              <span class="c"># add --voice to also test the speaker path</span>
+</code></pre></div>
+<p>It samples live <code>AircraftState</code> for a few seconds (printing every field, and flagging
+<code>pressure_altitude_ft</code>/<code>indicated_altitude_ft</code> by name if the sim build doesn't expose
+them), round-trips a COM1 standby frequency change and back, pulls one live weather
+reading, and watches X-Plane's raw <code>sim/joystick/joystick_button_values</code> dataref for a
+few seconds so you can confirm which button index your yoke or joystick actually reports
+-- the same dataref <a href="../features/joystick-ptt/">push-to-talk from hardware</a>'s default
+X-Plane source reads live, and useful alongside its <code>xatc ptt-probe</code> too. With
+<code>--voice</code>, it also sends one real phrase
+through Polly and the VHF radio effect to your actual speakers -- Polly and the effect
+chain only, no Transcribe or microphone involved. Like <code>xatc doctor</code>, it prints a
+pass/warn/fail report and never builds an <code>AtcEngine</code> -- it's a connectivity and
+data-availability check, not a flight.</p>
+<h2 id="5-run-it">5. Run it<a class="headerlink" href="#5-run-it" title="Permanent link">&para;</a></h2>
+<p>From the repository root, with no arguments:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">AWS_PROFILE</span><span class="o">=</span>xatc<span class="w"> </span>uv<span class="w"> </span>run<span class="w"> </span>xatc
+</code></pre></div>
+<p>This runs live from <code>settings.json</code> and opens the panel in your browser automatically.
+The first time, that file is empty, so open the <strong><a href="../features/radio-panel/#settings">Settings</a></strong>
+page (the gear icon) and fill in the Flight, Voice and other tabs there -- everything
+saves as you go, so this is a one-time setup per machine.</p>
+<p>The header should show <strong>X-Plane 12.x · connected</strong>. Hold the <strong>PTT</strong> button, or hold
+<strong>Space</strong> while the page has focus, to talk -- or use a real yoke or joystick button
+instead, straight from X-Plane by default on Windows or macOS (Voice tab's <strong>Learn PTT
+button</strong>; see <a href="../features/joystick-ptt/">Push-to-talk from hardware</a>). If the panel
+doesn't respond after an update, hard-refresh it (Cmd+Shift+R). The first time you use
+push-to-talk, macOS asks for microphone permission for your terminal app.</p>
+<p><strong>Flags still work</strong>, for development or a one-off override without touching
+<code>settings.json</code>:</p>
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>xatc<span class="w"> </span>run<span class="w"> </span>--live<span class="w"> </span>--voice<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--callsign<span class="w"> </span>N547GA<span class="w"> </span>--aircraft-type<span class="w"> </span>GLF5<span class="w"> </span>--dest<span class="w"> </span>KPDX<span class="w"> </span>--cruise<span class="w"> </span><span class="m">35000</span>
+</code></pre></div>
+<p><strong>Without X-Plane or AWS</strong>, replay a recorded taxi and type your transmissions instead
+of speaking them:</p>
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>xatc<span class="w"> </span>run<span class="w"> </span>--replay<span class="w"> </span>fixtures/flights/ksea_taxi_out.jsonl<span class="w"> </span>--weather-fixture<span class="w"> </span>south-flow<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--callsign<span class="w"> </span>N547GA<span class="w"> </span>--aircraft-type<span class="w"> </span>GLF5<span class="w"> </span>--dest<span class="w"> </span>KPDX<span class="w"> </span>--cruise<span class="w"> </span><span class="m">35000</span>
+</code></pre></div>
+<p>Run <code>uv run xatc run --help</code> for every flag.</p>
+<h2 id="demo-script">Demo script<a class="headerlink" href="#demo-script" title="Permanent link">&para;</a></h2>
+<p>A five-minute walkthrough of a real IFR clearance and taxi-out, at KSEA:</p>
+<ol>
+<li><strong>ATIS</strong> -- put <strong>118.00</strong> on COM2 and listen to the looping broadcast: wind,
+   altimeter, ceiling and visibility, active runway, and an information letter.</li>
+<li><strong>Clearance</strong> -- put <strong>128.00</strong> on COM1 and say <em>"Seattle Clearance, November five
+   four seven Golf Alpha, IFR to Portland with information Alpha."</em> Read the clearance
+   back.</li>
+<li><strong>Taxi</strong> -- put <strong>121.70</strong> on COM1 and say <em>"Seattle Ground, Gulfstream five four
+   seven Golf Alpha, ready to taxi with Alpha."</em> Read the taxi instruction back.</li>
+<li><strong>Wrong frequency</strong> -- transmit on a frequency nobody's listening on, and you get
+   silence.</li>
+</ol>
+<h2 id="development">Development<a class="headerlink" href="#development" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w">                          </span><span class="c1"># the full suite, including the MVP acceptance test</span>
+uv<span class="w"> </span>run<span class="w"> </span>xatc<span class="w"> </span>record<span class="w"> </span>--out<span class="w"> </span>flight.jsonl<span class="w">  </span><span class="c1"># record a live X-Plane session as a replay fixture</span>
+</code></pre></div>
+<p>CI runs the suite on Python 3.14 (the only supported version, ADR 0011), with the voice
+extra, on Windows, and synthesizes the <code>infra/</code> CDK app.</p>
+<p>Every option is described in the <strong><a href="../settings/">Settings reference</a></strong>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.indexes", "navigation.top", "content.code.copy", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
