@@ -92,11 +92,13 @@ X-Plane's own radios or what xatc actually hears/transmits on.
 
 ## Voice
 
-Push-to-talk speech in, ATC speech out. See [Voice](features/voice.md).
+Push-to-talk speech in, ATC speech out. **Always on** (ADR 0012) -- there's no toggle
+here, and `--voice` is accepted only as a no-op for one release, for an old script that
+still passes it. If voice can't actually start, xatc still runs and falls back to typing;
+see [Voice](features/voice.md#when-voice-cant-start) for exactly what that looks like.
 
 | Setting | Default | Flag | When | What it does |
 |---|---|---|---|---|
-| **Voice enabled** (`voice.enabled`) | off | `--voice` | restart | Turns on Amazon Transcribe (your speech) and Polly (ATC's replies). Off means text only: you type transmissions in the panel. |
 | **AWS profile** (`voice.aws_profile`) | `xatc` | — (`AWS_PROFILE`) | restart | The AWS CLI profile to use. Only the name is stored. |
 | **AWS region** (`voice.aws_region`) | `us-east-1` | `--aws-region` | restart | Where Transcribe, Polly and Bedrock are called. |
 | **Custom vocabulary** (`voice.vocabulary`) | `xatc-aviation-en-US` | `--vocabulary` / `--no-vocabulary` | restart | A Transcribe custom vocabulary name, deployed with `cdk deploy`. It improves recognition of callsigns, fixes and procedure names. **Blank, or `--no-vocabulary`, means none.** |
@@ -118,7 +120,7 @@ How strict ATC is, and how it understands you. Every change is **live**.
 
 | Setting | Default | Flag | What it does |
 |---|---|---|---|
-| **Intent parser** (`atc.intent_parser_mode`) | disabled (fallback with `--voice` if never set) | `--intent-mode` | **Disabled:** rules only. **Fallback:** the Nova Lite LLM helps only when the rules can't understand you. **Primary:** Nova Lite first, with the rules as backup. The LLM only classifies *what you asked for*; it never writes ATC's words. See [Intent parsing & LLM modes](features/intent-parsing.md). |
+| **Intent parser** (`atc.intent_parser_mode`) | fallback | `--intent-mode` | **Disabled:** rules only. **Fallback:** the Nova Lite LLM helps only when the rules can't understand you. **Primary:** Nova Lite first, with the rules as backup. The LLM only classifies *what you asked for*; it never writes ATC's words. A saved **Disabled** choice is left alone. Automatically sits out (rules only) while [voice is unavailable](features/voice.md#when-voice-cant-start), resuming your saved mode once it recovers. See [Intent parsing & LLM modes](features/intent-parsing.md). |
 | **Altitude source** (`atc.altitude_source`) | Mode C | `--altitude-source` | Which altitude the conformance monitor and handoffs judge you on. **Mode C** is what a real controller's radar shows: pressure altitude corrected to the local altimeter below FL180. **Indicated** is your cockpit altimeter. **True** is the sim's true MSL altitude. |
 | **Conformance strictness** (`atc.conformance_strictness`) | normal | `--strictness` | **Relaxed:** wider tolerances, and readback errors are corrected but don't hold up the flight. **Normal.** **Checkride:** tight tolerances. See [Conformance monitor](features/conformance-monitor.md). |
 | **Heavy-jet speed exception** (`atc.heavy_speed_exception`) | on | `--no-heavy-speed-exception` | When on, Heavy and Super types (747, 777, 787, A350, A380 …) aren't held to 250 kt below 10,000 ft (14 CFR 91.117(d)). An assigned speed is still enforced. |
@@ -160,7 +162,6 @@ Rarely needed. Every change needs a **restart**.
     "heavy_speed_exception": true
   },
   "voice": {
-    "enabled": true,
     "aws_profile": "xatc",
     "aws_region": "us-east-1",
     "vocabulary": "xatc-aviation-en-US",
