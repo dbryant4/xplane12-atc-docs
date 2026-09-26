@@ -45,6 +45,31 @@ run() {
   fi
 }
 
+# The site root's 404 page (site-root/404.html): redirects a pre-versioning link (no
+# version in its path) to the same page under the default version. mike only manages the
+# version folders, versions.json and the root index.html, so this keeps 404.html on
+# gh-pages in step with the source after every deploy.
+sync_root_404() {
+  local src="$REPO_ROOT/site-root/404.html"
+  [[ -f "$src" ]] || return 0
+  if $DRY_RUN; then
+    echo "+ (gh-pages: 404.html <- site-root/404.html, committed if changed)"
+    return 0
+  fi
+  local wt
+  wt="$(mktemp -d "${TMPDIR:-/tmp}/xatc-docs-gh-pages.XXXXXX")"
+  git worktree add -q "$wt" gh-pages
+  if ! cmp -s "$src" "$wt/404.html"; then
+    cp "$src" "$wt/404.html"
+    git -C "$wt" add 404.html
+    git -C "$wt" commit -q -m "Root 404 page: send unversioned links to the default docs version"
+    if $PUSH; then
+      git -C "$wt" push -q origin gh-pages
+    fi
+  fi
+  git worktree remove --force "$wt"
+}
+
 PUSH_ARGS=()
 if $PUSH; then
   PUSH_ARGS=(--push)
@@ -84,6 +109,7 @@ if [[ "$DOC_VERSION" == "dev" ]]; then
     echo "==> No release published yet: the site's default is dev"
     run "$MIKE" set-default ${PUSH_ARGS[@]+"${PUSH_ARGS[@]}"} dev
   fi
+  sync_root_404
   exit 0
 fi
 
@@ -107,3 +133,5 @@ else
   run "$MIKE" deploy ${PUSH_ARGS[@]+"${PUSH_ARGS[@]}"} \
     --message "Deploy docs ${DOC_VERSION} (xatc ${TARGET}) from ${SHA}" "$DOC_VERSION"
 fi
+
+sync_root_404
