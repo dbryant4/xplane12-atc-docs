@@ -65,4 +65,6 @@ nav:
       - Pushback: features/pushback.md
       - VFR pattern work: features/vfr-pattern.md
       - VFR flight following: features/vfr-flight-following.md
+      - VFR Class B/C/D airspace entry: features/vfr-airspace-entry.md
+      - Traffic advisories (not yet live): features/traffic-advisories.md
   - Roadmap: roadmap.md

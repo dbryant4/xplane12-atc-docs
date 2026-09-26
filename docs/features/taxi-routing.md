@@ -45,6 +45,10 @@ taxi."*
 6. Which physical end of a crossed runway gets spoken matches the flow family of the
    assigned runway -- an aircraft routed to 16L crossing "16C/34C" is told to cross
    **16C**, not 34C, since that's the end actually in the flow of traffic it's part of.
+   This resolution is now robust to an `apt.dat` file that spells the same runway
+   inconsistently between its own row and its hold-short rows (e.g. KLAX's "6R" vs.
+   "06R") -- runway ids are canonicalized everywhere this logic looks them up, fixing a
+   real bug that could name the wrong physical end at a handful of real airports.
 
 Arrival at the hold-short line is detected once the aircraft comes within about 30
 meters of the route's last node -- this is proximity detection for advancing the flight
@@ -57,9 +61,8 @@ None -- routing is entirely derived from the airport's own taxiway data.
 
 ## Limitations
 
-- No pushback modeling -- a pushback request currently gets no response at all.
 - No dedicated hold-short-to-threshold leg for line-up-and-wait.
-- Taxi-in (runway exit back to a gate) and general point-to-point routing exist in the
-  underlying graph code and are unit tested, but nothing in the engine calls them yet --
-  only gate-to-hold-short is wired up end to end.
 - No ramp/gate-name resolver -- see [Fuzzy ramp resolver](fuzzy-ramp-resolver.md).
+
+[Pushback](pushback.md) and taxi-in (runway exit back to a gate, on arrival) are both
+real now -- this page's older limitations bullets for them are gone.

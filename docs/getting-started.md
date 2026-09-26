@@ -10,7 +10,7 @@
 - **X-Plane 12.1.1+**, with its built-in Web API on port 8086 (on by default). It can
   run on a different machine than xatc itself -- see [Reach X-Plane](#4-reach-x-plane)
   below.
-- **Python 3.12+** and [uv](https://docs.astral.sh/uv/).
+- **Python 3.14+** and [uv](https://docs.astral.sh/uv/) -- the only supported version (ADR 0011).
 - **An AWS account**, for voice only -- Amazon Transcribe and Polly in `us-east-1`, plus
   the AWS CLI v2.
 - **Node.js 22+** and the AWS CDK CLI (`npm install -g aws-cdk`), only to deploy the
@@ -122,7 +122,8 @@ Checks that this machine is actually ready to fly, without guessing:
 uv run xatc doctor              # add --check-aws for a live (free, read-only) API check
 ```
 
-It reports Python and `uv` versions, whether an X-Plane installation was found (and
+It reports the Python and `uv` versions (failing below Python 3.14, the only supported
+version -- ADR 0011), whether an X-Plane installation was found (and
 whether its `apt.dat`, `atc.dat` and CIFP data are actually there), whether X-Plane's
 Web API is reachable right now, whether AWS credentials resolve, whether a microphone
 is available and actually picking up sound, and where the settings file lives -- each as
@@ -211,7 +212,7 @@ uv run pytest                          # the full suite, including the MVP accep
 uv run xatc record --out flight.jsonl  # record a live X-Plane session as a replay fixture
 ```
 
-CI runs the suite on Python 3.12 and 3.14, with the voice extra, on Windows, and
-synthesizes the `infra/` CDK app.
+CI runs the suite on Python 3.14 (the only supported version, ADR 0011), with the voice
+extra, on Windows, and synthesizes the `infra/` CDK app.
 
 Every option is described in the **[Settings reference](settings.md)**.
