@@ -62,9 +62,13 @@ never fires.
 
 - **Non-towered fields.** Pattern work needs a Tower; there's no CTAF self-announce
   handling for an untowered airport.
-- **Class B/C/D entry calls and sequencing.** With one aircraft in the pattern, it's
-  always "number one" -- there's no traffic to sequence behind, and no airspace-entry
-  clearance beyond what Tower already handles.
+- **Sequencing.** With one aircraft in the pattern, it's always "number one" -- there's
+  no traffic to sequence behind (see [traffic advisories](traffic-advisories.md), not
+  yet live, and the [roadmap](../roadmap.md)'s M7-3 for sequencing itself).
+
+A Class D field's own [Class B/C/D airspace entry](vfr-airspace-entry.md) rules apply
+here too, since that mechanism isn't gated to a particular flight phase -- though the
+combination isn't specifically covered by a test.
 
 A VFR flight whose destination is a *different* airport doesn't fly the pattern at all
 -- see [VFR flight following](vfr-flight-following.md).

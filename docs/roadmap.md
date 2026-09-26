@@ -15,7 +15,8 @@ covers, with a deterministic engine deciding every word ATC says.
 | **M3: departure** | ✅ done | [Tower takeoff clearance](features/tower-clearance.md); [Tower → Departure → Center](features/departure-center.md); a CIFP-assigned [SID](features/sid-departure-procedures.md); [readback checking](features/readback-checking.md); the [conformance monitor](features/conformance-monitor.md) |
 | **M4: arrival** | ✅ done | [Descent via a STAR, approach clearance, landing clearance, taxi-in, go-around and parking](features/arrival.md) |
 | **M5: realism** | ✅ done | ATIS-letter checks, en-route pilot requests, emergencies and special squawks, pushback (details below) |
-| **M6: VFR** | ✅ done | Pattern work at a towered airport (M6-1) and VFR flight following (M6-2), details below |
+| **M6: VFR** | ✅ done | Pattern work (M6-1), flight following (M6-2), and Class B/C/D airspace entry (M6-3), details below |
+| **M7: traffic awareness** | 🔶 in progress | Advisory logic built and tested (M7-2) -- not live until the X-Plane traffic feed lands; sequencing (M7-3) next |
 
 ### M5: the most common "real ATC" interactions
 - **ATIS-letter check.** Report an old letter on first contact with Clearance, Ground or
@@ -68,6 +69,35 @@ covers, with a deterministic engine deciding every word ATC says.
   VFR, frequency change approved." See [VFR flight
   following](features/vfr-flight-following.md).
 
+### M6-3: VFR Class B/C/D airspace entry
+- **Class B needs a request.** "request Bravo clearance" gets "cleared into the Class
+  Bravo airspace, maintain VFR at or below &lt;altitude&gt;"; entering uncleared gets an
+  escalating callout.
+- **Class C and D just need contact.** Ordinary two-way radio contact (the controller
+  using your callsign) satisfies it -- no request needed; entering before that gets an
+  escalating callout naming the airspace.
+- **Class B altitude limit** (F10): climbing above your cleared "at or below" altitude
+  gets its own escalating callout. See [VFR Class B/C/D airspace
+  entry](features/vfr-airspace-entry.md).
+
+### M7: traffic awareness
+- **M7-1 (ADR 0010)** laid the groundwork: a `TrafficTarget` snapshot type and the
+  geometry `atc/traffic.py` needs.
+- **M7-2** wired a full advisory pipeline into the engine and phraseology: "traffic,
+  twelve o'clock, five miles, opposite direction, Boeing seven thirty seven, altitude
+  indicates same altitude," from whoever has you airborne, with backoff and "traffic in
+  sight" handling. **Not live yet** -- there's no X-Plane traffic feed wired up today, so
+  this only runs against test data. See [Traffic advisories](features/traffic-advisories.md).
+- **F10** also gave KBFI's Class D real Laminar Research atc.dat data in its test
+  coverage, replacing a synthetic placeholder.
+- **A real bug, fixed**: an `apt.dat` file that spells a runway inconsistently between
+  its own row and its hold-short rows (e.g. KLAX's "6R" vs. "06R") could falsely flag a
+  clean, correctly-flown runway crossing as an incursion, or name the wrong runway end in
+  a taxi instruction or an incursion event -- confirmed at real airports (KLAX, KJFK) and
+  fixed everywhere runway ids get looked up. See [Conformance
+  monitor](features/conformance-monitor.md#ground-conformance) and [Taxi routing &
+  hold-shorts](features/taxi-routing.md).
+
 ### Also built along the way
 - **[Any airport](features/any-airport-data.md).** Airport, procedure and airspace data
   comes straight from your X-Plane install, including Custom Scenery priority, X-Plane's
@@ -92,7 +122,14 @@ See [Features](features/index.md) for the per-feature "available now" breakdown.
 
 ## What's next
 
-1. **First live flights on the Windows PC**: a real KSEA departure recording to replace
+1. **The live X-Plane traffic feed**: `SimBridge.traffic()` and the `xatc run --live`
+   wiring that feeds it into the engine, once the owner confirms the TCAS datarefs live
+   (ADR 0010) -- this is what actually turns on [traffic
+   advisories](features/traffic-advisories.md).
+2. **M7-3: sequencing behind traffic.** Builds on M7-2's traffic snapshot: "number two,
+   follow the Boeing seven thirty seven on a five mile final, report it in sight," with a
+   wake-turbulence caution behind a heavy.
+3. **First live flights on the Windows PC**: a real KSEA departure recording to replace
    the synthetic scenario tests, and confirming joystick PTT and the new altitude
    datarefs on real hardware.
 
@@ -109,7 +146,8 @@ the pilot said (Nova Lite). The deterministic engine decides every word ATC says
 
 ## Longer term
 
-- **AI or multiplayer traffic:** sequencing and traffic advisories.
+- **AI or multiplayer traffic**, once there's a live feed to sequence against (M7-3 and
+  beyond).
 - **ICAO (non-US) phraseology.**
 - **A one-click Windows installer.**
 - **Push-to-talk read straight from X-Plane's joystick bindings.**

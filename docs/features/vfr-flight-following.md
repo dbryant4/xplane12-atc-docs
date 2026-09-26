@@ -45,7 +45,16 @@ Within 10 nm of your destination, service ends on its own: *"radar service termi
 squawk VFR, frequency change approved."* Your squawk assignment is cleared -- there's
 nothing further to check in for.
 
+## Nearing a Class B, C or D destination
+
+If your route takes you into Class B, C or D airspace, those [entry
+rules](vfr-airspace-entry.md) apply independently of flight following -- a Class B
+destination still needs its own "request Bravo clearance" call, and Class C/D still just
+needs two-way contact.
+
 ## Out of scope
 
-- **Sequencing and traffic advisories against other aircraft.** With one aircraft in the
-  sim, there's nothing to call traffic against.
+- **Sequencing against other traffic.** [Traffic advisories](traffic-advisories.md) are
+  built (not yet live -- there's no real X-Plane traffic feed wired up today), but
+  sequencing behind another aircraft ("number two, follow the...") isn't -- see the
+  [roadmap](../roadmap.md)'s M7-3.

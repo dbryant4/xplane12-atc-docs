@@ -1,14 +1,14 @@
 # Conformance monitor
 
-**Available now: ground, airborne, landing and pattern rules, all wired into the engine
-and speaking.**
+**Available now: ground, airborne, landing, pattern and airspace rules, all wired into
+the engine and speaking.**
 
-Four monitors watch whether the aircraft is actually doing what it's been cleared to do,
+Five monitors watch whether the aircraft is actually doing what it's been cleared to do,
 and escalate a callout the way a real controller would when it isn't: one for ground
 movement, one for everything from the takeoff roll through approach, one for the landing
-itself, and one for [VFR pattern work](vfr-pattern.md). All four are pure (no I/O,
-deterministic on `AircraftState.t`), and all four are checked every tick from
-`AtcEngine.on_tick`.
+itself, one for [VFR pattern work](vfr-pattern.md), and one for [VFR Class B/C/D
+airspace entry](vfr-airspace-entry.md). All five are pure (no I/O, deterministic on
+`AircraftState.t`), and all five are checked every tick from `AtcEngine.on_tick`.
 
 ## Ground conformance
 
@@ -22,6 +22,12 @@ deterministic on `AircraftState.t`), and all four are checked every tick from
 | **Off the taxi route** | Cleared to taxi, but farther from the assigned route than tolerance allows, sustained | Gentle → firm → "possible pilot deviation" |
 | **Runway incursion** | Inside a runway's protected zone without a clearance that allows it -- fires immediately, no sustain time | "Hold position!" straight to "possible pilot deviation" |
 | **Takeoff without clearance** | On runway pavement, aligned with it, moving, without a takeoff clearance | "Stop immediately" straight to "possible pilot deviation" |
+
+Runway ids are canonicalized everywhere the runway-incursion rule looks them up, fixing
+a real bug where an `apt.dat` file that spells the same runway inconsistently between
+its own row and its hold-short rows (e.g. KLAX's "6R" vs. "06R") could falsely flag a
+legitimate, correctly-flown runway crossing as an incursion, or name the wrong runway
+end in the incursion event's own text.
 
 Every rule fires once when a violation is established, steps up exactly one severity
 level for each interval the violation continues (never repeating a step), and resets
@@ -160,6 +166,22 @@ work](vfr-pattern.md), spoken from Tower:
 Landing without a clearance in the pattern reuses [landing
 conformance](#landing-conformance)'s own rule, not a pattern-specific one.
 
+## Airspace conformance
+
+`xatc.atc.conformance_airspace.AirspaceConformanceMonitor` --
+`src/xatc/atc/conformance_airspace.py`. VFR-only rules for entering Class B, C or D
+airspace -- IFR flights are never checked, since 14 CFR 91.131/130/129 only bind VFR.
+Runs whenever the loaded `atc.dat` has a Class B, C or D airspace and its controlling
+position is staffed, independent of flight phase. See [VFR Class B/C/D airspace
+entry](vfr-airspace-entry.md) for the full pilot-facing behavior.
+
+| Rule | Fires when | Ladder |
+|---|---|---|
+| **Class B without clearance** | Inside a Class B's lateral boundary without ever having requested/received "cleared into the Class Bravo airspace" | Gentle → firm → "possible pilot deviation" |
+| **Class B altitude limit** | More than the strictness tolerance above a Class B clearance's own "maintain VFR at or below" altitude | *"check altitude, maintain VFR at or below..."* → *"maintain VFR at or below..."* → "possible pilot deviation" |
+| **Class C without contact** | Inside a Class C's boundary before the controlling facility has used the aircraft's callsign in a transmission (two-way contact -- no explicit request needed) | Gentle → firm → "possible pilot deviation" |
+| **Class D without contact** | Same as Class C, for a Class D tower's boundary | Gentle → firm → "possible pilot deviation" |
+
 ## Spoken wording, corrected
 
 A phraseology audit against FAA JO 7110.65 caught two real bugs in what these monitors
@@ -171,25 +193,26 @@ instead of *"on taxiway Bravo"*). Both are covered by a golden-string test suite
 (`tests/phraseology/test_golden_phraseology.py`) that pins the exact expected wording
 for one example of each transmission type, citing the FAA paragraph it follows.
 
-A fourth, related event -- **no check-in after a handoff** -- isn't a rule on any of
-these three monitors; the engine raises it itself (`xatc.atc.conformance_core.RadioRule
+A related event -- **no check-in after a handoff** -- isn't a rule on any of these
+monitors; the engine raises it itself (`xatc.atc.conformance_core.RadioRule
 .NO_CHECKIN`) the same moment it re-transmits a handoff reminder. See [Controller
 positions & frequencies](controller-positions.md#handoffs) for that mechanism -- it
 feeds the [debrief](debrief.md) the same way a real conformance event does, without
 being one.
 
-Once an [emergency, lost-comms code, or hijack code](emergencies.md) is active, all
-three monitors keep running and their events still reach the debrief -- but every
-spoken callout is suppressed, so a distracted pilot handling a real emergency doesn't
-also get called out for drifting off a taxi route or an altitude.
+Once an [emergency, lost-comms code, or hijack code](emergencies.md) is active, every
+monitor keeps running and their events still reach the debrief -- but every spoken
+callout is suppressed, so a distracted pilot handling a real emergency doesn't also get
+called out for drifting off a taxi route or an altitude.
 
 ## Limitations
 
 - **Heading after "resume own navigation" or a direct-to.** The engine never assigns a
   heading today, so there's nothing for the heading rule to clear in that case yet.
 
-The three monitors' shared escalation logic (fire once, step up the ladder, reset after
+All five monitors' shared escalation logic (fire once, step up the ladder, reset after
 conforming) is factored into one common module, `xatc.atc.conformance_core`, that
-`conformance.py`, `conformance_airborne.py` and `conformance_landing.py` all build on.
-Readback checking is a related but separate mechanism from these monitors -- see
-[Readback checking](readback-checking.md).
+`conformance.py`, `conformance_airborne.py`, `conformance_landing.py`,
+`conformance_pattern.py` and `conformance_airspace.py` all build on. Readback checking
+is a related but separate mechanism from these monitors -- see [Readback
+checking](readback-checking.md).
