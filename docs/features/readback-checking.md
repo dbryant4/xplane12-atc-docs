@@ -25,17 +25,23 @@ readback correct, departure frequency one one niner point two
 ## What's checked, and how strictly
 
 `xatc.phraseology.readback.check_readback(issued, kind, pilot_text)` compares a pilot's
-transmission against the `Clearance` ATC actually issued, for seven kinds of
-instruction: `ifr_clearance`, `taxi`, `taxi_in`, `takeoff`, `altitude`, `heading`,
-`frequency`. Each kind has its own required-vs-warning breakdown -- for example, an IFR
-clearance readback *must* include the altitude and squawk code, but the clearance limit
-and departure frequency are only warned about if missing, not rejected outright. A taxi
-readback must include the assigned runway and *every* hold-short instruction it was
-given, but the full taxi route itself is only a warning. A `taxi_in` readback (Ground's
+transmission against the `Clearance` ATC actually issued, for nine kinds of instruction:
+`ifr_clearance`, `taxi`, `taxi_in`, `takeoff`, `altitude`, `heading`, `frequency`,
+`direct`, `approach`. Each kind has its own required-vs-warning breakdown -- for example,
+an IFR clearance readback *must* include the altitude and squawk code, but the clearance
+limit and departure frequency are only warned about if missing, not rejected outright. A
+taxi readback must include a hold-short for every *other* runway crossed on the way --
+holding short of the assigned departure runway itself (the one you're taxiing to) is only
+a warning if left out, and so is the runway assignment and the full taxi route
+themselves, since real pilots often trim those from a long taxi readback. A `taxi_in`
+readback (Ground's
 taxi-to-parking instruction, once you're on the ground after landing -- see
 [Arrival](arrival.md)) requires *every* runway it crosses on the way to the stand to be
 read back, the same all-required treatment hold-shorts get on the way out; miss one and
-you get *"read back runway crossing"*.
+you get *"read back runway crossing"*. A `direct` readback requires the fix you were
+cleared direct to (see [En-route requests](enroute-requests.md)). An `approach` readback
+-- the approach clearance itself, see [Arrival](arrival.md) -- requires both the runway
+and, when a vector was needed to intercept, the assigned heading.
 
 The SID is a special case: leaving it out is only a warning, but naming a *different*
 one is treated as wrong regardless -- read back "Bangr Nine departure" when you were
@@ -71,9 +77,24 @@ The wording differs slightly for a missing item in this mode: it states the actu
 outright (*"hold short of runway one six left"*) instead of asking you to read it back
 again.
 
+## Readback marks in the panel
+
+Every transcript entry the engine ran a readback check against shows one of three marks
+(rendered by the radio panel's own JS, not spoken): **✓ readback** (correct), **✗
+readback** (wrong or incomplete), or **• no readback expected** (nothing to check --
+mainly takeoff clearances, and anything outside the nine kinds above).
+
+Only the `ifr_clearance` kind actually gets ATC to speak "readback correct" out loud.
+Every other kind -- `taxi`, `taxi_in`, `takeoff`, `altitude`, `heading`, `frequency`,
+`direct`, `approach` -- is silent when the readback is correct, the same way a real
+controller doesn't bother repeating "readback correct" for every taxi instruction or
+altitude confirmation. The panel's ✓ mark is how you actually know a readback landed for
+those; ATC itself only speaks up when something's missing or wrong, or for that one
+first IFR clearance.
+
 ## Limitations
 
-- Only the seven kinds above are checked; nothing else (e.g. a wrong-frequency
+- Only the nine kinds above are checked; nothing else (e.g. a wrong-frequency
   acknowledgment) is readback-verified.
 - Takeoff clearances are exempt by design, not an oversight -- a real "cleared for
   takeoff" readback is short enough that a full check adds little value over what the

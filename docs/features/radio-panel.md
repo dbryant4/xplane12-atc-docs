@@ -27,6 +27,11 @@ network:
   just been [handed off to](controller-positions.md#handoffs) is highlighted, with a
   one-click "Load & swap" that tunes and switches the TX radio to it directly, instead
   of loading to standby and flip-flopping separately.
+- **Route map card**, once airborne on an IFR route -- the filed fixes with the one
+  you're tracking toward highlighted, and anything already behind you dimmed. See [Route
+  tracking](route-tracking.md) for the data behind it.
+- **Reset flight button** -- clears the saved [flight state](flight-state.md) and starts
+  over from the ramp, without needing to restart xatc itself.
 - **Transcript** -- every transmission, tagged by frequency and station, plus a
   type-to-transmit box for text mode.
 - **Push-to-talk** -- an on-screen button, or holding Space while the page has focus

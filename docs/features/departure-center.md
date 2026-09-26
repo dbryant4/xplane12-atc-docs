@@ -52,6 +52,24 @@ Checking in on Center gets:
 -- your full filed cruise altitude this time, not a capped one, and it advances the
 flight phase to `ENROUTE`.
 
+### Direct-to, or resume own navigation, at radar contact
+
+If [Tower's takeoff clearance](tower-clearance.md#takeoff-heading-on-radar-vectors)
+carried a heading (a radar-vectors departure, no SID), the radar-contact check-in above
+also turns the aircraft loose from that heading:
+
+```
+"...radar contact, climb and maintain one zero thousand, cleared direct Battle Ground"
+"...radar contact, climb and maintain one zero thousand, resume own navigation"
+```
+
+Direct is issued to the first fix on the filed route (or the STAR's own entry/transition
+fix) if there is one to go to; otherwise it's a plain "resume own navigation." A SID
+departure never gets this -- there's no assigned heading to release in the first place,
+since the SID itself is flown as published from the takeoff roll. Once you're navigating
+your own route, [en-route requests](enroute-requests.md#direct-to) and [route
+tracking](route-tracking.md) take over as normal.
+
 **Check-ins are only accepted after a real handoff actually happened** -- being in the
 right phase isn't enough by itself. The engine also checks that
 `Clearance.expected_next_freq_khz` still points at the exact frequency you're checking
@@ -104,7 +122,7 @@ fixtures) and how the departure airport itself is chosen.
 - No step climbs beyond the two capped handoff altitudes (Departure's 10,000 ft cap,
   then straight to full cruise at Center) -- a real Departure/Center climbs an aircraft
   incrementally.
-- No direct-to clearances or crossing restrictions.
+- No crossing restrictions (a specific altitude or speed to meet at a fix along the way).
 - *Which* ARTCC facility is real (see above), but the frequency chosen *within* it is
   still the same deterministic placeholder (a bearing wedge from the block's polygon
   centroid) -- there's no source data for actual named-sector boundaries inside one

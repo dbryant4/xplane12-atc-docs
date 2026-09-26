@@ -21,13 +21,23 @@ provider, plus the radio behavior that sits above both:
   queue), FIFO within the same priority.
 - **The ATIS loop.** The engine only emits a new ATIS broadcast when the information
   letter changes, not every tick -- so the session itself remembers the latest broadcast
-  per frequency and replays it every couple of seconds while that frequency is being
-  listened to (COM1 or COM2's *active* frequency; see
-  [Controller positions](controller-positions.md)). A newer broadcast for the same
-  frequency replaces one still waiting to play; an identical one already playing is left
-  alone rather than restarted.
-- **Voice per position type**, for a bit of realism -- Ground and Tower get one Polly
-  voice, Clearance and Departure another, ATIS a third, all overridable.
+  per frequency and replays it on a loop while that frequency is being listened to (COM1
+  or COM2's *active* frequency; see [Controller positions](controller-positions.md)).
+  Tuning away cuts the currently-playing block off within one loop instead of letting it
+  finish; a letter change while already tuned in switches to the new broadcast at the
+  next loop boundary, not mid-utterance. Where a fresh tune-in joins the loop depends on
+  the `voice.atis_start` setting (see [Settings](../settings.md)): **broadcast** (the
+  default) joins partway through, like a real ATIS you're just now receiving; **beginning**
+  always starts at "...information Alpha..." instead.
+- **Untuned frequencies aren't heard.** A reply only plays if it's on a frequency either
+  radio is actively listening to -- a controller's own reminders or handoff chatter meant
+  for a frequency you've since retuned away from stays silent, the same as a real radio.
+- **Voice per position type**, for a bit of realism -- with `voice.controller_voices` set
+  to **varied** (the default), every controller position (Ground, Tower, Departure,
+  Center, Approach) gets its own Amazon Polly neural voice, assigned deterministically so
+  the same controller always sounds the same and a handoff always changes voice; **single**
+  uses one voice for every position. ATIS always gets its own dedicated voice either way.
+  See [Settings](../settings.md).
 
 ## How a transmission actually flows
 

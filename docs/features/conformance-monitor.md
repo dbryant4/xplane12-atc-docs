@@ -66,11 +66,15 @@ off the ground.
 | **Altitude deviation** | More than the tolerance off the assigned altitude once the aircraft has reached it (an overshoot counts -- passing through the target reaches it). Before that, only moving the wrong way from it, or missing a climb/descent allowance, fires. A normal climb or descent toward a new assignment never fires. | Gentle → firm → "possible pilot deviation" |
 | **Heading deviation** | More than the tolerance off the assigned magnetic heading, with wraparound at 360. Held to the tolerance once turned onto it; before that, a standard-rate-turn allowance. | Gentle → firm → "possible pilot deviation" |
 | **Speed deviation** | IAS above the tighter of 250 kt below 10,000 ft MSL (14 CFR 91.117(a)) and any assigned speed, plus tolerance -- see the heavy-jet exception below | Gentle → firm → "possible pilot deviation" |
-| **Wrong squawk** | The transponder code doesn't match the assigned code, or the mode is below ALT, for longer than a dial-in grace period | Gentle → firm only -- no pilot-deviation step |
+| **Wrong squawk** | The transponder code doesn't match the assigned code, or the mode doesn't report altitude, for longer than a dial-in grace period | Gentle → firm only -- no pilot-deviation step |
 
 A code from [7500, 7600 or 7700](emergencies.md) is never flagged as a wrong squawk --
 those are handled as emergencies and lost-comms in their own right, not as a
-conformance deviation.
+conformance deviation. "Doesn't report altitude" means the transponder is off, standby,
+or in test mode -- **ALT, ground, TA and TA/RA all count as reporting altitude** and
+never trigger this rule on their own, since a real Mode C/S transponder reports pressure
+altitude in every one of those modes (an airliner-style panel, like the owner's GLF5,
+normally sits in TA/RA in flight).
 
 Rules run in every airborne phase the engine reaches -- `TAKEOFF` once off the ground,
 `DEPARTURE`, `ENROUTE`, `DESCENT`, `APPROACH` -- and never on the ground, and never once
@@ -204,11 +208,6 @@ Once an [emergency, lost-comms code, or hijack code](emergencies.md) is active, 
 monitor keeps running and their events still reach the debrief -- but every spoken
 callout is suppressed, so a distracted pilot handling a real emergency doesn't also get
 called out for drifting off a taxi route or an altitude.
-
-## Limitations
-
-- **Heading after "resume own navigation" or a direct-to.** The engine never assigns a
-  heading today, so there's nothing for the heading rule to clear in that case yet.
 
 All five monitors' shared escalation logic (fire once, step up the ladder, reset after
 conforming) is factored into one common module, `xatc.atc.conformance_core`, that

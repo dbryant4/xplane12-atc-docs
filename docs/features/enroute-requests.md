@@ -12,9 +12,12 @@ altitude change, a weather deviation, or declining an outstanding instruction wi
 
 ### Direct-to
 
-*"Request direct Battle Ground"* -- approved with *"cleared direct Battle Ground"* if
-the fix is on your filed route or is your destination STAR's entry or transition fix;
-otherwise denied with *"unable, Battle Ground is not on your route."* An approved
+*"Request direct Battle Ground"* -- approved with *"cleared direct Battle Ground"* for
+any fix on your filed route, your destination STAR's entry/transition fix, or any other
+fix on the currently tracked route (see [Route tracking](route-tracking.md)); otherwise
+denied with *"unable, Battle Ground is not on your route."* Asking direct to a fix
+you've already passed gets a different denial instead -- *"unable, Battle Ground, that's
+behind you"* -- rather than clearing you backward along your own route. An approved
 direct-to drops any assigned heading and **is read back** -- get it wrong and you'll
 hear *"negative, cleared direct Battle Ground."*
 

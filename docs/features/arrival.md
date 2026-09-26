@@ -126,6 +126,13 @@ own "cross runway X" clause -- and, like a taxi-*out* crossing, has to be read b
 correctly (a new `taxi_in` [readback kind](readback-checking.md)) before the flight is
 considered clear to keep going.
 
+Calling the destination's Ground always gets taxi-to-parking, whatever flight phase the
+landing actually left behind -- a live KPDX flight missed its Tower check-in, which left
+the phase at `APPROACH` even after touchdown, and calling Ground from there got
+Portland's own *departure* taxi instead of a taxi to a stand. Now, being down on the
+ground and calling the destination's own Ground position is what matters, not which of
+`APPROACH`/`LANDING`/`TAXI_IN` the phase still happens to say.
+
 ## Go-around and missed approach (M4-4)
 
 Say "going around" (or "missed approach") in `APPROACH` or `LANDING` and ATC actually
