@@ -90,7 +90,9 @@ Push-to-talk speech in, ATC speech out. See [Voice](features/voice.md).
 | **AWS profile** (`voice.aws_profile`) | `xatc` | — (`AWS_PROFILE`) | restart | The AWS CLI profile to use. Only the name is stored. |
 | **AWS region** (`voice.aws_region`) | `us-east-1` | `--aws-region` | restart | Where Transcribe, Polly and Bedrock are called. |
 | **Custom vocabulary** (`voice.vocabulary`) | `xatc-aviation-en-US` | `--vocabulary` / `--no-vocabulary` | restart | A Transcribe custom vocabulary name, deployed with `cdk deploy`. It improves recognition of callsigns, fixes and procedure names. **Blank, or `--no-vocabulary`, means none.** |
-| **PTT joystick button** (`voice.ptt_joystick`) | blank | `--ptt-joystick` | **live** | `"<device>:<button>"` for a yoke or joystick push-to-talk button. Use **Learn PTT button** and press it within 10 s. Windows only for now. See [Joystick PTT](features/joystick-ptt.md). |
+| **Push-to-talk source** (`voice.ptt_source`) | `xplane` on Windows, `off` elsewhere | — | **live** | `xplane` reads X-Plane's own joystick dataref (Windows and macOS); `joystick` uses pygame directly (Windows only); `off` disables hardware PTT. See [Push-to-talk from hardware](features/joystick-ptt.md). |
+| **X-Plane PTT button** (`voice.ptt_xplane_button`) | `-1` (not set) | — | **live** | The `sim/joystick/joystick_button_values` index for your PTT button, only used when the source above is `xplane`. Use **Learn PTT button** and press it within 10 s. |
+| **Joystick PTT button** (`voice.ptt_joystick`) | blank | `--ptt-joystick` | **live** | `"<device>:<button>"`, only used when the source above is `joystick`. Use **Learn PTT button** and press it within 10 s. |
 | **Radio effect** (`voice.radio_fx_preset`) | `realistic` | — | **live** | `clean` (no radio effect), `realistic` (VHF band-limit, compression, hiss, squelch) or `busy-day` (more noise). Signal strength also varies with distance. See [VHF radio effect](features/radio-fx.md). |
 
 The panel also lists your **microphones** (the default is marked) and **joysticks** (with button
@@ -150,6 +152,8 @@ Rarely needed. Every change needs a **restart**.
     "aws_profile": "xatc",
     "aws_region": "us-east-1",
     "vocabulary": "xatc-aviation-en-US",
+    "ptt_source": "xplane",
+    "ptt_xplane_button": 1441,
     "ptt_joystick": "",
     "radio_fx_preset": "realistic"
   },

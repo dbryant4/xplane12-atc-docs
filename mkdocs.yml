@@ -58,7 +58,7 @@ nav:
       - Any-airport data loading: features/any-airport-data.md
       - SimBrief import: features/simbrief-import.md
       - Post-flight debrief: features/debrief.md
-      - Joystick/yoke PTT (Windows only): features/joystick-ptt.md
+      - Push-to-talk from hardware: features/joystick-ptt.md
       - ATIS letter check: features/atis-letter-check.md
       - En-route pilot requests: features/enroute-requests.md
       - Emergencies and special squawks: features/emergencies.md

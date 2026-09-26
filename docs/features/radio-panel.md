@@ -76,12 +76,13 @@ the form and save it in one step. Once the flight leaves the ramp (any phase pas
 `PARKED`), the whole Flight tab locks with the banner *"Flight plan locked after
 clearance -- changes here won't take effect this flight."*
 
-**Learn PTT button.** On the Voice tab, click **Learn PTT button**, then press a button
-on your yoke or joystick -- xatc listens for 10 seconds and fills in the
-`<device>:<button>` spec for you (Windows only; see [Joystick/yoke
-push-to-talk](joystick-ptt.md)). It doesn't save automatically -- click **Save Voice**
-to keep it. The Voice tab also lists the microphones and joysticks xatc can currently
-see, for reference (not a saved setting).
+**Learn PTT button.** On the Voice tab, pick a push-to-talk source -- **X-Plane** (the
+default, works on Windows and macOS), **Joystick** (Windows only), or **Off** -- then
+click **Learn PTT button** and press a button on your yoke or joystick: xatc listens for
+10 seconds and fills in the field that source uses. See [Push-to-talk from
+hardware](joystick-ptt.md). It doesn't save automatically -- click **Save Voice** to keep
+it. The Voice tab also lists the microphones and joysticks xatc can currently see, for
+reference (not a saved setting).
 
 **A field set by a command-line flag** for this run shows read-only with *"Set by
 command line for this run."* underneath -- the flag wins for the run, so there's nothing

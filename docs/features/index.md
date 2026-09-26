@@ -24,7 +24,7 @@ plan, and marked by what actually runs today.
 | [Any-airport data loading](any-airport-data.md) | Available now |
 | [SimBrief import](simbrief-import.md) | Available now |
 | [Post-flight debrief](debrief.md) | Available now |
-| [Joystick/yoke push-to-talk](joystick-ptt.md) | Available now (Windows only; refused on macOS) |
+| [Push-to-talk from hardware](joystick-ptt.md) | Available now (X-Plane source: Windows and macOS; Joystick source: Windows only) |
 | [ATIS letter check](atis-letter-check.md) | Available now |
 | [En-route pilot requests](enroute-requests.md) | Available now (direct-to, altitude, deviation, unable) |
 | [Emergencies and special squawks](emergencies.md) | Available now (7500/7600/7700) |
