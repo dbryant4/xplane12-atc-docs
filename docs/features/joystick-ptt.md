@@ -7,7 +7,10 @@ no matter which one you use. Configure this from the [Settings
 page](radio-panel.md#settings)'s Voice tab -- see [Settings reference](../settings.md)
 for the full field list.
 
-`voice.ptt_source` picks how: **X-Plane** (the default), **Joystick**, or **Off**.
+`voice.ptt_source` picks how: **X-Plane**, **Joystick**, or **Off**. The default is **X-Plane** on
+Windows and **Off** elsewhere. If you set up a joystick PTT button before this setting existed,
+xatc keeps using it (the Joystick source), and `--ptt-joystick` on the command line also means
+the Joystick source.
 
 ## X-Plane
 
