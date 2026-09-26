@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>xatc docs</title>
+  <!--
+    The site root's 404 page (GitHub Pages serves it for any missing path). Docs are
+    versioned (/dev/, /0.7/, /latest/); a link from before versioning has no version in its
+    path, so send it to the same page under the default version: "latest" once a release is
+    published, else the first version listed. A path that already starts with a version
+    and still isn't found gets a plain "not found" instead, so this never loops.
+    Published by scripts/publish-docs.sh from site-root/404.html.
+  -->
+  <script>
+    (function () {
+      var base = "/xplane12-atc-docs/";
+      function notFound() {
+        document.documentElement.className = "not-found";
+      }
+      var path = window.location.pathname;
+      if (path.indexOf(base) !== 0) { notFound(); return; }
+      var rest = path.slice(base.length);
+      fetch(base + "versions.json", { cache: "no-store" })
+        .then(function (r) { return r.json(); })
+        .then(function (versions) {
+          var names = [];
+          versions.forEach(function (v) {
+            names.push(v.version);
+            (v.aliases || []).forEach(function (a) { names.push(a); });
+          });
+          if (names.indexOf(rest.split("/")[0]) !== -1) { notFound(); return; }
+          var target = names.indexOf("latest") !== -1 ? "latest" : (versions[0] && versions[0].version);
+          if (!target) { notFound(); return; }
+          window.location.replace(base + target + "/" + rest + window.location.search + window.location.hash);
+        })
+        .catch(notFound);
+    })();
+  </script>
+  <style>
+    :root { color-scheme: light dark; }
+    body { font-family: system-ui, sans-serif; margin: 3rem 1rem; text-align: center; }
+    .message { display: none; }
+    .not-found .message { display: block; }
+    .not-found .redirecting { display: none; }
+  </style>
+</head>
+<body>
+  <p class="redirecting">Finding this page in the current docs…</p>
+  <div class="message">
+    <h1>Page not found</h1>
+    <p><a href="/xplane12-atc-docs/">Go to the xatc docs</a></p>
+  </div>
+  <noscript><p><a href="/xplane12-atc-docs/">Go to the xatc docs</a></p></noscript>
+</body>
+</html>
