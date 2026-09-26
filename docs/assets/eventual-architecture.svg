@@ -81,7 +81,7 @@
   <!-- xatc process -->
   <rect x="290" y="250" width="870" height="716" rx="10" fill="#ffffff" stroke="#475569" stroke-dasharray="2 0" stroke-width="1.4"/>
   <text x="306" y="273" class="h">xatc process</text>
-  <text x="420" y="273" class="xs">Python 3.12 · asyncio · contracts.py is the shared interface</text>
+  <text x="420" y="273" class="xs">Python 3.14 · asyncio · contracts.py is the shared interface</text>
 
   <!-- Row 1 -->
   <rect x="306" y="288" width="196" height="118" rx="8" class="built"/>
