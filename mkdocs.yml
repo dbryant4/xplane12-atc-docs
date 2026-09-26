@@ -41,6 +41,8 @@ nav:
       - features/index.md
       - Radio panel: features/radio-panel.md
       - Controller positions & frequencies: features/controller-positions.md
+      - Flight state across restarts: features/flight-state.md
+      - Live-sim robustness: features/live-sim-robustness.md
       - ATIS & weather: features/atis-weather.md
       - Runway selection: features/runway-selection.md
       - IFR clearance (CRAFT): features/ifr-clearance.md
@@ -52,6 +54,7 @@ nav:
       - VHF radio effect: features/radio-fx.md
       - Intent parsing & LLM modes: features/intent-parsing.md
       - Departure & Center: features/departure-center.md
+      - Route tracking (next fix): features/route-tracking.md
       - Arrival: features/arrival.md
       - Conformance monitor: features/conformance-monitor.md
       - Fuzzy ramp resolver (taxi-in only): features/fuzzy-ramp-resolver.md

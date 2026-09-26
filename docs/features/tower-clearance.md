@@ -13,6 +13,22 @@ Once you're holding short and call ready for departure, Tower clears you for tak
 This also transitions the flight phase to takeoff, and sets up the [automatic handoff to
 Departure](controller-positions.md#handoffs) once you're airborne above 1,000 ft AGL.
 
+### Takeoff heading on radar vectors
+
+When the [IFR clearance](ifr-clearance.md) has no SID (a radar-vectors departure), the
+takeoff clearance itself carries a heading to fly:
+
+```
+"...fly heading two seven zero, runway two five left, cleared for takeoff"
+```
+
+The heading is the runway's own magnetic heading rounded to the nearest 10&deg; --
+straight out, not a turn -- and Departure uses that same assigned heading to answer "do
+you still want us on this heading" and to know when to clear you direct or say
+"resume own navigation" (see [Departure & Center](departure-center.md)). A departure with
+a SID doesn't get a heading in the takeoff clearance; the SID itself defines the initial
+track.
+
 ## How it decides
 
 - Only fires from `HOLD_SHORT`. Too early (not at the hold line yet) or asking again

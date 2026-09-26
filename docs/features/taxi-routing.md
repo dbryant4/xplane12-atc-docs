@@ -55,6 +55,14 @@ meters of the route's last node -- this is proximity detection for advancing the
 phase, not conformance monitoring (it doesn't check whether you actually followed the
 assigned route to get there).
 
+### Runway requests to Ground
+
+You can ask Ground for a specific departure runway instead of taking the one already
+selected. If the wind still allows it -- within the same tailwind/crosswind limits [runway
+selection](runway-selection.md) itself enforces -- Ground approves it and issues a fresh
+taxi route to the new runway. If the wind doesn't allow it, you get *"unable runway
+two five left, wind"* instead and keep the runway you already had.
+
 ## Configuration
 
 None -- routing is entirely derived from the airport's own taxiway data.

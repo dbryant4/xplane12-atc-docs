@@ -66,6 +66,33 @@ to `settings.json`, and every connected panel sees the update via the same broad
 changing what's persisted; with no flag, the last-used mode is remembered, defaulting to
 Backup when `--voice` is on and Disabled otherwise.
 
+Both of the LLM helpers below are only wired in on a live voice flight (`--voice`) with
+intent parsing not set to Disabled -- with voice off, or the intent mode Disabled, neither
+one is ever instantiated, and the rules-only path (and a plain "say again") is all there
+is.
+
+## The readback judge (Nova Lite)
+
+`xatc.readback_llm.NovaLiteReadbackJudge` gets a second opinion whenever the rules-based
+[readback checker](readback-checking.md) has just rejected what you read back. It's a
+one-way safety net: the judge can only turn a rules *reject* into an *accept*, and only on
+a confident "yes" -- it's asked whether a real controller would accept this readback, and
+a "no," a low-confidence answer, a timeout, or a missing AWS connection all keep the rules
+checker's original verdict instead. It can never invent a readback or override a rules
+*accept*; nothing about the flight depends on the judge succeeding.
+
+## Conversational ATC (F17)
+
+When a pilot transmission doesn't match anything the rules parser
+or a scripted handler recognizes, `xatc.atc_conversation.NovaLiteController` gets a shot
+at it. It doesn't get to write ATC's reply -- it picks exactly one action from a small,
+closed set (`answer`, `unable`, `heading`, `altitude`, `direct`), which the engine then
+validates and renders in its own phraseology, the same as every other clearance. An
+`answer` (free-text, for things like acknowledging a request that needs no clearance) is
+still passed through an `answer_is_safe` guardrail before it's allowed to be spoken. If
+the model fails, times out, or proposes an action the engine can't validate, the pilot
+just hears *"say again"* -- the same as the rules parser's own fallback.
+
 ## Configuration
 
 ```bash
