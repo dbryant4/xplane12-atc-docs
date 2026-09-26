@@ -1809,10 +1809,9 @@ reading has crossed</em>, not the raw values:</p>
 <li>a gust appears or disappears altogether, or changes by 10 kt or more once already
   present</li>
 <li>altimeter changes 0.02 inHg or more</li>
+<li>the active runway changes (fed by <a href="#runway-hysteresis">runway hysteresis</a> below, so a
+  real runway change -- not a momentary flicker -- is always a fresh letter)</li>
 </ul>
-<p><code>AtisGenerator</code> also treats the active runway changing as significant on its own, but
-this doesn't currently happen live -- the engine's own call into it doesn't pass which
-runway is in use, so this trigger only fires for a caller that supplies one.</p>
 <p>Comparisons are always against the reading the letter last actually advanced on, not the
 immediately-previous call -- so a slow drift (altimeter creeping up 0.01 inHg at a time)
 still eventually crosses a threshold instead of resetting every step and never
@@ -1847,10 +1846,15 @@ to keep coming back the same way for a few minutes before it's adopted, except w
 <em>current</em> runway has drifted beyond its tailwind or crosswind limit, which switches at
 once rather than waiting out the sustain window (a stale runway shouldn't get a takeoff
 clearance).</p>
-<p><strong>This class is implemented and tested, but the engine doesn't use it yet</strong> -- all three
-places <code>engine.py</code> picks a runway still call the bare <code>select_runways</code> directly, so the
-live engine doesn't currently get the hysteresis benefit described here; only the ATIS
-letter's own smoothing (above) is wired in from that flight.</p>
+<p><strong>This is live.</strong> A shared <code>RunwaySelector</code> backs every runway pick for the departure
+airport -- the ATIS broadcast and whatever Ground/Clearance actually assigns come from
+the exact same instance, so they can't disagree even mid-hysteresis -- and a second,
+separate instance does the same for the destination's arrival planning. The arrival-side
+selector resets the moment real destination weather (a METAR) first replaces the
+aircraft's own weather as its stand-in, so an early guess from the wrong airport's wind
+can't anchor the arrival runway for minutes once the real reading is in. For <a href="../vfr-pattern/">VFR pattern
+work</a> (departure and destination are the same field), both sides share
+one selector, since it's the same runway question either way.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <p><code>xatc run --replay ... --weather-fixture {north-flow,south-flow}</code> seeds a fixed
 weather snapshot for development without a live sim; <code>--live</code> mode always reads real
@@ -1864,7 +1868,6 @@ sim weather continuously instead.</p>
 <li>ATIS is delivered as a looping voice broadcast on its own frequency; it isn't
   currently woven into what Clearance/Ground/Tower say beyond confirming the letter you
   state back.</li>
-<li><code>RunwaySelector</code>'s hysteresis (above) isn't wired into the live engine yet.</li>
 </ul>
 
 
