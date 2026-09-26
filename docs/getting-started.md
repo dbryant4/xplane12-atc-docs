@@ -146,9 +146,9 @@ It samples live `AircraftState` for a few seconds (printing every field, and fla
 them), round-trips a COM1 standby frequency change and back, pulls one live weather
 reading, and watches X-Plane's raw `sim/joystick/joystick_button_values` dataref for a
 few seconds so you can confirm which button index your yoke or joystick actually reports
-(useful alongside [joystick PTT](features/joystick-ptt.md)'s own `xatc ptt-probe`, and a
-step toward reading PTT straight from X-Plane with no extra library at all -- see
-joystick-ptt.md's own note on that). With `--voice`, it also sends one real phrase
+-- the same dataref [push-to-talk from hardware](features/joystick-ptt.md)'s default
+X-Plane source reads live, and useful alongside its `xatc ptt-probe` too. With
+`--voice`, it also sends one real phrase
 through Polly and the VHF radio effect to your actual speakers -- Polly and the effect
 chain only, no Transcribe or microphone involved. Like `xatc doctor`, it prints a
 pass/warn/fail report and never builds an `AtcEngine` -- it's a connectivity and
@@ -168,10 +168,11 @@ page (the gear icon) and fill in the Flight, Voice and other tabs there -- every
 saves as you go, so this is a one-time setup per machine.
 
 The header should show **X-Plane 12.x · connected**. Hold the **PTT** button, or hold
-**Space** while the page has focus, to talk -- or, on Windows, use [Joystick/yoke
-push-to-talk](features/joystick-ptt.md) (Voice tab's **Learn PTT button**) instead. If
-the panel doesn't respond after an update, hard-refresh it (Cmd+Shift+R). The first time
-you use push-to-talk, macOS asks for microphone permission for your terminal app.
+**Space** while the page has focus, to talk -- or use a real yoke or joystick button
+instead, straight from X-Plane by default on Windows or macOS (Voice tab's **Learn PTT
+button**; see [Push-to-talk from hardware](features/joystick-ptt.md)). If the panel
+doesn't respond after an update, hard-refresh it (Cmd+Shift+R). The first time you use
+push-to-talk, macOS asks for microphone permission for your terminal app.
 
 **Flags still work**, for development or a one-off override without touching
 `settings.json`:
