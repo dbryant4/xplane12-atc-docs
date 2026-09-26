@@ -42,13 +42,17 @@ reading has crossed*, not the raw values:
 - the smoothed ceiling crosses 500, 1,000 or 3,000 ft AGL (in either direction -- gaining
   or losing a ceiling reading entirely counts too)
 - visibility crosses 1 or 3 SM (when both readings report it)
+- the wind direction goes calm/variable, or comes back from being calm/variable
 - wind direction shifts 30° or more, but only while the wind is 10 kt or more -- a
   near-calm or variable direction is too noisy to mean anything operationally
 - wind speed changes 10 kt or more
 - a gust appears or disappears altogether, or changes by 10 kt or more once already
   present
 - altimeter changes 0.02 inHg or more
-- the active runway changes
+
+`AtisGenerator` also treats the active runway changing as significant on its own, but
+this doesn't currently happen live -- the engine's own call into it doesn't pass which
+runway is in use, so this trigger only fires for a caller that supplies one.
 
 Comparisons are always against the reading the letter last actually advanced on, not the
 immediately-previous call -- so a slow drift (altimeter creeping up 0.01 inHg at a time)

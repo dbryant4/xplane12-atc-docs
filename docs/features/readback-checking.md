@@ -33,7 +33,10 @@ limit and departure frequency are only warned about if missing, not rejected out
 taxi readback must include a hold-short for every *other* runway crossed on the way --
 holding short of the assigned departure runway itself (the one you're taxiing to) is only
 a warning if left out, and so is the runway assignment and the full taxi route
-themselves, since real pilots often trim those from a long taxi readback. A `taxi_in`
+themselves, since real pilots often trim those from a long taxi readback. That warning
+becomes required, though, the moment a taxi readback reads back *nothing at all* -- a
+bare "wilco" isn't a readback, so it can't lean on the runway being merely a warning to
+get away with saying nothing. A `taxi_in`
 readback (Ground's
 taxi-to-parking instruction, once you're on the ground after landing -- see
 [Arrival](arrival.md)) requires *every* runway it crosses on the way to the stand to be
@@ -81,8 +84,9 @@ again.
 
 Every transcript entry the engine ran a readback check against shows one of three marks
 (rendered by the radio panel's own JS, not spoken): **✓ readback** (correct), **✗
-readback** (wrong or incomplete), or **• no readback expected** (nothing to check --
-mainly takeoff clearances, and anything outside the nine kinds above).
+readback** (wrong or incomplete), or **• no readback expected** -- a readback or a plain
+"roger" sent when nothing was actually pending on that position, so there was nothing to
+check it against (mainly takeoff clearances, and anything outside the nine kinds above).
 
 Only the `ifr_clearance` kind actually gets ATC to speak "readback correct" out loud.
 Every other kind -- `taxi`, `taxi_in`, `takeoff`, `altitude`, `heading`, `frequency`,

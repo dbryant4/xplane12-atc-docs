@@ -66,21 +66,24 @@ to `settings.json`, and every connected panel sees the update via the same broad
 changing what's persisted; with no flag, the last-used mode is remembered, defaulting to
 Backup when `--voice` is on and Disabled otherwise.
 
+Both of the LLM helpers below are only wired in on a live voice flight (`--voice`) with
+intent parsing not set to Disabled -- with voice off, or the intent mode Disabled, neither
+one is ever instantiated, and the rules-only path (and a plain "say again") is all there
+is.
+
 ## The readback judge (Nova Lite)
 
-On a live voice flight, `xatc.readback_llm.NovaLiteReadbackJudge` gets a second opinion
-whenever the rules-based [readback checker](readback-checking.md) has just rejected what
-you read back. It's a one-way safety net: the judge can only turn a rules *reject* into an
-*accept* when the readback was actually correct in substance but phrased in a way the
-rules didn't anticipate (a reordered clearance, an unexpected filler word). It can never
-invent a readback, never override a rules *accept*, and never turn a genuinely wrong
-readback into a correct one. Any judge failure -- a timeout, an error, an ambiguous
-answer -- just keeps the original rules verdict; nothing about the flight depends on the
-judge succeeding.
+`xatc.readback_llm.NovaLiteReadbackJudge` gets a second opinion whenever the rules-based
+[readback checker](readback-checking.md) has just rejected what you read back. It's a
+one-way safety net: the judge can only turn a rules *reject* into an *accept*, and only on
+a confident "yes" -- it's asked whether a real controller would accept this readback, and
+a "no," a low-confidence answer, a timeout, or a missing AWS connection all keep the rules
+checker's original verdict instead. It can never invent a readback or override a rules
+*accept*; nothing about the flight depends on the judge succeeding.
 
 ## Conversational ATC (F17)
 
-Also live-voice only: when a pilot transmission doesn't match anything the rules parser
+When a pilot transmission doesn't match anything the rules parser
 or a scripted handler recognizes, `xatc.atc_conversation.NovaLiteController` gets a shot
 at it. It doesn't get to write ATC's reply -- it picks exactly one action from a small,
 closed set (`answer`, `unable`, `heading`, `altitude`, `direct`), which the engine then

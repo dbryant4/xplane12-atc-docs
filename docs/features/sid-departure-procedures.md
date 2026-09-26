@@ -37,6 +37,16 @@ KSEA.arinc424` and `fixtures/cifp/KPDX.arinc424`, both from the FAA's public CIF
 (cycle 2609, effective 2026-09-03; not for actual navigation, same as every other
 fixture in this project).
 
+On a real X-Plane install, `xatc.world.xplane_cifp` reads that same procedure data
+straight from the sim instead, covering every airport its nav data has -- not just
+KSEA/KPDX. It checks `Custom Data/CIFP/<ICAO>.dat` first (where a third-party nav data
+update, e.g. Navigraph's, installs an updated cycle), falling back to X-Plane's own
+bundled `Resources/default data/CIFP/<ICAO>.dat` copy -- per airport, so one airport can
+come from an installed update while another falls back to the default data. A Custom
+Data file that fails to parse (stale, empty, or left by a different nav data format) is
+skipped with a warning rather than stopping ATC, falling back to X-Plane's own copy the
+same as if Custom Data had nothing for that airport at all.
+
 ## How a SID is chosen
 
 `xatc.atc.sid_selector.select_sid(procedures, runway, flight_plan)`, in order:
@@ -95,11 +105,9 @@ falls back to the plain word/phonetic rules above instead of a wrong guess.
   arrival flow.
 - SID selection only considers the filed route's first fix and the filed SID itself --
   no aircraft-type-based SID restrictions (e.g. climb-gradient-only SIDs) are modeled.
-- Only KSEA and KPDX have CIFP fixtures today. Any other airport falls back to "via
-  radar vectors" until it gets one (or, on a real X-Plane install, until the engine
-  reads CIFP data from the sim's own installation the way it already does for apt.dat
-  and atc.dat -- see [Any-airport data loading](any-airport-data.md); that wiring for
-  CIFP specifically is still open).
+- Only KSEA and KPDX have bundled CIFP fixtures for development/CI without a real
+  X-Plane install; on a real install, any airport with CIFP data works (see above).
+  Without either, an airport falls back to "via radar vectors."
 
 ## Verification
 

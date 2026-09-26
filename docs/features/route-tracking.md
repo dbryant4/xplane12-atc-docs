@@ -4,18 +4,18 @@
 
 ## What it does
 
-The owner, flying KPDX → KSEA live: *"the ENROUTE phase should have a substate that is
-the next navigational point. That's how ATC really works."* Once airborne and past the
-initial climb, the engine keeps a live route -- the filed route's fixes, plus the
-assigned [STAR](arrival.md)'s own transition, common route and runway-transition fixes
-once a descent plan exists -- and tracks which fix on it the aircraft is heading for
-right now.
+Once airborne and past the initial climb, the engine keeps a live route -- the filed
+route's fixes, plus the assigned [STAR](arrival.md)'s own transition, common route and
+runway-transition fixes once a descent plan exists -- and tracks which fix on it the
+aircraft is heading for right now, the same way a real controller keeps track of where
+an aircraft is along its route rather than just its raw position.
 
 This is what drives:
 
 - The **[Route map card](radio-panel.md)** on the radio panel, showing the filed fixes
-  with the one you're tracking highlighted and anything already behind you dimmed.
-- **[Direct-to](enroute-requests.md#direct-to)** validation and "that's behind you"
+  with the one you're tracking highlighted (with its distance), anything already behind
+  you dimmed, and a line from the aircraft to that next fix.
+- **[Direct-to](enroute-requests.md#direct-to)** validation and "is behind you"
   denials.
 - **[Departure's](departure-center.md#direct-to-or-resume-own-navigation-at-radar-contact)**
   choice of which fix to clear you direct to at radar contact.

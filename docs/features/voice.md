@@ -23,9 +23,9 @@ provider, plus the radio behavior that sits above both:
   letter changes, not every tick -- so the session itself remembers the latest broadcast
   per frequency and replays it on a loop while that frequency is being listened to (COM1
   or COM2's *active* frequency; see [Controller positions](controller-positions.md)).
-  Tuning away cuts the currently-playing block off within one loop instead of letting it
-  finish; a letter change while already tuned in switches to the new broadcast at the
-  next loop boundary, not mid-utterance. Where a fresh tune-in joins the loop depends on
+  Tuning away cuts the currently-playing broadcast off within one audio block instead of
+  letting it finish; a letter change while already tuned in switches to the new broadcast
+  at the next loop boundary, not mid-utterance. Where a fresh tune-in joins the loop depends on
   the `voice.atis_start` setting (see [Settings](../settings.md)): **broadcast** (the
   default) joins partway through, like a real ATIS you're just now receiving; **beginning**
   always starts at "...information Alpha..." instead.

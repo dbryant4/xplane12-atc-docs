@@ -16,7 +16,7 @@ altitude change, a weather deviation, or declining an outstanding instruction wi
 any fix on your filed route, your destination STAR's entry/transition fix, or any other
 fix on the currently tracked route (see [Route tracking](route-tracking.md)); otherwise
 denied with *"unable, Battle Ground is not on your route."* Asking direct to a fix
-you've already passed gets a different denial instead -- *"unable, Battle Ground, that's
+you've already passed gets a different denial instead -- *"unable, Battle Ground is
 behind you"* -- rather than clearing you backward along your own route. An approved
 direct-to drops any assigned heading and **is read back** -- get it wrong and you'll
 hear *"negative, cleared direct Battle Ground."*

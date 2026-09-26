@@ -63,8 +63,8 @@ also turns the aircraft loose from that heading:
 "...radar contact, climb and maintain one zero thousand, resume own navigation"
 ```
 
-Direct is issued to the first fix on the filed route (or the STAR's own entry/transition
-fix) if there is one to go to; otherwise it's a plain "resume own navigation." A SID
+Direct is issued to the first fix on the filed route if there is one to go to; otherwise
+it's a plain "resume own navigation." A SID
 departure never gets this -- there's no assigned heading to release in the first place,
 since the SID itself is flown as published from the takeoff roll. Once you're navigating
 your own route, [en-route requests](enroute-requests.md#direct-to) and [route

@@ -9,8 +9,10 @@ taxi route, pending readback, everything the engine was tracking lived only in m
 That's a real problem the moment you need to restart mid-flight to pick up a code fix or
 a settings change without losing the flight. Now `xatc.atc.flight_state.FlightStateStore`
 saves the engine's flight state to `flight_state.pkl`, right next to `settings.json`,
-after every pilot call and whenever the engine says something or changes phase -- and
-puts it back into the freshly built engine on the first tick after a restart.
+immediately after every pilot call and whenever the engine says something or changes
+phase, and otherwise about every 10 seconds -- and puts it back into the freshly built
+engine on the first tick after a restart. This only runs on a `--live` run with a flight
+plan (a resolved callsign); it never applies in text-mode/replay development sessions.
 
 ## When it restores, and when it doesn't
 
@@ -37,11 +39,12 @@ alongside the flight state itself (the most recent 500 entries).
 
 ## Starting over on purpose
 
-`xatc run --fresh-flight` ignores whatever's saved and starts from the ramp, even if a
-matching flight's state is sitting right there. The **Reset flight** button on the [radio
+`xatc run --fresh-flight` ignores whatever's saved and starts over, even if a matching
+flight's state is sitting right there. The **Reset flight** button on the [radio
 panel](radio-panel.md) does the same thing without a restart: it drops the running
-engine (built fresh on the next tick, wherever the aircraft is now) and clears the saved
-file, so a subsequent restart doesn't bring the reset flight back either.
+engine and starts over parked, where the aircraft actually is (built fresh on the next
+tick), and clears the saved file, so a subsequent restart doesn't bring the reset flight
+back either.
 
 ## Configuration
 
@@ -51,6 +54,5 @@ for the exact per-OS paths).
 
 ## Limitations
 
-- Text-mode/replay development sessions don't use this -- it's a live-flight mechanism.
 - A restore is all-or-nothing per field, not a merge of individual sub-values within one
   field -- an incompatible field is dropped and rebuilt fresh in its entirety.

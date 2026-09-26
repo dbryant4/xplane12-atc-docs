@@ -15,7 +15,13 @@ network:
 - **COM1 and COM2** -- active and standby frequencies, a flip-flop button, a tuning
   knob (drag, scroll, or a numeric keypad, 25 kHz or 8.33 kHz steps), and a TX light
   that's green when that radio is selected to transmit and red once a push-to-talk mic
-  stream is actually confirmed open (not just "the button is pressed").
+  stream is actually confirmed open (not just "the button is pressed"). Either COM can be
+  hidden from the panel (Settings → Display) for flying with the radios tuned entirely
+  from the cockpit -- display only, X-Plane's own radios and what xatc hears/transmits on
+  are unaffected.
+- **A narrow-width top bar** -- below 700 px the title hides, the callsign leads, spacing
+  tightens, and the status pills ellipsize instead of wrapping, so the bar still fits on
+  one row down to 600 px wide.
 - **Two-way sync with X-Plane.** Tuning the panel writes the COM frequency to the sim;
   turning the knobs in the cockpit updates the panel. Either one can drive.
 - **Status section** -- the current flight phase and whatever's actually been issued on
@@ -28,10 +34,11 @@ network:
   one-click "Load & swap" that tunes and switches the TX radio to it directly, instead
   of loading to standby and flip-flopping separately.
 - **Route map card**, once airborne on an IFR route -- the filed fixes with the one
-  you're tracking toward highlighted, and anything already behind you dimmed. See [Route
+  you're tracking toward highlighted with its distance, anything already behind you
+  dimmed, and a line from the aircraft to that next fix. See [Route
   tracking](route-tracking.md) for the data behind it.
 - **Reset flight button** -- clears the saved [flight state](flight-state.md) and starts
-  over from the ramp, without needing to restart xatc itself.
+  over parked, where the aircraft is, without needing to restart xatc itself.
 - **Transcript** -- every transmission, tagged by frequency and station, plus a
   type-to-transmit box for text mode.
 - **Push-to-talk** -- an on-screen button, or holding Space while the page has focus
@@ -62,13 +69,14 @@ For every setting's default, flag and when it takes effect, see the **[Settings 
 
 Everything xatc needs to fly is configured from one place: click the gear icon to open
 the **Settings** page (ADR 0007 in the repository), which replaced an earlier one-tab
-options modal. It's organized into five tabs, each with its own **Save** button so
+options modal. It's organized into six tabs, each with its own **Save** button so
 changing one doesn't touch the others:
 
 | Tab | Covers |
 |---|---|
 | **Flight** | Flight plan source, callsign, aircraft type, departure/destination, route, cruise altitude |
 | **Connection** | X-Plane host/port, and an X-Plane installation folder override |
+| **Display** | Show/hide COM1 and COM2 on the panel |
 | **Voice** | Push-to-talk on/off, AWS profile/region, Transcribe vocabulary, [radio effect](radio-fx.md) preset, joystick PTT |
 | **ATC** | [Intent parsing mode](intent-parsing.md), altitude source, conformance strictness, and the 14 CFR 91.117(d) heavy-speed exception |
 | **Advanced** | `apt.dat`/`atc.dat` overrides, the debrief folder, and the panel's own host/port |

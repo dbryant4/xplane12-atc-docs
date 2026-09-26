@@ -80,6 +80,16 @@ run` -- use these settings (or `--xplane-host`/`--xplane-port`) instead. `xatc d
 install folder using whatever's currently typed in, even if you haven't clicked **Save
 Connection** yet -- a pass/warn/fail result with details appears right there.
 
+## Display
+
+What the [radio panel](features/radio-panel.md) itself shows -- display only, never what
+X-Plane's own radios or what xatc actually hears/transmits on.
+
+| Setting | Default | Flag | When | What it does |
+|---|---|---|---|---|
+| **Show COM1** (`display.com1_visible`) | on | — | **live** | Hides COM1 from the panel when off. Doesn't affect what xatc listens to or transmits on. |
+| **Show COM2** (`display.com2_visible`) | on | — | **live** | Same, for COM2. Both COMs can be hidden at once, for flying with the radios tuned entirely from the cockpit. |
+
 ## Voice
 
 Push-to-talk speech in, ATC speech out. See [Voice](features/voice.md).

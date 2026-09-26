@@ -71,10 +71,10 @@ off the ground.
 A code from [7500, 7600 or 7700](emergencies.md) is never flagged as a wrong squawk --
 those are handled as emergencies and lost-comms in their own right, not as a
 conformance deviation. "Doesn't report altitude" means the transponder is off, standby,
-or in test mode -- **ALT, ground, TA and TA/RA all count as reporting altitude** and
-never trigger this rule on their own, since a real Mode C/S transponder reports pressure
-altitude in every one of those modes (an airliner-style panel, like the owner's GLF5,
-normally sits in TA/RA in flight).
+on (Mode A only, no altitude), or in test mode -- **ALT, ground, TA and TA/RA all count
+as reporting altitude** and never trigger this rule on their own, since a real Mode C/S
+transponder reports pressure altitude in every one of those modes (a modern
+airliner-style panel normally sits in TA/RA in flight).
 
 Rules run in every airborne phase the engine reaches -- `TAKEOFF` once off the ground,
 `DEPARTURE`, `ENROUTE`, `DESCENT`, `APPROACH` -- and never on the ground, and never once
