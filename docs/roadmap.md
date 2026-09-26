@@ -109,8 +109,9 @@ covers, with a deterministic engine deciding every word ATC says.
   from the panel: the flight plan (manual or [SimBrief](features/simbrief-import.md)),
   the connection, voice, ATC options and advanced settings. Command-line flags remain as
   per-run overrides.
-- **[Joystick / yoke push-to-talk](features/joystick-ptt.md)**, the
-  [post-flight debrief](features/debrief.md), and
+- **[Push-to-talk from hardware](features/joystick-ptt.md)** -- straight from X-Plane's
+  own joystick datarefs by default (Windows and macOS), or a joystick/yoke library
+  directly (Windows only) -- the [post-flight debrief](features/debrief.md), and
   [distance-based signal strength](features/radio-fx.md#signal-strength-by-distance).
 - **An FAA JO 7110.65 phraseology audit.** A golden test suite cites the paragraph each
   transmission follows, with pronunciation overrides for local fix names ("Iceberg",
@@ -150,5 +151,4 @@ the pilot said (Nova Lite). The deterministic engine decides every word ATC says
   beyond).
 - **ICAO (non-US) phraseology.**
 - **A one-click Windows installer.**
-- **Push-to-talk read straight from X-Plane's joystick bindings.**
 - **Per-facility altimeter settings and airspace speed limits** (91.117(b) and (c)).

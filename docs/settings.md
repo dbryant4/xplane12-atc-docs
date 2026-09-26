@@ -90,10 +90,12 @@ Push-to-talk speech in, ATC speech out. See [Voice](features/voice.md).
 | **AWS profile** (`voice.aws_profile`) | `xatc` | — (`AWS_PROFILE`) | restart | The AWS CLI profile to use. Only the name is stored. |
 | **AWS region** (`voice.aws_region`) | `us-east-1` | `--aws-region` | restart | Where Transcribe, Polly and Bedrock are called. |
 | **Custom vocabulary** (`voice.vocabulary`) | `xatc-aviation-en-US` | `--vocabulary` / `--no-vocabulary` | restart | A Transcribe custom vocabulary name, deployed with `cdk deploy`. It improves recognition of callsigns, fixes and procedure names. **Blank, or `--no-vocabulary`, means none.** |
-| **PTT joystick button** (`voice.ptt_joystick`) | blank | `--ptt-joystick` | **live** | `"<device>:<button>"` for a yoke or joystick push-to-talk button. Use **Learn PTT button** and press it within 10 s. Windows only for now. See [Joystick PTT](features/joystick-ptt.md). |
+| **Push-to-talk source** (`voice.ptt_source`) | `xplane` on Windows, `off` elsewhere | — | **live** | `xplane` reads X-Plane's own joystick dataref (Windows and macOS); `joystick` uses pygame directly (Windows only); `off` disables hardware PTT. See [Push-to-talk from hardware](features/joystick-ptt.md). |
+| **X-Plane PTT button** (`voice.ptt_xplane_button`) | `-1` (not set) | — | **live** | The `sim/joystick/joystick_button_values` index for your PTT button, only used when the source above is `xplane`. Use **Learn PTT button** and press it within 10 s. |
+| **Joystick PTT button** (`voice.ptt_joystick`) | blank | `--ptt-joystick` | **live** | `"<device>:<button>"`, only used when the source above is `joystick`. Use **Learn PTT button** and press it within 10 s. |
 | **Radio effect** (`voice.radio_fx_preset`) | `realistic` | — | **live** | `clean` (no radio effect), `realistic` (VHF band-limit, compression, hiss, squelch) or `busy-day` (more noise). Signal strength also varies with distance. See [VHF radio effect](features/radio-fx.md). |
-| **Controller voices** (`voice.controller_voices`) | Varied | — | **live** | **Varied** gives each controller position (Ground, Tower, Departure, Center, Approach) its own Amazon Polly neural voice, assigned deterministically so the same controller always sounds the same and every handoff changes voice. **Single** uses one voice for everything. ATIS always gets its own dedicated voice either way. See [Voice](features/voice.md). |
-| **ATIS playback** (`voice.atis_start`) | Join the broadcast | — | **live** | **Join the broadcast** tunes in partway through the loop, like a real ATIS you're just now receiving (a random point, or where its own virtual clock says it should be if you've heard it before). **Start from the beginning** always starts at "...information Alpha..." on tune-in instead. Either way, retuning away cuts the audio off within one block instead of letting it finish, and a letter change while already tuned in switches at the next loop boundary, not mid-utterance. See [Voice](features/voice.md). |
+| **Controller voices** (`voice.controller_voices`) | `varied` | — | **live** | `varied` gives each controller position its own Amazon Polly neural voice, so the same controller always sounds the same and every handoff changes voice; `single` uses one voice for everything. ATIS always gets its own dedicated voice either way. |
+| **ATIS playback** (`voice.atis_start`) | `broadcast` | — | **live** | `broadcast` tunes in wherever the loop is right now, like a real ATIS; `beginning` always starts from "...information Alpha..." on tune-in. Either way, retuning away cuts the broadcast off within one audio block. |
 
 The panel also lists your **microphones** (the default is marked) and **joysticks** (with button
 counts), so you can see what xatc detects. **Test** next to the AWS profile checks it (even
@@ -152,8 +154,12 @@ Rarely needed. Every change needs a **restart**.
     "aws_profile": "xatc",
     "aws_region": "us-east-1",
     "vocabulary": "xatc-aviation-en-US",
+    "ptt_source": "xplane",
+    "ptt_xplane_button": 1441,
     "ptt_joystick": "",
-    "radio_fx_preset": "realistic"
+    "radio_fx_preset": "realistic",
+    "controller_voices": "varied",
+    "atis_start": "broadcast"
   },
   "connection": { "xplane_host": "127.0.0.1", "xplane_port": 8086, "xplane_root": "" },
   "advanced": { "apt_dat": "", "atc_dat": "", "debrief_dir": "", "panel_host": "127.0.0.1", "panel_port": 8000 }
