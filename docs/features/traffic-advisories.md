@@ -1,11 +1,12 @@
 # Traffic advisories
 
-**Built and tested end to end -- not live yet.** The advisory logic is fully wired into
-the engine, but nothing feeds it real X-Plane traffic today: `xatc.sim.bridge.SimBridge`
-(the interface `xatc run --live` actually uses) has no `traffic()` method yet, and
-nothing calls the engine's traffic-ingestion hook outside of tests. See [ADR
-0010](../roadmap.md) in the repository -- it's still "accepted, pending live
-confirmation of the TCAS datarefs."
+**Built and tested end to end -- not live yet.** Both traffic advisories and [wake
+turbulence cautions](#wake-turbulence-cautions-f11-f12) below are fully wired into the
+engine, but nothing feeds either of them real X-Plane traffic today:
+`xatc.sim.bridge.SimBridge` (the interface `xatc run --live` actually uses) has no
+`traffic()` method yet, and nothing calls the engine's traffic-ingestion hook outside of
+tests. See [ADR 0010](../roadmap.md) in the repository -- it's still "accepted, pending
+live confirmation of the TCAS datarefs."
 
 ## What it does, once the feed lands
 
@@ -37,9 +38,25 @@ flight to call traffic against). Suppressed entirely on the ground, during an
 [emergency](emergencies.md), and for a second right around another handoff or readback,
 so calls don't collide.
 
+## Wake turbulence cautions (F11, F12)
+
+The same traffic feed (once it's live -- see below) also drives wake turbulence
+cautions (FAA 7110.65 2-1-20): a takeoff or landing clearance on a runway a Heavy or a
+Super departed from or landed on recently ends with **"caution wake turbulence"**, and
+so does a [sequencing call](../roadmap.md#m7-traffic-awareness) behind one (M7-3).
+
+"Recently" is category-specific: **2 minutes behind a Heavy, 3 minutes behind a
+Super** (`xatc.atc.wake.WakeTracker`, tracking each Heavy/Super target's departures and
+landings by which runway end its heading matches). Two runways count as the same one for
+this if their centerlines are **less than 2,500 ft apart and run the same direction** --
+close, staggered parallels like KSEA's 16L/16C/16R -- so a landing on 16C still cautions
+the next departure off 16L. Runways that only *cross* the one in question (a different
+course entirely, not a close parallel) are never folded in, however near their
+thresholds might be on the airport diagram.
+
 ## Today, this only runs against test data
 
 Until `SimBridge.traffic()` (the live X-Plane side) and the `xatc run --live` wiring that
-feeds its output into `on_traffic()` both land, this logic only exercises the full
-pipeline in the test suite, against synthetic straight-line targets -- not in a real
-flight.
+feeds its output into `on_traffic()` both land, none of the above -- traffic advisories
+or wake turbulence cautions -- runs against a real flight. Both only exercise the full
+pipeline in the test suite today, against synthetic straight-line targets.

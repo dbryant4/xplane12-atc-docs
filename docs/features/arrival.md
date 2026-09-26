@@ -89,6 +89,71 @@ turn right heading two five zero, maintain two thousand until established on the
 localizer, cleared ILS runway two eight right approach
 ```
 
+## Approach vectoring (F16)
+
+When there's no STAR -- or a go-around resequences the aircraft with no STAR either --
+Approach doesn't just give one heading toward a point on the final and leave it there.
+It builds an actual pattern (`xatc.atc.vectoring`, tied into the engine's `_maybe_vector`
+and `_maybe_clear_approach`) and flies it leg by leg, the way a real controller would.
+
+### Choosing the entry
+
+At check-in, from where the aircraft is relative to the final approach course:
+
+- **Straight-in**: already within 30° of the final, seen from where the final vector
+  would join it, and at least 2 nm beyond that point. One leg: fly straight to it.
+- **Base entry**: off to one side, beyond the base turn. One leg: the base turn point.
+- **Downwind**: anywhere else -- abeam or ahead of the runway, or past it. Two legs:
+  join the downwind, then the base turn point at its end.
+
+Whichever pattern is picked, it's flown on the aircraft's own side of the final -- it's
+never turned across the extended centerline to build a pattern on the other side. How
+far out the downwind, the base turn and the final-vector intercept point are all scale
+with the aircraft's own performance class: a jet gets a downwind 5 nm abeam the
+centerline with an intercept point at least 8 nm out; a turboprop, 4 and 7; a piston, 3
+and 5 -- so a light single isn't sent 13 miles out for its base the way an airliner is.
+
+### Flying the pattern
+
+One heading change at a time, never more than one every 30 seconds, each with the
+altitude step that goes with it -- stepping down 1,000 ft per leg so the aircraft
+reaches the approach altitude by the base turn. If the track drifts more than 10° off
+what the assigned heading should be making good, sustained for 30 seconds (allowing for
+the wind doing the drifting), Approach corrects it with another heading -- "turn left
+heading two four zero" if it actually turned, "fly heading two four zero" if it never
+did.
+
+If the aircraft ends up on the wrong side of the final -- a missed turn, a strong
+crosswind -- Approach doesn't try to turn it back across; it builds a new pattern from
+wherever it actually is now.
+
+### The final vector
+
+Once a 30° intercept from the aircraft's current position would join the final at or
+outside the intercept point (7110.65 5-9-1: at least 2 nm outside the approach gate, so
+at least 3 nm outside the FAF overall), the final vector comes with its distance from
+the FAF, folded into the approach clearance from above:
+
+```
+five miles from Toloc, turn left heading three one zero, maintain two thousand until
+established on the localizer, cleared ILS runway two eight right approach
+```
+
+### A heading you ask for
+
+[Conversational ATC](intent-parsing.md#conversational-atc-f17) can grant a heading you ask
+for directly ("can we get a left turn for the downwind?") -- Approach flies that heading
+as given, and it isn't overridden by the next scheduled turn. Vectoring picks back up on
+its own about a minute later, planning a fresh pattern from wherever that heading
+actually took the aircraft.
+
+### On the radio panel
+
+While vectoring, the [route map](radio-panel.md) draws the pattern instead of the filed
+route: the extended centerline, the FAF, and every point Approach has planned (the
+downwind join, the base turn, the turn to final) with the leg you're on and the next one
+highlighted, and a caption like "vectors: right downwind, next: base turn, 9.8 nm".
+
 ## Landing clearance and taxi-in (M4-3)
 
 Approach hands off to Tower at the approach's own charted final approach fix (from CIFP
@@ -194,15 +259,28 @@ rather than a callout asking what you're doing.
   ARTCC facility you're on, though, is real -- see [Departure &
   Center](departure-center.md#center-to-center-handoffs) for Center-to-Center handoffs
   crossing an actual ARTCC boundary.
+- **Approach vectoring doesn't model minimum vectoring altitudes.** Altitude steps down
+  toward the approach altitude by the base leg; it doesn't yet check that against real
+  MVA data for the airspace it's actually flying through.
+- **A rare small overshoot of the final on a base entry, in strong crosswinds**, before
+  the next correction catches it -- the pattern tolerates a little drift across the
+  final before deciding it actually needs a new one.
 
 ## Verification
 
-Unit tests (`tests/atc/test_engine_arrival.py`, 50 tests) cover the descent, approach
+Unit tests (`tests/atc/test_engine_arrival.py`, 59 tests) cover the descent, approach
 handoff and clearance, landing/taxi-in, go-around/missed-approach, and parking logic
 individually, against real KSEA/KPDX CIFP and weather data. `tests/atc/
-test_conformance_landing.py` (9 tests) covers both landing-conformance rules. A full
-scripted KSEA-to-KPDX arrival (`tests/scenarios/test_m4_arrival.py`, 8 tests) flies the
-real engine and the real intent parser (no stubs) end to end -- descent, Approach
-check-in and clearance, Tower check-in and landing, rollout, taxi to a named gate, and
-parking -- and asserts the *exact, complete* transmission sequence: any extra or missing
-call, including a conformance callout that shouldn't have fired, fails the test.
+test_conformance_landing.py` covers both landing-conformance rules. A full scripted
+KSEA-to-KPDX arrival (`tests/scenarios/test_m4_arrival.py`, 8 tests) flies the real
+engine and the real intent parser (no stubs) end to end -- descent, Approach check-in
+and clearance, Tower check-in and landing, rollout, taxi to a named gate, and parking --
+and asserts the *exact, complete* transmission sequence: any extra or missing call,
+including a conformance callout that shouldn't have fired, fails the test.
+
+`tests/atc/test_vectoring.py` (30 tests) covers the vectoring planner on KPDX's runway
+28R (ILS, FAF Toloc 5.9 nm out): all three entries, the leg-by-leg headings and altitude
+steps, drift correction, a replan after crossing the final, the final vector's distance
+and 30° intercept, and a missed-approach resequence -- a simulated pilot flies whatever
+heading and altitude Approach assigns and reads every instruction back, from check-in to
+the approach clearance.

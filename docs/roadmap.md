@@ -16,7 +16,7 @@ covers, with a deterministic engine deciding every word ATC says.
 | **M4: arrival** | ✅ done | [Descent via a STAR, approach clearance, landing clearance, taxi-in, go-around and parking](features/arrival.md) |
 | **M5: realism** | ✅ done | ATIS-letter checks, en-route pilot requests, emergencies and special squawks, pushback (details below) |
 | **M6: VFR** | ✅ done | Pattern work (M6-1), flight following (M6-2), and Class B/C/D airspace entry (M6-3), details below |
-| **M7: traffic awareness** | 🔶 in progress | Advisory logic built and tested (M7-2) -- not live until the X-Plane traffic feed lands; sequencing (M7-3) next |
+| **M7: traffic awareness** | 🔶 in progress | Advisory, sequencing (M7-3) and wake turbulence (F11, F12) logic all built and tested -- none live until the X-Plane traffic feed lands |
 
 ### M5: the most common "real ATC" interactions
 - **ATIS-letter check.** Report an old letter on first contact with Clearance, Ground or
@@ -86,8 +86,18 @@ covers, with a deterministic engine deciding every word ATC says.
 - **M7-2** wired a full advisory pipeline into the engine and phraseology: "traffic,
   twelve o'clock, five miles, opposite direction, Boeing seven thirty seven, altitude
   indicates same altitude," from whoever has you airborne, with backoff and "traffic in
-  sight" handling. **Not live yet** -- there's no X-Plane traffic feed wired up today, so
-  this only runs against test data. See [Traffic advisories](features/traffic-advisories.md).
+  sight" handling. See [Traffic advisories](features/traffic-advisories.md).
+- **M7-3** sequences behind traffic: "number two, follow the Boeing seven thirty seven
+  on a five mile final, report it in sight" on approach, "continue" while the runway's
+  occupied in the VFR pattern, with a wake-turbulence caution folded in behind a Heavy
+  or Super.
+- **F11, F12: wake turbulence cautions.** A takeoff or landing clearance on a runway a
+  Heavy or Super used recently (2 minutes behind a Heavy, 3 behind a Super) ends with
+  "caution wake turbulence" -- close parallel runways under 2,500 ft apart count as one
+  for this, crossing runways don't. See [Traffic
+  advisories](features/traffic-advisories.md#wake-turbulence-cautions-f11-f12).
+- **Not live yet, any of it** -- there's no X-Plane traffic feed wired up today, so all
+  three only run against test data.
 - **F10** also gave KBFI's Class D real Laminar Research atc.dat data in its test
   coverage, replacing a synthetic placeholder.
 - **A real bug, fixed**: an `apt.dat` file that spells a runway inconsistently between
@@ -99,6 +109,27 @@ covers, with a deterministic engine deciding every word ATC says.
   hold-shorts](features/taxi-routing.md).
 
 ### Also built along the way
+- **F13: live-sim robustness.** A live X-Plane session pausing, replaying, being
+  repositioned or slewed, or starting a new flight altogether no longer trips a bogus
+  conformance callout, a stuck timer, or a flight that thinks it's still where it used
+  to be. See [Live-sim robustness](features/live-sim-robustness.md).
+- **F15: en-route "next fix" tracking.** ATC keeps track of where you are on your filed
+  route -- the next fix, direct-tos, cross-track for lateral conformance, and the
+  descent's own timing all measure against it, and the panel's Route map draws it. See
+  [Route tracking](features/route-tracking.md).
+- **F16: approach vectoring.** With no STAR (or after a missed approach), Approach
+  builds and flies an actual pattern -- straight-in, base entry or downwind -- instead of
+  pointing you at one spot on the final. See [Arrival](features/arrival.md#approach-vectoring-f16).
+- **F17: conversational ATC.** A call the rules parser can't place goes to an LLM that
+  can only pick one of a small, closed set of actions (a heading, an altitude, a
+  direct-to, "unable", or a short factual answer) -- never free-form ATC. See [Intent
+  parsing & LLM modes](features/intent-parsing.md#conversational-atc-f17).
+- **Voice is always on** (ADR 0012): no more `voice.enabled` setting or `--no-voice`
+  flag -- push-to-talk voice is what xatc is for, not a toggle. See
+  [Voice](features/voice.md) for the details.
+- **Versioned docs and GitHub Releases** (ADR 0009). This site is versioned to match
+  xatc's own releases, published alongside a tagged GitHub Release each time. See
+  [Versions](versions.md).
 - **[Any airport](features/any-airport-data.md).** Airport, procedure and airspace data
   comes straight from your X-Plane install, including Custom Scenery priority, X-Plane's
   own CIFP files and fix coordinates. It was checked against 15 real airports, which
@@ -124,15 +155,17 @@ See [Features](features/index.md) for the per-feature "available now" breakdown.
 ## What's next
 
 1. **The live X-Plane traffic feed**: `SimBridge.traffic()` and the `xatc run --live`
-   wiring that feeds it into the engine, once the owner confirms the TCAS datarefs live
-   (ADR 0010) -- this is what actually turns on [traffic
-   advisories](features/traffic-advisories.md).
-2. **M7-3: sequencing behind traffic.** Builds on M7-2's traffic snapshot: "number two,
-   follow the Boeing seven thirty seven on a five mile final, report it in sight," with a
-   wake-turbulence caution behind a heavy.
-3. **First live flights on the Windows PC**: a real KSEA departure recording to replace
-   the synthetic scenario tests, and confirming joystick PTT and the new altitude
-   datarefs on real hardware.
+   wiring that feeds it into the engine, once the TCAS datarefs are confirmed live (ADR
+   0010) -- this is what actually turns on [traffic
+   advisories](features/traffic-advisories.md), sequencing and wake turbulence cautions.
+2. **F18: AWS sign-in and status.** A guided AWS CLI sign-in walkthrough and a clearer
+   picture of what's actually connected, from the panel.
+3. **Minimum vectoring altitudes.** A follow-up to [approach
+   vectoring](features/arrival.md#approach-vectoring-f16): real MVA data instead of just
+   stepping the altitude down toward the approach altitude.
+4. **F19: a Windows installer** (proposed ADR 0013 in the repository) -- a setup wizard
+   (Inno Setup, a bundled Python runtime, no uv or git clone needed) producing one
+   installer per release, attached to its GitHub Release.
 
 ## Where it's heading
 
