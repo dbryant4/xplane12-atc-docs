@@ -8,6 +8,9 @@ a change takes effect, and the command-line flag that can override it for a sing
 
 - **Run `xatc` with no arguments** (or double-click `scripts\xatc-run.cmd` on Windows). xatc starts
   from your saved settings and opens the panel in your browser. There's nothing to type.
+- **First time**, a welcome banner on the Settings page walks through Connection (test it),
+  Voice (test your AWS profile and microphone), and Flight (set your destination), then Save.
+  Dismiss it once you don't need it -- it stays dismissed on that browser.
 - **Where they're saved:** one `settings.json` file.
 
   | OS | Path |
@@ -73,6 +76,10 @@ The `XATC_XPLANE_HOST`/`XATC_XPLANE_PORT` environment variables no longer affect
 run` -- use these settings (or `--xplane-host`/`--xplane-port`) instead. `xatc doctor`,
 `xatc smoke` and `xatc record` still honor them.
 
+**Test** buttons next to X-Plane port and X-Plane folder check the connection and the
+install folder using whatever's currently typed in, even if you haven't clicked **Save
+Connection** yet -- a pass/warn/fail result with details appears right there.
+
 ## Voice
 
 Push-to-talk speech in, ATC speech out. See [Voice](features/voice.md).
@@ -87,7 +94,9 @@ Push-to-talk speech in, ATC speech out. See [Voice](features/voice.md).
 | **Radio effect** (`voice.radio_fx_preset`) | `realistic` | — | **live** | `clean` (no radio effect), `realistic` (VHF band-limit, compression, hiss, squelch) or `busy-day` (more noise). Signal strength also varies with distance. See [VHF radio effect](features/radio-fx.md). |
 
 The panel also lists your **microphones** (the default is marked) and **joysticks** (with button
-counts), so you can see what xatc detects.
+counts), so you can see what xatc detects. **Test** next to the AWS profile checks it (even
+unsaved) resolves real, non-expired credentials; **Test** next to the microphones list checks
+whichever one xatc currently sees is actually picking up sound.
 
 ## ATC
 
