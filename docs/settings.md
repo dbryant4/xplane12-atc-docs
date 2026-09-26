@@ -94,6 +94,8 @@ Push-to-talk speech in, ATC speech out. See [Voice](features/voice.md).
 | **X-Plane PTT button** (`voice.ptt_xplane_button`) | `-1` (not set) | — | **live** | The `sim/joystick/joystick_button_values` index for your PTT button, only used when the source above is `xplane`. Use **Learn PTT button** and press it within 10 s. |
 | **Joystick PTT button** (`voice.ptt_joystick`) | blank | `--ptt-joystick` | **live** | `"<device>:<button>"`, only used when the source above is `joystick`. Use **Learn PTT button** and press it within 10 s. |
 | **Radio effect** (`voice.radio_fx_preset`) | `realistic` | — | **live** | `clean` (no radio effect), `realistic` (VHF band-limit, compression, hiss, squelch) or `busy-day` (more noise). Signal strength also varies with distance. See [VHF radio effect](features/radio-fx.md). |
+| **Controller voices** (`voice.controller_voices`) | `varied` | — | **live** | `varied` gives each controller position its own Amazon Polly neural voice, so the same controller always sounds the same and every handoff changes voice; `single` uses one voice for everything. ATIS always gets its own dedicated voice either way. |
+| **ATIS playback** (`voice.atis_start`) | `broadcast` | — | **live** | `broadcast` tunes in wherever the loop is right now, like a real ATIS; `beginning` always starts from "...information Alpha..." on tune-in. Either way, retuning away cuts the broadcast off within one audio block. |
 
 The panel also lists your **microphones** (the default is marked) and **joysticks** (with button
 counts), so you can see what xatc detects. **Test** next to the AWS profile checks it (even
@@ -155,7 +157,9 @@ Rarely needed. Every change needs a **restart**.
     "ptt_source": "xplane",
     "ptt_xplane_button": 1441,
     "ptt_joystick": "",
-    "radio_fx_preset": "realistic"
+    "radio_fx_preset": "realistic",
+    "controller_voices": "varied",
+    "atis_start": "broadcast"
   },
   "connection": { "xplane_host": "127.0.0.1", "xplane_port": 8086, "xplane_root": "" },
   "advanced": { "apt_dat": "", "atc_dat": "", "debrief_dir": "", "panel_host": "127.0.0.1", "panel_port": 8000 }
