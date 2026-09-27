@@ -114,10 +114,10 @@ running `xatc doctor` -- see below.
 **Every time you fly**, double-click `scripts\xatc-run.cmd`. It sets `AWS_PROFILE=xatc`
 (you still need that profile configured once, per step 3 above) and runs `xatc` with
 whatever arguments you give it -- none, for the normal double-click case. With no
-arguments, xatc runs live from `settings.json` and opens the panel in your browser
-automatically; configure the flight plan, voice and everything else from the
-[Settings page](features/radio-panel.md#settings) there, not flags. Flags still work for
-a one-off override, e.g. from a terminal:
+arguments, xatc runs live from `settings.json` and opens the panel in its own [native
+window](features/native-window.md) automatically; configure the flight plan, voice and
+everything else from the [Settings page](features/radio-panel.md#settings) there, not
+flags. Flags still work for a one-off override, e.g. from a terminal:
 
 ```powershell
 scripts\xatc-run.cmd run --live --dest KPDX --cruise 35000
@@ -173,8 +173,9 @@ From the repository root, with no arguments:
 AWS_PROFILE=xatc uv run xatc
 ```
 
-This runs live from `settings.json` and opens the panel in your browser automatically.
-The first time, that file is empty, so open the **[Settings](features/radio-panel.md#settings)**
+This runs live from `settings.json` and opens the panel in its own [native
+window](features/native-window.md) automatically (`--browser` keeps it in a browser tab
+instead). The first time, that file is empty, so open the **[Settings](features/radio-panel.md#settings)**
 page (the gear icon) and fill in the Flight, Voice and other tabs there -- everything
 saves as you go, so this is a one-time setup per machine.
 

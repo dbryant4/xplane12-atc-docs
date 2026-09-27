@@ -98,7 +98,7 @@ changing one doesn't touch the others:
 |---|---|
 | **Flight** | Flight plan source, callsign, aircraft type, departure/destination, route, cruise altitude |
 | **Connection** | X-Plane host/port, and an X-Plane installation folder override |
-| **Display** | Show/hide COM1 and COM2 on the panel |
+| **Display** | Show/hide COM1 and COM2, [native window](native-window.md) vs. browser, always on top |
 | **Voice** | AWS profile/region, Transcribe vocabulary, [radio effect](radio-fx.md) preset, hardware PTT source, and the AWS account block ([sign-in and status](voice.md#aws-sign-in-and-status)). Always on -- see [Voice](voice.md#when-voice-cant-start) for what happens if it can't start |
 | **ATC** | [Intent parsing mode](intent-parsing.md), altitude source, conformance strictness, and the 14 CFR 91.117(d) heavy-speed exception |
 | **Advanced** | `apt.dat`/`atc.dat` overrides, the debrief folder, and the panel's own host/port |

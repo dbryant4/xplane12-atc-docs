@@ -7,7 +7,9 @@ a change takes effect, and the command-line flag that can override it for a sing
 ## How settings work
 
 - **Run `xatc` with no arguments** (or double-click `scripts\xatc-run.cmd` on Windows). xatc starts
-  from your saved settings and opens the panel in your browser. There's nothing to type.
+  from your saved settings and opens the panel in its own [native window](features/native-window.md)
+  by default (`--browser`, or Display → Window, keeps the old browser-tab behavior). There's nothing
+  to type.
 - **First time**, a welcome banner on the Settings page walks through Connection (test it),
   Voice (test your AWS profile and microphone), and Flight (set your destination), then Save.
   Dismiss it once you don't need it -- it stays dismissed on that browser.
@@ -82,13 +84,16 @@ Connection** yet -- a pass/warn/fail result with details appears right there.
 
 ## Display
 
-What the [radio panel](features/radio-panel.md) itself shows -- display only, never what
-X-Plane's own radios or what xatc actually hears/transmits on.
+What the [radio panel](features/radio-panel.md) itself shows, and how it's shown at all
+-- display only, never what X-Plane's own radios or what xatc actually hears/transmits
+on.
 
 | Setting | Default | Flag | When | What it does |
 |---|---|---|---|---|
 | **Show COM1** (`display.com1_visible`) | on | — | **live** | Hides COM1 from the panel when off. Doesn't affect what xatc listens to or transmits on. |
 | **Show COM2** (`display.com2_visible`) | on | — | **live** | Same, for COM2. Both COMs can be hidden at once, for flying with the radios tuned entirely from the cockpit. |
+| **Window** (`display.window`) | Native | `--browser` | **restart** | **Native** opens the panel in its own [native window](features/native-window.md); **Browser** opens it in the OS default browser tab instead, same as before F20. No live way to turn an already-open browser tab into a native window or back. |
+| **Always on top** (`display.always_on_top`) | off | — | **live** | Keeps the native window above X-Plane. No effect in browser mode. |
 
 ## Voice
 
