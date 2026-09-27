@@ -65,10 +65,11 @@ what's wrong:
 - **Panel** -- your browser's own WebSocket connection to xatc, separate from the sim
   connection above: green while connected, red while it's reconnecting.
 - **AWS** -- whether voice's AWS credentials actually work right now (checked at
-  startup, every 60 seconds, after any voice-related Settings save, and on demand);
+  startup, every 60 seconds, after any AWS-related Settings save, and on demand);
   green when signed in, amber once the session has under 15 minutes left or something
-  needs attention, red when it can't reach AWS at all. Click it to jump straight to
-  Settings → Voice's AWS account block. See [AWS sign-in and status](voice.md#aws-sign-in-and-status).
+  needs attention, red when it can't reach AWS at all. Click a non-green pill to sign in
+  right there in a popover, no Settings needed; click a green one to open Settings →
+  Voice's AWS account block instead. See [AWS sign-in and status](voice.md#aws-sign-in-and-status).
 
 ## Type-to-transmit
 
@@ -99,9 +100,9 @@ changing one doesn't touch the others:
 | **Flight** | Flight plan source, callsign, aircraft type, departure/destination, route, cruise altitude |
 | **Connection** | X-Plane host/port, and an X-Plane installation folder override |
 | **Display** | Show/hide COM1 and COM2, [native window](native-window.md) vs. browser, always on top |
-| **Voice** | AWS profile/region, Transcribe vocabulary, [radio effect](radio-fx.md) preset, hardware PTT source, and the AWS account block ([sign-in and status](voice.md#aws-sign-in-and-status)). Always on -- see [Voice](voice.md#when-voice-cant-start) for what happens if it can't start |
+| **Voice** | Transcribe vocabulary, [radio effect](radio-fx.md) preset, hardware PTT source, and the AWS account block ([sign-in and status](voice.md#aws-sign-in-and-status)). Always on -- see [Voice](voice.md#when-voice-cant-start) for what happens if it can't start |
 | **ATC** | [Intent parsing mode](intent-parsing.md), altitude source, conformance strictness, and the 14 CFR 91.117(d) heavy-speed exception |
-| **Advanced** | `apt.dat`/`atc.dat` overrides, the debrief folder, and the panel's own host/port |
+| **Advanced** | AWS profile/region, `apt.dat`/`atc.dat` overrides, the debrief folder, and the panel's own host/port |
 
 **Flight plan: manual or SimBrief.** The Flight tab's Manual/SimBrief toggle switches
 between typing everything in by hand and pulling a real OFP: enter a SimBrief username
