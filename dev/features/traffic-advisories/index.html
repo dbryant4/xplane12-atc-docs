@@ -1715,9 +1715,9 @@ the TCAS target datarefs (ADR 0010) and feeds them into the engine, about once a
 on their own connection alongside the aircraft-state one. That drives traffic advisories
 and <a href="#wake-turbulence-cautions-f11-f12">wake turbulence cautions</a> below, plus
 <a href="../../roadmap/#m7-traffic-awareness">sequencing</a> (M7-3) behind other traffic on approach
-or in the pattern.</p>
-<!-- TODO once Jr Dev 1's panel PR merges: mention the header's "Traffic N" chip here. -->
-
+or in the pattern. A <strong>"Traffic N"</strong> chip in the <a href="../radio-panel/">radio panel</a>'s header
+confirms the feed is actually seeing something -- see <a href="#the-live-feed">The live feed</a>
+below.</p>
 <p><strong>Not yet confirmed against real AI traffic on a running X-Plane 12.4.3.</strong> The dataref
 names, decoding and fallbacks below are all built and tested against synthetic data; <code>xatc
 smoke --live --tcas-seconds 5</code> (see below) is how to check what a real X-Plane build
@@ -1777,6 +1777,11 @@ X-Plane build missing that dataref, a below-50-kt groundspeed fallback) is set.<
   S/type, plus (marked "unverified," since they haven't been confirmed live yet)
   velocity, weight-on-wheels and flight id. Run this against a real flight with AI
   traffic before trusting the feed.</li>
+<li><strong>The panel's "Traffic N" chip</strong> is the day-to-day way to confirm the same thing
+  without a terminal: it shows the current target count, with "N nearby, M airborne" in
+  its tooltip. Hidden -- not shown as "Traffic 0" -- whenever there's nothing to report,
+  which covers three different situations the panel can't tell apart (no feed at all, a
+  stale one, or a genuine clear sky) equally honestly.</li>
 <li><strong><code>xatc record</code></strong> now records traffic alongside aircraft state, and <code>--replay</code> plays it
   back. An older recording (with no traffic in it) still replays unchanged on this
   version -- it just has no traffic -- but a recording made now, with traffic in it,

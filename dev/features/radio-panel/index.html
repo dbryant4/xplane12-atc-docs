@@ -663,6 +663,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#traffic-chip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Traffic chip
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#type-to-transmit" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1704,6 +1715,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#traffic-chip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Traffic chip
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#type-to-transmit" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1823,6 +1845,9 @@ network:</p>
   <a href="#settings">Settings</a> below.</li>
 <li><strong>Status pills</strong> in the top bar, one per thing that can be up or down -- see <a href="#status-pills">Status
   pills</a> below.</li>
+<li><strong>A "Traffic N" chip</strong>, next to the status pills, when the <a href="../traffic-advisories/">live traffic
+  feed</a> actually has something to report -- see <a href="#traffic-chip">Traffic
+  chip</a> below.</li>
 </ul>
 <h2 id="status-pills">Status pills<a class="headerlink" href="#status-pills" title="Permanent link">&para;</a></h2>
 <p>Three pills in the top bar, each a short label with a color for its state and the actual
@@ -1842,6 +1867,13 @@ what's wrong:</p>
   right there in a popover, no Settings needed; click a green one to open Settings →
   Voice's AWS account block instead. See <a href="../voice/#aws-sign-in-and-status">AWS sign-in and status</a>.</li>
 </ul>
+<h2 id="traffic-chip">Traffic chip<a class="headerlink" href="#traffic-chip" title="Permanent link">&para;</a></h2>
+<p>Unlike the status pills above, this one isn't clickable and has no color for state --
+it's just shown or hidden, next to them in the header. <strong>"Traffic N"</strong> shows the <a href="../traffic-advisories/">live
+traffic feed</a>'s current target count, with "N nearby, M airborne"
+in its tooltip. Hidden entirely -- not shown as "Traffic 0" -- whenever there's nothing
+to report: no feed at all, a stale one, or a genuine clear sky all look the same from
+here, on purpose, since the panel can't actually tell them apart.</p>
 <h2 id="type-to-transmit">Type-to-transmit<a class="headerlink" href="#type-to-transmit" title="Permanent link">&para;</a></h2>
 <p>Not a separate mode to switch into -- the transcript's own text box works all the time,
 alongside voice, not instead of it. Type a transmission and it's handled exactly like a
