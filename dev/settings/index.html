@@ -1825,7 +1825,7 @@ a change takes effect, and the command-line flag that can override it for a sing
   by default (<code>--browser</code>, or Display → Window, keeps the old browser-tab behavior). There's nothing
   to type.</li>
 <li><strong>First time</strong>, a welcome banner on the Settings page walks through Connection (test it),
-  Voice (test your AWS profile and microphone), and Flight (set your destination), then Save.
+  Voice (sign in to AWS if the pill isn't green, test your microphone), and Flight (set your destination), then Save.
   Dismiss it once you don't need it -- it stays dismissed on that browser.</li>
 <li><strong>Where they're saved:</strong> one <code>settings.json</code> file.</li>
 </ul>
@@ -2086,20 +2086,6 @@ see <a href="../features/voice/#when-voice-cant-start">Voice</a> for exactly wha
 </thead>
 <tbody>
 <tr>
-<td><strong>AWS profile</strong> (<code>voice.aws_profile</code>)</td>
-<td><code>xatc</code></td>
-<td>— (<code>AWS_PROFILE</code>)</td>
-<td>restart</td>
-<td>The AWS CLI profile to use. Only the name is stored.</td>
-</tr>
-<tr>
-<td><strong>AWS region</strong> (<code>voice.aws_region</code>)</td>
-<td><code>us-east-1</code></td>
-<td><code>--aws-region</code></td>
-<td>restart</td>
-<td>Where Transcribe, Polly and Bedrock are called.</td>
-</tr>
-<tr>
 <td><strong>Custom vocabulary</strong> (<code>voice.vocabulary</code>)</td>
 <td><code>xatc-aviation-en-US</code></td>
 <td><code>--vocabulary</code> / <code>--no-vocabulary</code></td>
@@ -2151,14 +2137,14 @@ see <a href="../features/voice/#when-voice-cant-start">Voice</a> for exactly wha
 </tbody>
 </table>
 <p>The panel also lists your <strong>microphones</strong> (the default is marked) and <strong>joysticks</strong> (with button
-counts), so you can see what xatc detects. <strong>Test</strong> next to the AWS profile checks it (even
-unsaved) resolves real, non-expired credentials; <strong>Test</strong> next to the microphones list checks
+counts), so you can see what xatc detects. <strong>Test</strong> next to the microphones list checks
 whichever one xatc currently sees is actually picking up sound.</p>
-<p><strong>AWS account.</strong> Below the fields above, a separate block shows the profile and region
-<em>actually in use</em> right now (which can differ from what's typed above -- see <a href="../features/voice/#how-the-aws-profile-is-resolved">how the
-profile is resolved</a>), a plain-language
-status line, and a <strong>Sign in to AWS</strong> button that runs the real <code>aws login</code> for you. See
-<a href="../features/voice/#aws-sign-in-and-status">AWS sign-in and status</a>.</p>
+<p><strong>AWS account.</strong> A separate block shows a plain-language status line for whether AWS is
+actually reachable right now, and a <strong>Sign in to AWS</strong> button that runs the real <code>aws
+login</code> for you -- most pilots never need to touch anything else here, since one-click
+sign-in from the header's <strong>AWS</strong> pill (or this button) resolves everything on its own.
+See <a href="../features/voice/#aws-sign-in-and-status">AWS sign-in and status</a>. The AWS <strong>profile</strong>
+and <strong>region</strong> fields themselves moved to <a href="#advanced">Advanced</a> -- see there.</p>
 <h2 id="atc">ATC<a class="headerlink" href="#atc" title="Permanent link">&para;</a></h2>
 <p>How strict ATC is, and how it understands you. Every change is <strong>live</strong>.</p>
 <table>
@@ -2209,6 +2195,18 @@ status line, and a <strong>Sign in to AWS</strong> button that runs the real <co
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><strong>AWS profile</strong> (<code>voice.aws_profile</code>)</td>
+<td>blank</td>
+<td>— (<code>AWS_PROFILE</code>)</td>
+<td>Only needed with more than one AWS account/profile on this PC -- blank means the default credential chain (an <code>AWS_PROFILE</code> env var if set, else the <code>[default]</code> profile). Most pilots never set this; sign in from the <strong>AWS</strong> pill instead. A saved name that stops existing is silently cleared back to blank the next time xatc starts (logged once), not shown as broken.</td>
+</tr>
+<tr>
+<td><strong>AWS region</strong> (<code>voice.aws_region</code>)</td>
+<td><code>us-east-1</code></td>
+<td><code>--aws-region</code></td>
+<td>Where Transcribe, Polly and Bedrock are called.</td>
+</tr>
 <tr>
 <td><strong>apt.dat override</strong> (<code>advanced.apt_dat</code>)</td>
 <td>blank</td>
@@ -2263,7 +2261,7 @@ status line, and a <strong>Sign in to AWS</strong> button that runs the real <co
 <span class="w">    </span><span class="nt">"heavy_speed_exception"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">  </span><span class="p">},</span>
 <span class="w">  </span><span class="nt">"voice"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">"aws_profile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xatc"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"aws_profile"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"aws_region"</span><span class="p">:</span><span class="w"> </span><span class="s2">"us-east-1"</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"vocabulary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xatc-aviation-en-US"</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"ptt_source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xplane"</span><span class="p">,</span>

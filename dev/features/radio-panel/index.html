@@ -1836,10 +1836,11 @@ what's wrong:</p>
 <li><strong>Panel</strong> -- your browser's own WebSocket connection to xatc, separate from the sim
   connection above: green while connected, red while it's reconnecting.</li>
 <li><strong>AWS</strong> -- whether voice's AWS credentials actually work right now (checked at
-  startup, every 60 seconds, after any voice-related Settings save, and on demand);
+  startup, every 60 seconds, after any AWS-related Settings save, and on demand);
   green when signed in, amber once the session has under 15 minutes left or something
-  needs attention, red when it can't reach AWS at all. Click it to jump straight to
-  Settings → Voice's AWS account block. See <a href="../voice/#aws-sign-in-and-status">AWS sign-in and status</a>.</li>
+  needs attention, red when it can't reach AWS at all. Click a non-green pill to sign in
+  right there in a popover, no Settings needed; click a green one to open Settings →
+  Voice's AWS account block instead. See <a href="../voice/#aws-sign-in-and-status">AWS sign-in and status</a>.</li>
 </ul>
 <h2 id="type-to-transmit">Type-to-transmit<a class="headerlink" href="#type-to-transmit" title="Permanent link">&para;</a></h2>
 <p>Not a separate mode to switch into -- the transcript's own text box works all the time,
@@ -1880,7 +1881,7 @@ changing one doesn't touch the others:</p>
 </tr>
 <tr>
 <td><strong>Voice</strong></td>
-<td>AWS profile/region, Transcribe vocabulary, <a href="../radio-fx/">radio effect</a> preset, hardware PTT source, and the AWS account block (<a href="../voice/#aws-sign-in-and-status">sign-in and status</a>). Always on -- see <a href="../voice/#when-voice-cant-start">Voice</a> for what happens if it can't start</td>
+<td>Transcribe vocabulary, <a href="../radio-fx/">radio effect</a> preset, hardware PTT source, and the AWS account block (<a href="../voice/#aws-sign-in-and-status">sign-in and status</a>). Always on -- see <a href="../voice/#when-voice-cant-start">Voice</a> for what happens if it can't start</td>
 </tr>
 <tr>
 <td><strong>ATC</strong></td>
@@ -1888,7 +1889,7 @@ changing one doesn't touch the others:</p>
 </tr>
 <tr>
 <td><strong>Advanced</strong></td>
-<td><code>apt.dat</code>/<code>atc.dat</code> overrides, the debrief folder, and the panel's own host/port</td>
+<td>AWS profile/region, <code>apt.dat</code>/<code>atc.dat</code> overrides, the debrief folder, and the panel's own host/port</td>
 </tr>
 </tbody>
 </table>

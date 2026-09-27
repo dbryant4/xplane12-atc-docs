@@ -1927,47 +1927,51 @@ fallback still cover a broken or partial install rather than crashing on it.</p>
 <h2 id="aws-sign-in-and-status">AWS sign-in and status<a class="headerlink" href="#aws-sign-in-and-status" title="Permanent link">&para;</a></h2>
 <p>The radio panel's <strong>AWS</strong> <a href="../radio-panel/#status-pills">status pill</a> reflects whether
 voice's AWS credentials actually work right now, not just whether they did at startup:
-checked at startup, every 60 seconds after that, whenever you save anything on the Voice
-tab, and on demand (a <strong>Check again</strong> button). It's a free <code>sts:GetCallerIdentity</code> call
--- nothing this check does ever reads, stores or displays the actual access key, secret,
-account id or ARN.</p>
-<p>Clicking the pill opens the <strong>Voice</strong> tab's <strong>AWS account</strong> block, which shows:</p>
-<ul>
-<li>The <strong>profile</strong> and <strong>region</strong> actually in use right now -- not necessarily
-  <code>voice.aws_profile</code> as typed; see <a href="#how-the-aws-profile-is-resolved">profile resolution</a> below.</li>
-<li>A plain-language <strong>status line</strong> (e.g. <em>"signed in"</em>, <em>"AWS credentials have
-  expired"</em>, <em>"AWS profile 'xatc' doesn't exist"</em>), with a hint on what to do about it
-  when there's something to do.</li>
-<li>A <strong>"Sign in to AWS"</strong> button, replaced by <strong>Cancel</strong> while a sign-in is running, and
-  by <strong>Check again</strong> once it isn't signed in cleanly. It stays available even while
-  everything's fine, but only reappears automatically once the session has under 15
-  minutes left, so you can refresh before it actually lapses rather than after.</li>
-</ul>
-<p><strong>Signing in</strong> runs the real AWS CLI v2 command for you: <code>aws login --profile &lt;resolved&gt;
---region &lt;region&gt;</code> as a background process on the same PC xatc is running on -- it opens
-a browser window there, waits for you to finish signing in, and streams each line of the
-CLI's own progress into the panel as it happens (a fresh <strong>AWS</strong> status broadcast follows
-once it's done). <strong>Cancel</strong> stops it outright; left alone, it times out after 5 minutes
-with a message showing the exact command so you can run it yourself in a terminal
-instead. If the AWS CLI itself isn't installed, sign-in fails immediately with a link to
-install it, and <strong>Check again</strong> lets you retry once it is.</p>
-<p><strong>Only a panel opened on the PC itself can start a sign-in</strong> -- a client connected over
-anything but loopback (127.0.0.1/<code>::1</code>, i.e. not a phone or another machine on the LAN)
-is refused outright, since running an arbitrary local command on someone else's request
-would be a real security hole. Checking the status, and cancelling an already-running
-sign-in, both work from any connected panel -- only <em>starting</em> one is restricted.</p>
+checked at startup, every 60 seconds after that, whenever you save anything AWS-related,
+and on demand. It's a free <code>sts:GetCallerIdentity</code> call -- nothing this check does ever
+reads, stores or displays the actual access key, secret, account id or ARN.</p>
+<p><strong>One click signs you in.</strong> Click the pill (or the welcome banner's own "Sign in to
+AWS" link, or Settings → Voice's <strong>Sign in to AWS</strong> button) whenever it isn't plain
+green, and a small popover under the pill walks you through it, with no need to open
+Settings first:</p>
+<ol>
+<li><em>"A browser window is opening on this PC -- finish signing in there."</em>, with a
+   <strong>Cancel</strong> button while it's running.</li>
+<li>Ends in <em>"Signed in ✓"</em> (a fresh <strong>AWS</strong> status follows, and the popover closes on
+   its own after a few seconds), or a plain-language error with a <strong>Check again</strong>
+   button -- <em>"The AWS CLI isn't installed."</em> (with an <strong>Install the AWS CLI</strong> link) if
+   it genuinely isn't, or <em>"Sign-in didn't finish: …"</em> for anything else. <strong>Cancel</strong>
+   just closes the popover quietly, nothing more to say.</li>
+</ol>
+<p>Signing in runs the real AWS CLI v2 command for you (<code>aws login --profile &lt;resolved&gt;
+--region &lt;region&gt;</code>) as a background process on the same PC xatc is running on. Left
+alone, it times out after 5 minutes.</p>
+<p>Clicking the pill while everything's already fine opens <strong>Settings → Voice</strong>'s <strong>AWS
+account</strong> block instead -- a one-line status and the same <strong>Sign in to AWS</strong> button, for
+signing in again ahead of time. It reappears automatically once the current session has
+under 15 minutes left, so you can refresh before it actually lapses rather than after.</p>
+<p><strong>Only a panel opened on the PC itself can start or cancel a sign-in</strong> -- a client
+connected over anything but loopback (127.0.0.1/<code>localhost</code>, i.e. not a phone or another
+machine on the LAN) gets <em>"Sign in from the PC running xatc"</em> instead, and the server
+refuses the action outright if it's tried anyway. Checking the status works from any
+connected panel either way.</p>
 <h3 id="how-the-aws-profile-is-resolved">How the AWS profile is resolved<a class="headerlink" href="#how-the-aws-profile-is-resolved" title="Permanent link">&para;</a></h3>
-<p>The same rule applies everywhere AWS is touched -- this status check, the actual
-Transcribe/Polly/Bedrock calls, and the sign-in command above all agree on exactly one
-profile:</p>
+<p><strong>Most pilots never need to set a profile at all.</strong> Blank (the default) means "no
+specific profile" -- the same rule applies everywhere AWS is touched (this status check,
+the actual Transcribe/Polly/Bedrock calls, and the sign-in command above):</p>
 <ol>
 <li>An <code>AWS_PROFILE</code> environment variable already set before xatc started, if there is one.</li>
-<li>Otherwise, <code>voice.aws_profile</code> from Settings → Voice, but only if a profile by that
-   name actually exists (an unrecognized name falls through to the next step instead of
-   failing outright, with a hint saying so).</li>
-<li>Otherwise, boto3's own default (the <code>default</code> profile, or plain environment
-   credentials) -- the same thing that happens if you never configure a profile at all.</li>
+<li>Otherwise, <strong>AWS profile</strong> from Settings → Advanced (<code>voice.aws_profile</code>), but only if
+   a profile by that name actually exists (an unrecognized name falls through to the
+   next step instead of failing outright, with a hint saying so -- and a <em>saved</em> name
+   that stops existing is quietly cleared back to blank the next time xatc starts,
+   logged once, rather than kept around as a broken setting).</li>
+<li>Otherwise, boto3's own default credential chain (the <code>default</code> profile, or plain
+   environment credentials) -- the same thing that happens with no profile configured at
+   all, which is the common case.</li>
 </ol>
+<p>Only set a profile yourself if you actually use more than one AWS account or profile on
+this PC.</p>
 <p><code>xatc doctor</code> reports this same status under <strong>"AWS sign-in status"</strong> -- the identical
 check, the identical hint, whether you're reading the panel or a terminal.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
