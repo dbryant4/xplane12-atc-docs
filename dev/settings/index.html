@@ -2023,7 +2023,10 @@ X-Plane's own radios or what xatc actually hears/transmits on.</p>
 </tbody>
 </table>
 <h2 id="voice">Voice<a class="headerlink" href="#voice" title="Permanent link">&para;</a></h2>
-<p>Push-to-talk speech in, ATC speech out. See <a href="../features/voice/">Voice</a>.</p>
+<p>Push-to-talk speech in, ATC speech out. <strong>Always on</strong> (ADR 0012) -- there's no toggle
+here, and <code>--voice</code> is accepted only as a no-op for one release, for an old script that
+still passes it. If voice can't actually start, xatc still runs and falls back to typing;
+see <a href="../features/voice/#when-voice-cant-start">Voice</a> for exactly what that looks like.</p>
 <table>
 <thead>
 <tr>
@@ -2035,13 +2038,6 @@ X-Plane's own radios or what xatc actually hears/transmits on.</p>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td><strong>Voice enabled</strong> (<code>voice.enabled</code>)</td>
-<td>off</td>
-<td><code>--voice</code></td>
-<td>restart</td>
-<td>Turns on Amazon Transcribe (your speech) and Polly (ATC's replies). Off means text only: you type transmissions in the panel.</td>
-</tr>
 <tr>
 <td><strong>AWS profile</strong> (<code>voice.aws_profile</code>)</td>
 <td><code>xatc</code></td>
@@ -2125,9 +2121,9 @@ whichever one xatc currently sees is actually picking up sound.</p>
 <tbody>
 <tr>
 <td><strong>Intent parser</strong> (<code>atc.intent_parser_mode</code>)</td>
-<td>disabled (fallback with <code>--voice</code> if never set)</td>
+<td>fallback</td>
 <td><code>--intent-mode</code></td>
-<td><strong>Disabled:</strong> rules only. <strong>Fallback:</strong> the Nova Lite LLM helps only when the rules can't understand you. <strong>Primary:</strong> Nova Lite first, with the rules as backup. The LLM only classifies <em>what you asked for</em>; it never writes ATC's words. See <a href="../features/intent-parsing/">Intent parsing &amp; LLM modes</a>.</td>
+<td><strong>Disabled:</strong> rules only. <strong>Fallback:</strong> the Nova Lite LLM helps only when the rules can't understand you. <strong>Primary:</strong> Nova Lite first, with the rules as backup. The LLM only classifies <em>what you asked for</em>; it never writes ATC's words. A saved <strong>Disabled</strong> choice is left alone. Automatically sits out (rules only) while <a href="../features/voice/#when-voice-cant-start">voice is unavailable</a>, resuming your saved mode once it recovers. See <a href="../features/intent-parsing/">Intent parsing &amp; LLM modes</a>.</td>
 </tr>
 <tr>
 <td><strong>Altitude source</strong> (<code>atc.altitude_source</code>)</td>
@@ -2215,7 +2211,6 @@ whichever one xatc currently sees is actually picking up sound.</p>
 <span class="w">    </span><span class="nt">"heavy_speed_exception"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">  </span><span class="p">},</span>
 <span class="w">  </span><span class="nt">"voice"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"aws_profile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xatc"</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"aws_region"</span><span class="p">:</span><span class="w"> </span><span class="s2">"us-east-1"</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"vocabulary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xatc-aviation-en-US"</span><span class="p">,</span>

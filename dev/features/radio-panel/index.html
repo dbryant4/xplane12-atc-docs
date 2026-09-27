@@ -650,10 +650,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#text-mode" class="md-nav__link">
+  <a href="#type-to-transmit" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Text mode
+        Type-to-transmit
       
     </span>
   </a>
@@ -1652,10 +1652,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#text-mode" class="md-nav__link">
+  <a href="#type-to-transmit" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Text mode
+        Type-to-transmit
       
     </span>
   </a>
@@ -1760,9 +1760,10 @@ network:</p>
 <li><strong>Reset flight button</strong> -- clears the saved <a href="../flight-state/">flight state</a> and starts
   over parked, where the aircraft is, without needing to restart xatc itself.</li>
 <li><strong>Transcript</strong> -- every transmission, tagged by frequency and station, plus a
-  type-to-transmit box for text mode.</li>
+  type-to-transmit box that's always there alongside voice.</li>
 <li><strong>Push-to-talk</strong> -- an on-screen button, or holding Space while the page has focus
-  (ignored while typing in a text field). See <a href="../voice/">Voice</a>.</li>
+  (ignored while typing in a text field). Always on -- disabled with a plain reason,
+  rather than erroring, whenever <a href="../voice/#when-voice-cant-start">voice itself can't start</a>.</li>
 <li><strong>Settings</strong> -- a gear icon opens a full Settings page covering everything xatc needs
   to fly: flight plan, connection, voice, ATC behavior, and advanced overrides. See
   <a href="#settings">Settings</a> below.</li>
@@ -1770,10 +1771,12 @@ network:</p>
   which replay file is playing and whether it's still moving or holding at the end of
   the recording.</li>
 </ul>
-<h2 id="text-mode">Text mode<a class="headerlink" href="#text-mode" title="Permanent link">&para;</a></h2>
-<p>Everything works with no voice and no AWS account: type a transmission into the box
-instead of speaking it, and the panel's the primary UI. This is also how the project
-develops and tests without needing a live sim.</p>
+<h2 id="type-to-transmit">Type-to-transmit<a class="headerlink" href="#type-to-transmit" title="Permanent link">&para;</a></h2>
+<p>Not a separate mode to switch into -- the transcript's own text box works all the time,
+alongside voice, not instead of it. Type a transmission and it's handled exactly like a
+spoken one. This is what keeps a flight going with no AWS account at all, or whenever
+<a href="../voice/#when-voice-cant-start">voice can't start</a> (bad credentials, no mic), and it's
+also how the project develops and tests without needing a live sim.</p>
 <h2 id="two-way-com-sync">Two-way COM sync<a class="headerlink" href="#two-way-com-sync" title="Permanent link">&para;</a></h2>
 <p>All frequency changes go through one interface the engine's sim bridge implements,
 whether that's a live X-Plane Web API connection or a recorded/replayed flight -- the
@@ -1807,7 +1810,7 @@ changing one doesn't touch the others:</p>
 </tr>
 <tr>
 <td><strong>Voice</strong></td>
-<td>Push-to-talk on/off, AWS profile/region, Transcribe vocabulary, <a href="../radio-fx/">radio effect</a> preset, joystick PTT</td>
+<td>AWS profile/region, Transcribe vocabulary, <a href="../radio-fx/">radio effect</a> preset, hardware PTT source. Always on -- see <a href="../voice/#when-voice-cant-start">Voice</a> for what happens if it can't start</td>
 </tr>
 <tr>
 <td><strong>ATC</strong></td>
@@ -1837,10 +1840,12 @@ reference (not a saved setting).</p>
 command line for this run."</em> underneath -- the flag wins for the run, so there's nothing
 useful to edit.</p>
 <p><strong>Some changes need a restart.</strong> X-Plane connection settings, the panel's own host/port,
-and the voice on/off switch, AWS profile/region and vocabulary only take effect on the
-next launch -- saving one of those shows a banner: <em>"&#8635; Restart xatc to apply:
-&lt;the changed keys&gt;."</em> Everything else (ATC behavior, the radio effect preset,
-joystick PTT) applies immediately.</p>
+and the AWS profile/region and vocabulary only take effect on the next launch -- saving
+one of those shows a banner: <em>"&#8635; Restart xatc to apply: &lt;the changed keys&gt;."</em>
+Everything else (ATC behavior, the radio effect preset, joystick PTT) applies
+immediately. Saving anything on the Voice tab, whether or not it needs a restart, also
+triggers a fresh attempt to start voice if it wasn't already running -- see
+<a href="../voice/#when-voice-cant-start">Voice</a>.</p>
 <p><strong>Where it's saved.</strong> Settings live in <code>settings.json</code> in your OS's standard config
 directory -- <code>%LOCALAPPDATA%\xatc\settings.json</code> on Windows, <code>~/Library/Application
 Support/xatc/settings.json</code> on macOS, <code>~/.config/xatc/settings.json</code> on Linux. The

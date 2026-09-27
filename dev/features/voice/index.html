@@ -969,6 +969,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#voice-is-always-on" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Voice is always on
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-voice-cant-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When voice can't start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1652,6 +1674,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#voice-is-always-on" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Voice is always on
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-voice-cant-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When voice can't start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1749,8 +1793,49 @@ PTT up    -&gt;  final transcript  -&gt;  engine.on_pilot_transmission(tuned_fre
 engine wrote by construction, so there's no risk of a voice layer paraphrasing a
 clearance (the same risk an earlier Nova 2 Sonic speech-to-speech design carried, and
 the reason this project moved away from it -- see ADR 0004 in the repository).</p>
+<h2 id="voice-is-always-on">Voice is always on<a class="headerlink" href="#voice-is-always-on" title="Permanent link">&para;</a></h2>
+<p>There's no toggle (ADR 0012) -- not a setting, not a flag, not a per-run choice. <code>uv
+sync</code> installs everything voice needs as ordinary dependencies (no more separate <code>voice</code>
+extra to remember), and every real run tries to start voice. <code>xatc run --voice</code> still
+parses, but only as a documented no-op kept for one release so an old script or shortcut
+that still passes it doesn't break -- it does nothing.</p>
+<p><code>botocore[crt]</code>, which AWS CLI v2's <code>aws login</code> credentials need on Windows (see <a href="../../getting-started/">Getting
+Started</a> step 3), comes along the same way -- nothing extra to
+install or configure.</p>
+<h2 id="when-voice-cant-start">When voice can't start<a class="headerlink" href="#when-voice-cant-start" title="Permanent link">&para;</a></h2>
+<p>Bad or expired AWS credentials, no working microphone, or a Transcribe/Polly error never
+block or crash startup -- xatc always starts, in whatever state voice ends up in:</p>
+<ul>
+<li>The radio panel gets a <code>{"type": "voice_status", "available": bool, "detail": "..."}</code>
+  broadcast the moment voice's state is known (and again on every change), naming exactly
+  what's wrong (e.g. <em>"AWS credentials not signed in -- check Settings -&gt; Voice"</em>) and
+  what to do about it.</li>
+<li><strong>Push-to-talk is disabled with that reason</strong> -- the on-screen button, holding Space,
+  and a hardware yoke/joystick button all refuse the same way, showing the detail as a
+  tooltip or a plain status line instead of erroring. There's no separate "voice off"
+  state to design around: unavailable is unavailable, however you tried to key up.</li>
+<li><strong>Type-to-transmit keeps working regardless</strong> -- it's the panel's own input, never
+  gated on voice. This is how you keep flying while voice is down, not a mode you have
+  to switch into.</li>
+<li><strong>It retries automatically</strong>: saving anything on the Voice tab, or fixing AWS
+  credentials externally (<code>aws login</code>) and coming back, triggers a fresh attempt with
+  whatever's currently configured. There's no <em>"Retry voice"</em> button in the panel yet --
+  saving Voice settings is the way to force a retry right now.</li>
+<li><strong>The LLM helpers sit out too, and come back together.</strong> The readback judge,
+  conversational ATC, and Nova Lite intent classification all need the same AWS access
+  voice does, so all three switch off automatically the moment voice becomes unavailable
+  (falling back to rules-only intent parsing and the plain rules-based readback checker)
+  and switch back on together once voice recovers -- restoring whatever intent mode you
+  actually had configured, not just flipping back on unconditionally. An explicit
+  <strong>Disabled</strong> intent mode is left alone either way: it stays off before, during and
+  after a voice outage.</li>
+</ul>
+<p>This is the <em>only</em> path now -- there's no separate "voice deliberately off" branch to
+fall into. A missing dependency, specifically, should never actually happen after a
+normal <code>uv sync</code> (they're ordinary dependencies now), but the same check and the same
+fallback still cover a broken or partial install rather than crashing on it.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
-<p><code>xatc run --voice</code> turns voice on. A few flags matter:</p>
+<p>A few flags still matter, independent of the always-on change above:</p>
 <table>
 <thead>
 <tr>
@@ -1775,10 +1860,8 @@ the reason this project moved away from it -- see ADR 0004 in the repository).</
 </table>
 <p>Push-to-talk itself is bound in the <a href="../radio-panel/">radio panel</a>: the on-screen PTT
 button, or holding <strong>Space</strong> while the page has focus (ignored while typing in a text
-field, so Space still types spaces there).</p>
-<p>The <code>voice</code> extra pulls in <code>botocore[crt]</code>, which AWS CLI v2's <code>aws login</code> credentials
-need on Windows (see <a href="../../getting-started/">Getting Started</a> step 3) -- installing the
-voice extra is enough, nothing extra to configure.</p>
+field, so Space still types spaces there) -- see <a href="../joystick-ptt/">Push-to-talk from
+hardware</a> for a real yoke or joystick button instead.</p>
 <h2 id="the-nova-2-sonic-spike">The Nova 2 Sonic spike<a class="headerlink" href="#the-nova-2-sonic-spike" title="Permanent link">&para;</a></h2>
 <p>An earlier spike (<code>xatc.voice.spike_nova</code>) tried Amazon Nova 2 Sonic as a single
 bidirectional speech-to-speech model instead of separate STT/TTS calls. It's kept in the
@@ -1788,8 +1871,11 @@ recognition and exact-text speech synthesis, and Polly can't paraphrase a cleara
 way a speech-to-speech model theoretically could.</p>
 <h2 id="limitations">Limitations<a class="headerlink" href="#limitations" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Requires a live AWS connection for both directions -- there's no offline voice path
-  (use <a href="../radio-panel/#text-mode">text mode</a> instead when developing without AWS).</li>
+<li>Requires a live AWS connection for both directions -- there's no offline voice path.
+  Without one, voice is simply unavailable (see above); type-to-transmit on the <a href="../radio-panel/">radio
+  panel</a> works regardless.</li>
+<li>No <em>"Retry voice"</em> control in the panel yet -- saving the Voice tab (even with nothing
+  actually changed) is the only way to force a retry right now.</li>
 <li>The custom vocabulary must be deployed and its name must match what <code>xatc run</code> is
   told, or transcription runs without domain-specific hints.</li>
 <li>No sidetone (hearing your own transmitted audio played back) is implemented.</li>

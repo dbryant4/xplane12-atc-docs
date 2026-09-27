@@ -1871,7 +1871,7 @@ covers, with a deterministic engine deciding every word ATC says.</p>
 <tr>
 <td><strong>M7: traffic awareness</strong></td>
 <td>🔶 in progress</td>
-<td>Advisory logic built and tested (M7-2) -- not live until the X-Plane traffic feed lands; sequencing (M7-3) next</td>
+<td>Advisory, sequencing (M7-3) and wake turbulence (F11, F12) logic all built and tested -- none live until the X-Plane traffic feed lands</td>
 </tr>
 </tbody>
 </table>
@@ -1948,8 +1948,18 @@ covers, with a deterministic engine deciding every word ATC says.</p>
 <li><strong>M7-2</strong> wired a full advisory pipeline into the engine and phraseology: "traffic,
   twelve o'clock, five miles, opposite direction, Boeing seven thirty seven, altitude
   indicates same altitude," from whoever has you airborne, with backoff and "traffic in
-  sight" handling. <strong>Not live yet</strong> -- there's no X-Plane traffic feed wired up today, so
-  this only runs against test data. See <a href="../features/traffic-advisories/">Traffic advisories</a>.</li>
+  sight" handling. See <a href="../features/traffic-advisories/">Traffic advisories</a>.</li>
+<li><strong>M7-3</strong> sequences behind traffic: "number two, follow the Boeing seven thirty seven
+  on a five mile final, report it in sight" on approach, "continue" while the runway's
+  occupied in the VFR pattern, with a wake-turbulence caution folded in behind a Heavy
+  or Super.</li>
+<li><strong>F11, F12: wake turbulence cautions.</strong> A takeoff or landing clearance on a runway a
+  Heavy or Super used recently (2 minutes behind a Heavy, 3 behind a Super) ends with
+  "caution wake turbulence" -- close parallel runways under 2,500 ft apart count as one
+  for this, crossing runways don't. See <a href="../features/traffic-advisories/#wake-turbulence-cautions-f11-f12">Traffic
+  advisories</a>.</li>
+<li><strong>Not live yet, any of it</strong> -- there's no X-Plane traffic feed wired up today, so all
+  three only run against test data.</li>
 <li><strong>F10</strong> also gave KBFI's Class D real Laminar Research atc.dat data in its test
   coverage, replacing a synthetic placeholder.</li>
 <li><strong>A real bug, fixed</strong>: an <code>apt.dat</code> file that spells a runway inconsistently between
@@ -1962,6 +1972,27 @@ covers, with a deterministic engine deciding every word ATC says.</p>
 </ul>
 <h3 id="also-built-along-the-way">Also built along the way<a class="headerlink" href="#also-built-along-the-way" title="Permanent link">&para;</a></h3>
 <ul>
+<li><strong>F13: live-sim robustness.</strong> A live X-Plane session pausing, replaying, being
+  repositioned or slewed, or starting a new flight altogether no longer trips a bogus
+  conformance callout, a stuck timer, or a flight that thinks it's still where it used
+  to be. See <a href="../features/live-sim-robustness/">Live-sim robustness</a>.</li>
+<li><strong>F15: en-route "next fix" tracking.</strong> ATC keeps track of where you are on your filed
+  route -- the next fix, direct-tos, cross-track for lateral conformance, and the
+  descent's own timing all measure against it, and the panel's Route map draws it. See
+  <a href="../features/route-tracking/">Route tracking</a>.</li>
+<li><strong>F16: approach vectoring.</strong> With no STAR (or after a missed approach), Approach
+  builds and flies an actual pattern -- straight-in, base entry or downwind -- instead of
+  pointing you at one spot on the final. See <a href="../features/arrival/#approach-vectoring-f16">Arrival</a>.</li>
+<li><strong>F17: conversational ATC.</strong> A call the rules parser can't place goes to an LLM that
+  can only pick one of a small, closed set of actions (a heading, an altitude, a
+  direct-to, "unable", or a short factual answer) -- never free-form ATC. See <a href="../features/intent-parsing/#conversational-atc-f17">Intent
+  parsing &amp; LLM modes</a>.</li>
+<li><strong>Voice is always on</strong> (ADR 0012): no more <code>voice.enabled</code> setting or <code>--no-voice</code>
+  flag -- push-to-talk voice is what xatc is for, not a toggle. See
+  <a href="../features/voice/">Voice</a> for the details.</li>
+<li><strong>Versioned docs and GitHub Releases</strong> (ADR 0009). This site is versioned to match
+  xatc's own releases, published alongside a tagged GitHub Release each time. See
+  <a href="../versions/">Versions</a>.</li>
 <li><strong><a href="../features/any-airport-data/">Any airport</a>.</strong> Airport, procedure and airspace data
   comes straight from your X-Plane install, including Custom Scenery priority, X-Plane's
   own CIFP files and fix coordinates. It was checked against 15 real airports, which
@@ -1986,15 +2017,17 @@ covers, with a deterministic engine deciding every word ATC says.</p>
 <h2 id="whats-next">What's next<a class="headerlink" href="#whats-next" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>The live X-Plane traffic feed</strong>: <code>SimBridge.traffic()</code> and the <code>xatc run --live</code>
-   wiring that feeds it into the engine, once the owner confirms the TCAS datarefs live
-   (ADR 0010) -- this is what actually turns on <a href="../features/traffic-advisories/">traffic
-   advisories</a>.</li>
-<li><strong>M7-3: sequencing behind traffic.</strong> Builds on M7-2's traffic snapshot: "number two,
-   follow the Boeing seven thirty seven on a five mile final, report it in sight," with a
-   wake-turbulence caution behind a heavy.</li>
-<li><strong>First live flights on the Windows PC</strong>: a real KSEA departure recording to replace
-   the synthetic scenario tests, and confirming joystick PTT and the new altitude
-   datarefs on real hardware.</li>
+   wiring that feeds it into the engine, once the TCAS datarefs are confirmed live (ADR
+   0010) -- this is what actually turns on <a href="../features/traffic-advisories/">traffic
+   advisories</a>, sequencing and wake turbulence cautions.</li>
+<li><strong>F18: AWS sign-in and status.</strong> A guided AWS CLI sign-in walkthrough and a clearer
+   picture of what's actually connected, from the panel.</li>
+<li><strong>Minimum vectoring altitudes.</strong> A follow-up to <a href="../features/arrival/#approach-vectoring-f16">approach
+   vectoring</a>: real MVA data instead of just
+   stepping the altitude down toward the approach altitude.</li>
+<li><strong>F19: a Windows installer</strong> (proposed ADR 0013 in the repository) -- a setup wizard
+   (Inno Setup, a bundled Python runtime, no uv or git clone needed) producing one
+   installer per release, attached to its GitHub Release.</li>
 </ol>
 <h2 id="where-its-heading">Where it's heading<a class="headerlink" href="#where-its-heading" title="Permanent link">&para;</a></h2>
 <p>The target architecture. Green is built today, amber is next, and dashed is later
