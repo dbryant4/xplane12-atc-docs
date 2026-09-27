@@ -51,6 +51,9 @@ network:
   [Settings](#settings) below.
 - **Status pills** in the top bar, one per thing that can be up or down -- see [Status
   pills](#status-pills) below.
+- **A "Traffic N" chip**, next to the status pills, when the [live traffic
+  feed](traffic-advisories.md) actually has something to report -- see [Traffic
+  chip](#traffic-chip) below.
 
 ## Status pills
 
@@ -70,6 +73,15 @@ what's wrong:
   needs attention, red when it can't reach AWS at all. Click a non-green pill to sign in
   right there in a popover, no Settings needed; click a green one to open Settings →
   Voice's AWS account block instead. See [AWS sign-in and status](voice.md#aws-sign-in-and-status).
+
+## Traffic chip
+
+Unlike the status pills above, this one isn't clickable and has no color for state --
+it's just shown or hidden, next to them in the header. **"Traffic N"** shows the [live
+traffic feed](traffic-advisories.md)'s current target count, with "N nearby, M airborne"
+in its tooltip. Hidden entirely -- not shown as "Traffic 0" -- whenever there's nothing
+to report: no feed at all, a stale one, or a genuine clear sky all look the same from
+here, on purpose, since the panel can't actually tell them apart.
 
 ## Type-to-transmit
 
