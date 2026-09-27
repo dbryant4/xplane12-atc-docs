@@ -54,7 +54,7 @@ needs two-way contact.
 
 ## Out of scope
 
-- **Sequencing against other traffic.** [Traffic advisories](traffic-advisories.md) are
-  built (not yet live -- there's no real X-Plane traffic feed wired up today), but
-  sequencing behind another aircraft ("number two, follow the...") isn't -- see the
+- **Sequencing against other traffic.** [Traffic advisories](traffic-advisories.md) call
+  out nearby aircraft, but flight following doesn't sequence you behind another one
+  ("number two, follow the...") the way approach/pattern traffic does -- see the
   [roadmap](../roadmap.md)'s M7-3.

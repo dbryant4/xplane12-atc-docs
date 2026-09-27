@@ -33,6 +33,6 @@ plan, and marked by what actually runs today.
 | [VFR pattern work](vfr-pattern.md) | Available now, at a towered airport (M6-1) |
 | [VFR flight following](vfr-flight-following.md) | Available now (M6-2) |
 | [VFR Class B/C/D airspace entry](vfr-airspace-entry.md) | Available now (M6-3, F10) |
-| [Traffic advisories](traffic-advisories.md) | Built and tested (M7-2) -- not live, no X-Plane traffic feed wired up yet |
+| [Traffic advisories](traffic-advisories.md) | Available now (M7-2), fed by a live X-Plane traffic feed -- not yet confirmed against real AI traffic on 12.4.3 |
 
 See the [Roadmap](../roadmap.md) for what's coming next and in what order.
