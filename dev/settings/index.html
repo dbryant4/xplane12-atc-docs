@@ -661,6 +661,8 @@
       
         
       
+        
+      
     
     
     
@@ -728,6 +730,34 @@
     
   
     Radio panel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../features/native-window/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Native window
   
 
     
@@ -1791,7 +1821,9 @@ a change takes effect, and the command-line flag that can override it for a sing
 <h2 id="how-settings-work">How settings work<a class="headerlink" href="#how-settings-work" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Run <code>xatc</code> with no arguments</strong> (or double-click <code>scripts\xatc-run.cmd</code> on Windows). xatc starts
-  from your saved settings and opens the panel in your browser. There's nothing to type.</li>
+  from your saved settings and opens the panel in its own <a href="../features/native-window/">native window</a>
+  by default (<code>--browser</code>, or Display → Window, keeps the old browser-tab behavior). There's nothing
+  to type.</li>
 <li><strong>First time</strong>, a welcome banner on the Settings page walks through Connection (test it),
   Voice (test your AWS profile and microphone), and Flight (set your destination), then Save.
   Dismiss it once you don't need it -- it stays dismissed on that browser.</li>
@@ -1993,8 +2025,9 @@ run</code> -- use these settings (or <code>--xplane-host</code>/<code>--xplane-p
 install folder using whatever's currently typed in, even if you haven't clicked <strong>Save
 Connection</strong> yet -- a pass/warn/fail result with details appears right there.</p>
 <h2 id="display">Display<a class="headerlink" href="#display" title="Permanent link">&para;</a></h2>
-<p>What the <a href="../features/radio-panel/">radio panel</a> itself shows -- display only, never what
-X-Plane's own radios or what xatc actually hears/transmits on.</p>
+<p>What the <a href="../features/radio-panel/">radio panel</a> itself shows, and how it's shown at all
+-- display only, never what X-Plane's own radios or what xatc actually hears/transmits
+on.</p>
 <table>
 <thead>
 <tr>
@@ -2019,6 +2052,20 @@ X-Plane's own radios or what xatc actually hears/transmits on.</p>
 <td>—</td>
 <td><strong>live</strong></td>
 <td>Same, for COM2. Both COMs can be hidden at once, for flying with the radios tuned entirely from the cockpit.</td>
+</tr>
+<tr>
+<td><strong>Window</strong> (<code>display.window</code>)</td>
+<td>Native</td>
+<td><code>--browser</code></td>
+<td><strong>restart</strong></td>
+<td><strong>Native</strong> opens the panel in its own <a href="../features/native-window/">native window</a>; <strong>Browser</strong> opens it in the OS default browser tab instead, same as before F20. No live way to turn an already-open browser tab into a native window or back.</td>
+</tr>
+<tr>
+<td><strong>Always on top</strong> (<code>display.always_on_top</code>)</td>
+<td>off</td>
+<td>—</td>
+<td><strong>live</strong></td>
+<td>Keeps the native window above X-Plane. No effect in browser mode.</td>
 </tr>
 </tbody>
 </table>
