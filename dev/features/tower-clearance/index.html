@@ -1790,22 +1790,32 @@ track.</p>
   after you've already been cleared both get <em>"say again"</em> instead.</li>
 <li>The runway comes from your existing clearance if you have one, or a fresh <a href="../runway-selection/">runway
   selection</a> otherwise.</li>
-<li>This is a <strong>direct</strong> clearance -- there's no sequencing. A real Tower might instead
-  say "line up and wait" behind other traffic; that's out of scope for this
-  single-aircraft engine.</li>
+<li>This is a <strong>direct</strong> clearance -- a deliberate scope choice for the takeoff clearance
+  specifically, not a sign xatc has no sequencing at all: <a href="../../roadmap/#m7-traffic-awareness">Approach's landing
+  clearance and the VFR pattern's runway queue</a>
+  (M7-3) do sequence behind other traffic, fed by the live <a href="../traffic-advisories/">traffic
+  feed</a>; Tower's takeoff clearance still never does. A real
+  Tower might instead say "line up and wait" behind other traffic on this runway;
+  that's out of scope here.</li>
+<li><strong>Wake turbulence caution</strong> does fold in here, the same way it does everywhere else a
+  clearance is issued on a runway: "…runway one six left, cleared for takeoff, caution
+  wake turbulence" when a Heavy or Super used that runway in the last 2-3 minutes (F11,
+  F12) -- see <a href="../traffic-advisories/#wake-turbulence-cautions-f11-f12">Traffic advisories</a>.</li>
 </ul>
 <h2 id="what-exists-but-isnt-used-yet">What exists but isn't used yet<a class="headerlink" href="#what-exists-but-isnt-used-yet" title="Permanent link">&para;</a></h2>
 <p>The phraseology for "line up and wait" (7110.65 3-9-4: <em>"(callsign) runway (number),
 line up and wait"</em>) is fully implemented and tested as a standalone renderer, and
-<code>Clearance</code> has a <code>line_up_and_wait</code> field for it -- but the engine never calls it or
-sets that field. Since this is a single-aircraft MVP with no traffic to sequence behind,
-there's currently no situation that would trigger it.</p>
+<code>Clearance</code> has a <code>line_up_and_wait</code> field for it -- but the takeoff clearance never
+calls it or sets that field for this reason (a separate, unrelated use of the same field
+name marks a repositioned-onto-the-runway aircraft's state after F13's reposition
+handling, not an actual spoken "line up and wait"). There's currently no situation that
+triggers the real phraseology.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <p>None.</p>
 <h2 id="limitations">Limitations<a class="headerlink" href="#limitations" title="Permanent link">&para;</a></h2>
 <ul>
-<li>No sequencing -- always a direct takeoff clearance, never line-up-and-wait, since
-  there's no other traffic to hold you for.</li>
+<li>No sequencing on the takeoff clearance itself -- always direct, never line-up-and-wait
+  (see above; this is unrelated to whether sequencing exists elsewhere).</li>
 <li>No wind read as part of the takeoff clearance in practice (the renderer supports
   attaching one, but the engine doesn't supply it today).</li>
 <li>No go-arounds and no landing clearance flow yet -- see <a href="../../roadmap/">Roadmap</a>.</li>
