@@ -136,11 +136,13 @@ uv run xatc doctor              # add --check-aws for a live (free, read-only) A
 It reports the Python and `uv` versions (failing below Python 3.14, the only supported
 version -- ADR 0011), whether an X-Plane installation was found (and
 whether its `apt.dat`, `atc.dat` and CIFP data are actually there), whether X-Plane's
-Web API is reachable right now, whether AWS credentials resolve, whether a microphone
-is available and actually picking up sound, and where the settings file lives -- each as
-a pass/warn/fail line with a fix hint, plus a summary count. `--check-aws` additionally
-makes one free, read-only call each to Transcribe, Polly and Bedrock (Nova Lite) to
-confirm the account actually has access, not just that credentials resolve.
+Web API is reachable right now, whether AWS credentials resolve, whether the [same
+microphone the live session would use](features/voice.md#microphone-reliability) is
+available and actually picking up sound, and where the settings file and the [log
+file](features/voice.md#log-file) live -- each as a pass/warn/fail line with a fix
+hint, plus a summary count. `--check-aws` additionally makes one free, read-only call
+each to Transcribe, Polly and Bedrock (Nova Lite) to confirm the account actually has
+access, not just that credentials resolve.
 
 ### `xatc smoke --live`
 
