@@ -26,12 +26,21 @@ whole time. Climbing through 40% of the way to pattern altitude -- 400 ft AGL fo
 piston, 600 ft for a turbine or jet -- Tower says **"report midfield downwind."**
 
 Call it out -- *"midfield right downwind, touch and go"* or *"...full stop"* -- and
-Tower replies:
+Tower replies, sequencing you behind anyone ahead of you in the pattern or on the runway
+(M7-3, fed by the [live traffic feed](traffic-advisories.md)):
 
-- **A touch-and-go, stop-and-go, or "the option"**: *"number one, runway two eight
-  right, cleared for the option."*
-- **A full stop** (the default if you don't say otherwise): *"number one, runway two
-  eight right, cleared to land."*
+- **Traffic ahead of you in the pattern**: *"number two, follow the Cessna on
+  downwind"* -- or "number three," "number four," counting everyone ahead of you, not
+  just the nearest -- report it in sight the same way [Approach's own sequencing
+  call](../roadmap.md#m7-traffic-awareness) works, and your landing clearance waits
+  until the one you're following has landed or gone.
+- **Nothing ahead of you, but the runway itself is still occupied**: *"number one,
+  continue"* -- try again next time around.
+- **Otherwise, a touch-and-go, stop-and-go, or "the option"**: *"number one, runway two
+  eight right, cleared for the option,"* or, for **a full stop** (the default if you
+  don't say otherwise), *"...cleared to land."* Either way, **"caution wake
+  turbulence"** folds in (F11, F12) behind a Heavy or Super that used the runway
+  recently.
 
 A touch-and-go's landing clearance lapses the moment you're airborne again, and the next
 circuit starts fresh -- Tower asks for another midfield downwind report, and you need a
@@ -62,9 +71,6 @@ never fires.
 
 - **Non-towered fields.** Pattern work needs a Tower; there's no CTAF self-announce
   handling for an untowered airport.
-- **Sequencing.** With one aircraft in the pattern, it's always "number one" -- there's
-  no traffic to sequence behind (see [traffic advisories](traffic-advisories.md), not
-  yet live, and the [roadmap](../roadmap.md)'s M7-3 for sequencing itself).
 
 A Class D field's own [Class B/C/D airspace entry](vfr-airspace-entry.md) rules apply
 here too, since that mechanism isn't gated to a particular flight phase -- though the

@@ -109,4 +109,8 @@ which airport and `atc.dat` to actually read (`--departure`, `--apt-dat`, `--atc
   stops calling (see above).
 - Redirects only cover three intents; everything else on a wrong staffed frequency is
   silence, not a redirect.
-- Single aircraft only -- there's no sequencing or traffic awareness in who owns you.
+- Which position owns you never depends on other traffic -- position/frequency
+  resolution is a flat scan over `frequencies_khz`, nothing else. [Sequencing behind
+  other traffic](../roadmap.md#m7-traffic-awareness) (M7-3, fed by the live traffic
+  feed) is a separate mechanism layered on top of this, on approach and in the VFR
+  pattern -- it changes when a clearance comes, never who you're talking to.
