@@ -39,5 +39,8 @@ Charlie airspace without establishing communications"* (or *"Class Delta"*).
 
 ## Out of scope
 
-- **Sequencing behind other traffic** ("number two, follow the...") is not implemented
-  here -- see the [roadmap](../roadmap.md) for M7-3.
+- **Sequencing behind other traffic** ("number two, follow the...") doesn't apply to
+  airspace-entry clearances -- whether you're cleared into Class B, or in violation
+  entering C/D without contact, never depends on anyone else's position. Sequencing
+  itself is implemented elsewhere (Approach's landing clearance, the VFR pattern's
+  runway queue) -- see [M7-3 in the roadmap](../roadmap.md#m7-traffic-awareness).
