@@ -55,13 +55,33 @@ meters of the route's last node -- this is proximity detection for advancing the
 phase, not conformance monitoring (it doesn't check whether you actually followed the
 assigned route to get there).
 
-### Runway requests to Ground
+### Requesting a different runway
 
-You can ask Ground for a specific departure runway instead of taking the one already
-selected. If the wind still allows it -- within the same tailwind/crosswind limits [runway
-selection](runway-selection.md) itself enforces -- Ground approves it and issues a fresh
-taxi route to the new runway. If the wind doesn't allow it, you get *"unable runway
-two five left, wind"* instead and keep the runway you already had.
+You can ask for a specific departure runway instead of taking the one already selected --
+on the ground at the departure airport, by Ground, Clearance (once it's cleared you) or
+Tower: *"is it possible to get two eight left?"*, and enough other phrasings ("would it
+be possible", "may we", "any chance") that a natural ask isn't missed. It's checked
+before any pending readback, redirect or clearance request, so asking right after a taxi
+instruction is never marked as a wrong readback, and it's your own aircraft's runway
+that changes -- the ATIS keeps announcing the airport's own runway in use.
+
+If the wind still allows it -- within the same tailwind/crosswind limits [runway
+selection](runway-selection.md) itself enforces -- it's approved:
+
+- **Ground** re-issues the taxi route to the new runway from wherever you are right now,
+  replacing any taxi readback still pending. Already holding short of the old runway?
+  You're taxiing again until you reach the new hold short, and the eventual takeoff
+  clearance names the new runway.
+- **Clearance or Tower** send you to Ground instead -- *"contact Portland Ground one two
+  one point niner for runway two eight left"* -- since they don't taxi aircraft
+  themselves; Ground gives the actual taxi on your next call.
+
+If the wind doesn't allow it, you get *"unable runway two five left, wind"* and keep the
+runway you already had. A runway the airport doesn't have at all gets *"unable, runway
+three four not available"*; with no taxi route to the new one, the old clearance simply
+stands. [Conversational ATC](intent-parsing.md#conversational-atc-f17) recognizes an
+unusual phrasing as the same `runway` action, checked exactly the same way as the rules
+parser's own.
 
 ## Configuration
 

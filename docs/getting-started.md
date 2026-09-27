@@ -72,6 +72,14 @@ AWS_PROFILE=xatc aws sts get-caller-identity
 If your shell already has `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` or
 `AWS_SESSION_TOKEN` exported, `unset` them first -- they take priority over the profile.
 
+**Day to day, you shouldn't need a terminal for this at all.** The radio panel's **AWS**
+status pill reflects whether these credentials are actually working right now, and
+Settings → Voice has a **Sign in to AWS** button that runs `aws login` for you and
+streams its progress into the panel -- see [AWS sign-in and
+status](features/voice.md#aws-sign-in-and-status). The `aws login`/CLI setup above is
+still there if you'd rather run it yourself from a terminal, or you're setting this up
+somewhere without a browser handy on the same machine.
+
 ## 4. Reach X-Plane
 
 X-Plane's Web API only listens on its own machine. If X-Plane runs on a different

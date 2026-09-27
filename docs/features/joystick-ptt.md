@@ -16,9 +16,9 @@ the Joystick source.
 
 Reads `sim/joystick/joystick_button_values` -- X-Plane's own array of every joystick
 button's current state -- straight over the Web API connection `xatc` already has open
-for `AircraftState`. Confirmed live against the owner's real yoke on Windows (X-Plane
-12.4.3): the PTT button showed up at index 1441. No extra library and no SDL are
-involved, so unlike the Joystick source below, this works on macOS too.
+for `AircraftState`. Confirmed live against a real yoke on Windows (X-Plane 12.4.3): the
+PTT button showed up at index 1441. No extra library and no SDL are involved, so unlike
+the Joystick source below, this works on macOS too.
 
 Click **Learn PTT button** on the Voice tab, then press the button on your yoke or
 joystick: xatc watches the array for up to 10 seconds and fills in the index that

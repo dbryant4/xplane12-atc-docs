@@ -38,6 +38,10 @@ provider, plus the radio behavior that sits above both:
   the same controller always sounds the same and a handoff always changes voice; **single**
   uses one voice for every position. ATIS always gets its own dedicated voice either way.
   See [Settings](../settings.md).
+- **AWS sign-in status**, right in the panel -- a header pill and a Settings → Voice
+  block show whether voice's AWS credentials actually work right now, with a guided
+  "Sign in to AWS" button when they don't. See [AWS sign-in and
+  status](#aws-sign-in-and-status) below.
 
 ## How a transmission actually flows
 
@@ -99,6 +103,58 @@ This is the *only* path now -- there's no separate "voice deliberately off" bran
 fall into. A missing dependency, specifically, should never actually happen after a
 normal `uv sync` (they're ordinary dependencies now), but the same check and the same
 fallback still cover a broken or partial install rather than crashing on it.
+
+## AWS sign-in and status
+
+The radio panel's **AWS** [status pill](radio-panel.md#status-pills) reflects whether
+voice's AWS credentials actually work right now, not just whether they did at startup:
+checked at startup, every 60 seconds after that, whenever you save anything on the Voice
+tab, and on demand (a **Check again** button). It's a free `sts:GetCallerIdentity` call
+-- nothing this check does ever reads, stores or displays the actual access key, secret,
+account id or ARN.
+
+Clicking the pill opens the **Voice** tab's **AWS account** block, which shows:
+
+- The **profile** and **region** actually in use right now -- not necessarily
+  `voice.aws_profile` as typed; see [profile resolution](#how-the-aws-profile-is-resolved) below.
+- A plain-language **status line** (e.g. *"signed in"*, *"AWS credentials have
+  expired"*, *"AWS profile 'xatc' doesn't exist"*), with a hint on what to do about it
+  when there's something to do.
+- A **"Sign in to AWS"** button, replaced by **Cancel** while a sign-in is running, and
+  by **Check again** once it isn't signed in cleanly. It stays available even while
+  everything's fine, but only reappears automatically once the session has under 15
+  minutes left, so you can refresh before it actually lapses rather than after.
+
+**Signing in** runs the real AWS CLI v2 command for you: `aws login --profile <resolved>
+--region <region>` as a background process on the same PC xatc is running on -- it opens
+a browser window there, waits for you to finish signing in, and streams each line of the
+CLI's own progress into the panel as it happens (a fresh **AWS** status broadcast follows
+once it's done). **Cancel** stops it outright; left alone, it times out after 5 minutes
+with a message showing the exact command so you can run it yourself in a terminal
+instead. If the AWS CLI itself isn't installed, sign-in fails immediately with a link to
+install it, and **Check again** lets you retry once it is.
+
+**Only a panel opened on the PC itself can start a sign-in** -- a client connected over
+anything but loopback (127.0.0.1/`::1`, i.e. not a phone or another machine on the LAN)
+is refused outright, since running an arbitrary local command on someone else's request
+would be a real security hole. Checking the status, and cancelling an already-running
+sign-in, both work from any connected panel -- only *starting* one is restricted.
+
+### How the AWS profile is resolved
+
+The same rule applies everywhere AWS is touched -- this status check, the actual
+Transcribe/Polly/Bedrock calls, and the sign-in command above all agree on exactly one
+profile:
+
+1. An `AWS_PROFILE` environment variable already set before xatc started, if there is one.
+2. Otherwise, `voice.aws_profile` from Settings → Voice, but only if a profile by that
+   name actually exists (an unrecognized name falls through to the next step instead of
+   failing outright, with a hint saying so).
+3. Otherwise, boto3's own default (the `default` profile, or plain environment
+   credentials) -- the same thing that happens if you never configure a profile at all.
+
+`xatc doctor` reports this same status under **"AWS sign-in status"** -- the identical
+check, the identical hint, whether you're reading the panel or a terminal.
 
 ## Configuration
 

@@ -18,7 +18,9 @@ network:
   stream is actually confirmed open (not just "the button is pressed"). Either COM can be
   hidden from the panel (Settings → Display) for flying with the radios tuned entirely
   from the cockpit -- display only, X-Plane's own radios and what xatc hears/transmits on
-  are unaffected.
+  are unaffected, and hiding a radio doesn't hide the [frequency
+  directory](controller-positions.md)'s own "→ COM1"/"→ COM2" and "Load & swap" buttons,
+  since those still tune the aircraft's actual radios either way.
 - **A narrow-width top bar** -- below 700 px the title hides, the callsign leads, spacing
   tightens, and the status pills ellipsize instead of wrapping, so the bar still fits on
   one row down to 600 px wide.
@@ -47,9 +49,26 @@ network:
 - **Settings** -- a gear icon opens a full Settings page covering everything xatc needs
   to fly: flight plan, connection, voice, ATC behavior, and advanced overrides. See
   [Settings](#settings) below.
-- **Sim connection indicator** -- shows live X-Plane version and connection state, or
-  which replay file is playing and whether it's still moving or holding at the end of
-  the recording.
+- **Status pills** in the top bar, one per thing that can be up or down -- see [Status
+  pills](#status-pills) below.
+
+## Status pills
+
+Three pills in the top bar, each a short label with a color for its state and the actual
+words in its tooltip (hover or tap it) -- keeping the bar itself short without hiding
+what's wrong:
+
+- **X-Plane** -- the sim connection. Shows the X-Plane version once connected (e.g.
+  "X-Plane 12.4.3"), green for connected, red for disconnected (retrying with backoff).
+  Replaying a recording instead of a live connection shows the filename and whether it's
+  still playing or holding at the end, in gray.
+- **Panel** -- your browser's own WebSocket connection to xatc, separate from the sim
+  connection above: green while connected, red while it's reconnecting.
+- **AWS** -- whether voice's AWS credentials actually work right now (checked at
+  startup, every 60 seconds, after any voice-related Settings save, and on demand);
+  green when signed in, amber once the session has under 15 minutes left or something
+  needs attention, red when it can't reach AWS at all. Click it to jump straight to
+  Settings → Voice's AWS account block. See [AWS sign-in and status](voice.md#aws-sign-in-and-status).
 
 ## Type-to-transmit
 
@@ -80,7 +99,7 @@ changing one doesn't touch the others:
 | **Flight** | Flight plan source, callsign, aircraft type, departure/destination, route, cruise altitude |
 | **Connection** | X-Plane host/port, and an X-Plane installation folder override |
 | **Display** | Show/hide COM1 and COM2 on the panel |
-| **Voice** | AWS profile/region, Transcribe vocabulary, [radio effect](radio-fx.md) preset, hardware PTT source. Always on -- see [Voice](voice.md#when-voice-cant-start) for what happens if it can't start |
+| **Voice** | AWS profile/region, Transcribe vocabulary, [radio effect](radio-fx.md) preset, hardware PTT source, and the AWS account block ([sign-in and status](voice.md#aws-sign-in-and-status)). Always on -- see [Voice](voice.md#when-voice-cant-start) for what happens if it can't start |
 | **ATC** | [Intent parsing mode](intent-parsing.md), altitude source, conformance strictness, and the 14 CFR 91.117(d) heavy-speed exception |
 | **Advanced** | `apt.dat`/`atc.dat` overrides, the debrief folder, and the panel's own host/port |
 

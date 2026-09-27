@@ -114,6 +114,12 @@ counts), so you can see what xatc detects. **Test** next to the AWS profile chec
 unsaved) resolves real, non-expired credentials; **Test** next to the microphones list checks
 whichever one xatc currently sees is actually picking up sound.
 
+**AWS account.** Below the fields above, a separate block shows the profile and region
+*actually in use* right now (which can differ from what's typed above -- see [how the
+profile is resolved](features/voice.md#how-the-aws-profile-is-resolved)), a plain-language
+status line, and a **Sign in to AWS** button that runs the real `aws login` for you. See
+[AWS sign-in and status](features/voice.md#aws-sign-in-and-status).
+
 ## ATC
 
 How strict ATC is, and how it understands you. Every change is **live**.

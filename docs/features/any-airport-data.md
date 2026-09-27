@@ -4,11 +4,11 @@
 not just KSEA.**
 
 The MVP was scoped to KSEA only, with `xatc` developed and run from a Mac, reaching
-X-Plane's Web API on a separate Windows PC over an SSH tunnel. The owner approved making
-`xatc` fly any airport its scenery covers, which needs real airport data (apt.dat) and
-real Center airspace data (atc.dat) for wherever the aircraft actually is -- data that
-only exists inside a real X-Plane installation, not in this repo's small fixture set.
-See ADR 0006 in the repository for the full decision record.
+X-Plane's Web API on a separate Windows PC over an SSH tunnel. `xatc` was then extended
+to fly any airport its scenery covers, which needs real airport data (apt.dat) and real
+Center airspace data (atc.dat) for wherever the aircraft actually is -- data that only
+exists inside a real X-Plane installation, not in this repo's small fixture set. See ADR
+0006 in the repository for the full decision record.
 
 ## Locating and reading the data
 
