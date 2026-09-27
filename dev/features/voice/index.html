@@ -1021,6 +1021,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#microphone-reliability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Microphone reliability
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#log-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log file
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#aws-sign-in-and-status" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1754,6 +1776,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#microphone-reliability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Microphone reliability
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#log-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log file
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#aws-sign-in-and-status" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1923,7 +1967,71 @@ block or crash startup -- xatc always starts, in whatever state voice ends up in
 <p>This is the <em>only</em> path now -- there's no separate "voice deliberately off" branch to
 fall into. A missing dependency, specifically, should never actually happen after a
 normal <code>uv sync</code> (they're ordinary dependencies now), but the same check and the same
-fallback still cover a broken or partial install rather than crashing on it.</p>
+fallback still cover a broken or partial install rather than crashing on it. A PortAudio
+load failure itself is covered the same way now too: <code>xatc run</code> reports voice
+unavailable with the reason instead of refusing to start, and <code>xatc doctor</code>'s microphone
+check fails with the reason instead of crashing.</p>
+<h2 id="microphone-reliability">Microphone reliability<a class="headerlink" href="#microphone-reliability" title="Permanent link">&para;</a></h2>
+<p>Built after two live flights where a Bluetooth (HFP) headset went silent mid-flight and
+only a restart of xatc brought it back. <strong>Not yet confirmed on Windows</strong> -- built and
+tested against a fake <code>sounddevice</code>/PortAudio, not real hardware there yet.</p>
+<ul>
+<li><strong>Pick a device</strong> in Settings → Voice (<code>voice.mic_device</code>), live -- Save Voice switches
+  to it immediately, no restart. Blank uses the system default. A saved device is found
+  by name again if it comes back under a different index (a reconnect, or a new USB
+  device, can renumber everything); a device that isn't currently connected is refused
+  with a field error when you try to save it, but a <em>saved</em> one that later goes away
+  just falls back to the default with one log line, not an error.</li>
+<li><strong>On Windows, the list shows each physical microphone once.</strong> PortAudio otherwise
+  lists the same microphone once per host API (MME, DirectSound, WASAPI, WDM-KS); xatc
+  only lists the default host API's devices (MME on Windows), since WASAPI/WDM-KS can't
+  open some devices at Transcribe's 16 kHz.</li>
+<li><strong>Refresh</strong> rescans the audio hardware first, so a headset plugged in after xatc
+  started shows up in the list without a restart.</li>
+<li><strong>A silent stream reopens itself.</strong> Two push-to-talks in a row with almost no sound
+  (held at least half a second) reopen the microphone before the next one. If that
+  doesn't help, or the device disappeared outright, xatc also rescans the audio
+  hardware -- the step that actually finds a reconnected Bluetooth headset, since
+  PortAudio only sees new devices when it (re-)initializes. Silence alone triggers at
+  most one rescan every 2 minutes.</li>
+<li><strong>After two truly dead push-to-talks</strong> (silent, not just quiet), the transcript adds a
+  hint: check the headset, and on Windows names the "Let desktop apps access your
+  microphone" privacy switch specifically (with a direct link to that Settings page)
+  when that's actually what's blocking it.</li>
+<li><strong><code>xatc doctor</code>'s microphone check</strong> opens the exact device and stream settings the
+  live session would use -- it <em>is</em> the same code -- and reports the level in the same
+  units as the running session's own <code>[ptt] mic peak=</code> log line, so a doctor result
+  means the same thing a real flight would see.</li>
+</ul>
+<h2 id="log-file">Log file<a class="headerlink" href="#log-file" title="Permanent link">&para;</a></h2>
+<p>Everything the console shows also goes to a rotating log file (5 files of 2 MB each), so
+a log can be sent after a flight without having kept a terminal open -- including when
+xatc runs with no console at all.</p>
+<table>
+<thead>
+<tr>
+<th>OS</th>
+<th>Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Windows</td>
+<td><code>%LOCALAPPDATA%\xatc\logs\xatc.log</code></td>
+</tr>
+<tr>
+<td>macOS</td>
+<td><code>~/Library/Logs/xatc/xatc.log</code></td>
+</tr>
+<tr>
+<td>Linux</td>
+<td><code>~/.local/state/xatc/log/xatc.log</code></td>
+</tr>
+</tbody>
+</table>
+<p>Settings → Advanced and <code>xatc doctor</code> both show the exact path in use. AWS ARNs, access
+key IDs and account IDs are masked in the file (the console itself is unchanged) --
+safe to attach to a bug report without checking it over line by line first.</p>
 <h2 id="aws-sign-in-and-status">AWS sign-in and status<a class="headerlink" href="#aws-sign-in-and-status" title="Permanent link">&para;</a></h2>
 <p>The radio panel's <strong>AWS</strong> <a href="../radio-panel/#status-pills">status pill</a> reflects whether
 voice's AWS credentials actually work right now, not just whether they did at startup:

@@ -2086,6 +2086,13 @@ see <a href="../features/voice/#when-voice-cant-start">Voice</a> for exactly wha
 </thead>
 <tbody>
 <tr>
+<td><strong>Microphone</strong> (<code>voice.mic_device</code>)</td>
+<td>blank</td>
+<td>—</td>
+<td><strong>live</strong></td>
+<td>Blank uses the system default. A picked device is found by name again if it reconnects under a different index; a saved one that later goes away falls back to the default (one log line, not an error). See <a href="../features/voice/#microphone-reliability">Microphone reliability</a>.</td>
+</tr>
+<tr>
 <td><strong>Custom vocabulary</strong> (<code>voice.vocabulary</code>)</td>
 <td><code>xatc-aviation-en-US</code></td>
 <td><code>--vocabulary</code> / <code>--no-vocabulary</code></td>
@@ -2136,9 +2143,10 @@ see <a href="../features/voice/#when-voice-cant-start">Voice</a> for exactly wha
 </tr>
 </tbody>
 </table>
-<p>The panel also lists your <strong>microphones</strong> (the default is marked) and <strong>joysticks</strong> (with button
-counts), so you can see what xatc detects. <strong>Test</strong> next to the microphones list checks
-whichever one xatc currently sees is actually picking up sound.</p>
+<p>The panel also lists your <strong>microphones</strong> (the default is marked; <strong>Refresh</strong> rescans
+for one plugged in after xatc started) and <strong>joysticks</strong> (with button counts, for
+reference only, not a saved setting). <strong>Test</strong> next to the microphones list checks that
+whichever device is picked -- even unsaved -- is actually picking up sound.</p>
 <p><strong>AWS account.</strong> A separate block shows a plain-language status line for whether AWS is
 actually reachable right now, and a <strong>Sign in to AWS</strong> button that runs the real <code>aws
 login</code> for you -- most pilots never need to touch anything else here, since one-click
@@ -2239,6 +2247,9 @@ and <strong>region</strong> fields themselves moved to <a href="#advanced">Advan
 </tr>
 </tbody>
 </table>
+<p><strong>Log file.</strong> Not a setting -- a read-only path here (and in <code>xatc doctor</code>) to the
+rotating log file everything the console shows also goes to, for sending after a
+flight. See <a href="../features/voice/#log-file">Log file</a>.</p>
 <hr />
 <h2 id="example-settingsjson">Example <code>settings.json</code><a class="headerlink" href="#example-settingsjson" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>

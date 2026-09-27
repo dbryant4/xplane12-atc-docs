@@ -1971,11 +1971,13 @@ flags. Flags still work for a one-off override, e.g. from a terminal:</p>
 <p>It reports the Python and <code>uv</code> versions (failing below Python 3.14, the only supported
 version -- ADR 0011), whether an X-Plane installation was found (and
 whether its <code>apt.dat</code>, <code>atc.dat</code> and CIFP data are actually there), whether X-Plane's
-Web API is reachable right now, whether AWS credentials resolve, whether a microphone
-is available and actually picking up sound, and where the settings file lives -- each as
-a pass/warn/fail line with a fix hint, plus a summary count. <code>--check-aws</code> additionally
-makes one free, read-only call each to Transcribe, Polly and Bedrock (Nova Lite) to
-confirm the account actually has access, not just that credentials resolve.</p>
+Web API is reachable right now, whether AWS credentials resolve, whether the <a href="../features/voice/#microphone-reliability">same
+microphone the live session would use</a> is
+available and actually picking up sound, and where the settings file and the <a href="../features/voice/#log-file">log
+file</a> live -- each as a pass/warn/fail line with a fix
+hint, plus a summary count. <code>--check-aws</code> additionally makes one free, read-only call
+each to Transcribe, Polly and Bedrock (Nova Lite) to confirm the account actually has
+access, not just that credentials resolve.</p>
 <h3 id="xatc-smoke-live"><code>xatc smoke --live</code><a class="headerlink" href="#xatc-smoke-live" title="Permanent link">&para;</a></h3>
 <p><code>xatc doctor</code> checks static setup; <code>xatc smoke --live</code> is the hands-on follow-up, run
 against a real, running X-Plane session (an aircraft actually loaded) to sanity-check
