@@ -57,11 +57,10 @@ This is read back like any other direct-to.
 ## Off-course monitoring
 
 `xatc.atc.route_track.OffCourseMonitor` checks the aircraft's distance off the current
-leg (the previous fix, or wherever a direct-to was issued from, to the next fix) --
-but only while it's actually supposed to be navigating that leg itself: never while on
-an assigned heading (a vector), and never right after an approved
-[deviation](enroute-requests.md#weather-deviation) that hasn't yet been resumed. The
-tolerance scales with [conformance strictness](conformance-monitor.md):
+leg (the previous fix to the next fix) -- but only while it's actually supposed to be
+navigating that leg itself: never while on an assigned heading (a vector), and never
+right after an approved [deviation](enroute-requests.md#weather-deviation) that hasn't
+yet been resumed. The tolerance scales with [conformance strictness](conformance-monitor.md):
 
 | Strictness | Off-course tolerance | Sustained before it fires |
 |---|---|---|
@@ -70,7 +69,17 @@ tolerance scales with [conformance strictness](conformance-monitor.md):
 | Checkride | 2 nm | 20 s |
 
 Once it fires: *"you appear to be off course, proceed direct Battle Ground"*, escalating
-straight to "possible pilot deviation" if it isn't corrected.
+straight to "possible pilot deviation" if it isn't corrected. The escalation resets on a
+handoff -- a controller that's just handed you off to the next one never gets to say
+"possible pilot deviation" after the fact, since it's no longer the one working you.
+
+**Cleared direct a fix, the check is different**: cross-track distance from a line
+doesn't mean much once you're flying straight at a point rather than along a leg, so
+instead it's whether your ground track actually points at the fix (within 30°) and your
+range to it isn't growing -- after a minute's grace to actually turn onto it. A direct-to
+issued at radar contact, or answering a heading question, anchors the *next* leg where
+the aircraft is at that moment, so it isn't judged against a line drawn from somewhere
+else entirely once it resumes its own navigation.
 
 ## Configuration
 

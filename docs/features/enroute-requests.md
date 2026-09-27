@@ -21,6 +21,14 @@ behind you"* -- rather than clearing you backward along your own route. An appro
 direct-to drops any assigned heading and **is read back** -- get it wrong and you'll
 hear *"negative, cleared direct Battle Ground."*
 
+**A fix name speech recognition mangles is still understood.** "Direct cougar" is
+recognized as COUGA -- case and spaces ignored, matched by its first 4-5 letters, a
+sound-alike, or a close spelling against every fix actually on your route or STAR, and
+only when exactly one of them clearly wins (never a guess between two similar idents).
+Reporting *"proceeding direct"* or *"is direct cougar"* once you're already cleared there
+gets *"roger"* instead of *"say again the fix"*, and reading back *"direct cougar"*
+itself reads back as direct COUGA.
+
 ### Altitude change
 
 *"Request higher,"* *"request lower,"* or a specific *"request flight level three nine

@@ -259,8 +259,8 @@
   <text x="1234" y="342" class="s">a validated Intent (ADR 0005)</text>
   <rect x="1222" y="366" width="238" height="80" rx="8" class="aws"/>
   <text x="1234" y="388" class="t">IAM + vocabulary via CDK</text>
-  <text x="1234" y="406" class="s">infra/ XatcVoiceStack; the owner</text>
-  <text x="1234" y="422" class="s">runs `cdk deploy`; agents never</text>
+  <text x="1234" y="406" class="s">infra/ XatcVoiceStack; you run</text>
+  <text x="1234" y="422" class="s">`cdk deploy`; agents never</text>
   <text x="1234" y="438" class="s">create resources or see keys</text>
 
   <rect x="1206" y="480" width="270" height="72" rx="10" class="ext"/>

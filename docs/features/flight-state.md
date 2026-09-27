@@ -37,6 +37,13 @@ always used, so a restart still picks up a code fix to any of them even while re
 the same flight. The [radio panel's transcript](radio-panel.md) is saved and restored
 alongside the flight state itself (the most recent 500 entries).
 
+**The ATIS plays again after a restart, too.** The [voice session](voice.md) only
+remembers a broadcast from an actual `speak()` call, which the engine makes just once,
+when the information letter changes -- not something a restore alone would trigger. The
+restored engine re-broadcasts its current letter to the freshly built voice session on
+that first tick, so you're not left with a resumed flight and no ATIS playing at all
+until the letter happens to change again.
+
 ## Starting over on purpose
 
 `xatc run --fresh-flight` ignores whatever's saved and starts over, even if a matching
