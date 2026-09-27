@@ -5,9 +5,9 @@ the TCAS target datarefs (ADR 0010) and feeds them into the engine, about once a
 on their own connection alongside the aircraft-state one. That drives traffic advisories
 and [wake turbulence cautions](#wake-turbulence-cautions-f11-f12) below, plus
 [sequencing](../roadmap.md#m7-traffic-awareness) (M7-3) behind other traffic on approach
-or in the pattern.
-
-<!-- TODO once Jr Dev 1's panel PR merges: mention the header's "Traffic N" chip here. -->
+or in the pattern. A **"Traffic N"** chip in the [radio panel](radio-panel.md)'s header
+confirms the feed is actually seeing something -- see [The live feed](#the-live-feed)
+below.
 
 **Not yet confirmed against real AI traffic on a running X-Plane 12.4.3.** The dataref
 names, decoding and fallbacks below are all built and tested against synthetic data; `xatc
@@ -78,6 +78,11 @@ X-Plane build missing that dataref, a below-50-kt groundspeed fallback) is set.
   S/type, plus (marked "unverified," since they haven't been confirmed live yet)
   velocity, weight-on-wheels and flight id. Run this against a real flight with AI
   traffic before trusting the feed.
+- **The panel's "Traffic N" chip** is the day-to-day way to confirm the same thing
+  without a terminal: it shows the current target count, with "N nearby, M airborne" in
+  its tooltip. Hidden -- not shown as "Traffic 0" -- whenever there's nothing to report,
+  which covers three different situations the panel can't tell apart (no feed at all, a
+  stale one, or a genuine clear sky) equally honestly.
 - **`xatc record`** now records traffic alongside aircraft state, and `--replay` plays it
   back. An older recording (with no traffic in it) still replays unchanged on this
   version -- it just has no traffic -- but a recording made now, with traffic in it,
