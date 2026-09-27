@@ -102,7 +102,59 @@ block or crash startup -- xatc always starts, in whatever state voice ends up in
 This is the *only* path now -- there's no separate "voice deliberately off" branch to
 fall into. A missing dependency, specifically, should never actually happen after a
 normal `uv sync` (they're ordinary dependencies now), but the same check and the same
-fallback still cover a broken or partial install rather than crashing on it.
+fallback still cover a broken or partial install rather than crashing on it. A PortAudio
+load failure itself is covered the same way now too: `xatc run` reports voice
+unavailable with the reason instead of refusing to start, and `xatc doctor`'s microphone
+check fails with the reason instead of crashing.
+
+## Microphone reliability
+
+Built after two live flights where a Bluetooth (HFP) headset went silent mid-flight and
+only a restart of xatc brought it back. **Not yet confirmed on Windows** -- built and
+tested against a fake `sounddevice`/PortAudio, not real hardware there yet.
+
+- **Pick a device** in Settings → Voice (`voice.mic_device`), live -- Save Voice switches
+  to it immediately, no restart. Blank uses the system default. A saved device is found
+  by name again if it comes back under a different index (a reconnect, or a new USB
+  device, can renumber everything); a device that isn't currently connected is refused
+  with a field error when you try to save it, but a *saved* one that later goes away
+  just falls back to the default with one log line, not an error.
+- **On Windows, the list shows each physical microphone once.** PortAudio otherwise
+  lists the same microphone once per host API (MME, DirectSound, WASAPI, WDM-KS); xatc
+  only lists the default host API's devices (MME on Windows), since WASAPI/WDM-KS can't
+  open some devices at Transcribe's 16 kHz.
+- **Refresh** rescans the audio hardware first, so a headset plugged in after xatc
+  started shows up in the list without a restart.
+- **A silent stream reopens itself.** Two push-to-talks in a row with almost no sound
+  (held at least half a second) reopen the microphone before the next one. If that
+  doesn't help, or the device disappeared outright, xatc also rescans the audio
+  hardware -- the step that actually finds a reconnected Bluetooth headset, since
+  PortAudio only sees new devices when it (re-)initializes. Silence alone triggers at
+  most one rescan every 2 minutes.
+- **After two truly dead push-to-talks** (silent, not just quiet), the transcript adds a
+  hint: check the headset, and on Windows names the "Let desktop apps access your
+  microphone" privacy switch specifically (with a direct link to that Settings page)
+  when that's actually what's blocking it.
+- **`xatc doctor`'s microphone check** opens the exact device and stream settings the
+  live session would use -- it *is* the same code -- and reports the level in the same
+  units as the running session's own `[ptt] mic peak=` log line, so a doctor result
+  means the same thing a real flight would see.
+
+## Log file
+
+Everything the console shows also goes to a rotating log file (5 files of 2 MB each), so
+a log can be sent after a flight without having kept a terminal open -- including when
+xatc runs with no console at all.
+
+| OS | Path |
+|---|---|
+| Windows | `%LOCALAPPDATA%\xatc\logs\xatc.log` |
+| macOS | `~/Library/Logs/xatc/xatc.log` |
+| Linux | `~/.local/state/xatc/log/xatc.log` |
+
+Settings → Advanced and `xatc doctor` both show the exact path in use. AWS ARNs, access
+key IDs and account IDs are masked in the file (the console itself is unchanged) --
+safe to attach to a bug report without checking it over line by line first.
 
 ## AWS sign-in and status
 

@@ -30,11 +30,13 @@ network:
   the current clearance: squawk, runway, assigned or expected altitude, departure
   frequency, taxi route, and hold-shorts. Only fields that are actually set show up, so
   it starts almost empty on the ramp and fills in as ATC issues things.
-- **Frequency directory** -- nearby controller positions, sorted by relevance to the
-  current phase. Click one to load it into a COM's standby. Whichever position you've
-  just been [handed off to](controller-positions.md#handoffs) is highlighted, with a
-  one-click "Load & swap" that tunes and switches the TX radio to it directly, instead
-  of loading to standby and flip-flopping separately.
+- **Frequency directory** -- nearby controller positions, following the aircraft (F14):
+  whoever's working you now leads, with its own highlight; whoever you're handed off to
+  next is highlighted too, with a one-click "Load & swap" that tunes and switches the TX
+  radio to it directly, instead of loading to standby and flip-flopping separately.
+  Click any other row to load it into a COM's standby. See [Directory
+  ordering](controller-positions.md#directory-ordering-f14) for exactly what shows up
+  and when.
 - **Route map card**, once airborne on an IFR route -- the filed fixes with the one
   you're tracking toward highlighted with its distance, anything already behind you
   dimmed, and a line from the aircraft to that next fix. See [Route
@@ -129,8 +131,14 @@ default, works on Windows and macOS), **Joystick** (Windows only), or **Off** --
 click **Learn PTT button** and press a button on your yoke or joystick: xatc listens for
 10 seconds and fills in the field that source uses. See [Push-to-talk from
 hardware](joystick-ptt.md). It doesn't save automatically -- click **Save Voice** to keep
-it. The Voice tab also lists the microphones and joysticks xatc can currently see, for
-reference (not a saved setting).
+it.
+
+**Microphone.** The Voice tab's microphone list (blank means the system default) is a
+real, live setting -- pick one and **Save Voice** switches to it immediately, no restart.
+**Refresh** rescans the audio devices first, so a headset plugged in after xatc started
+shows up. Joysticks are listed alongside it too, but only for reference, not a saved
+setting. See [Voice](voice.md#microphone-reliability) for what happens if the picked
+device goes away or goes silent mid-flight.
 
 **A field set by a command-line flag** for this run shows read-only with *"Set by
 command line for this run."* underneath -- the flag wins for the run, so there's nothing

@@ -104,6 +104,7 @@ see [Voice](features/voice.md#when-voice-cant-start) for exactly what that looks
 
 | Setting | Default | Flag | When | What it does |
 |---|---|---|---|---|
+| **Microphone** (`voice.mic_device`) | blank | — | **live** | Blank uses the system default. A picked device is found by name again if it reconnects under a different index; a saved one that later goes away falls back to the default (one log line, not an error). See [Microphone reliability](features/voice.md#microphone-reliability). |
 | **Custom vocabulary** (`voice.vocabulary`) | `xatc-aviation-en-US` | `--vocabulary` / `--no-vocabulary` | restart | A Transcribe custom vocabulary name, deployed with `cdk deploy`. It improves recognition of callsigns, fixes and procedure names. **Blank, or `--no-vocabulary`, means none.** |
 | **Push-to-talk source** (`voice.ptt_source`) | `xplane` on Windows, `off` elsewhere | — | **live** | `xplane` reads X-Plane's own joystick dataref (Windows and macOS); `joystick` uses pygame directly (Windows only); `off` disables hardware PTT. See [Push-to-talk from hardware](features/joystick-ptt.md). |
 | **X-Plane PTT button** (`voice.ptt_xplane_button`) | `-1` (not set) | — | **live** | The `sim/joystick/joystick_button_values` index for your PTT button, only used when the source above is `xplane`. Use **Learn PTT button** and press it within 10 s. |
@@ -112,9 +113,10 @@ see [Voice](features/voice.md#when-voice-cant-start) for exactly what that looks
 | **Controller voices** (`voice.controller_voices`) | `varied` | — | **live** | `varied` gives each controller position its own Amazon Polly neural voice, so the same controller always sounds the same and every handoff changes voice; `single` uses one voice for everything. ATIS always gets its own dedicated voice either way. |
 | **ATIS playback** (`voice.atis_start`) | `broadcast` | — | **live** | `broadcast` tunes in wherever the loop is right now, like a real ATIS; `beginning` always starts from "...information Alpha..." on tune-in. Either way, retuning away cuts the broadcast off within one audio block. |
 
-The panel also lists your **microphones** (the default is marked) and **joysticks** (with button
-counts), so you can see what xatc detects. **Test** next to the microphones list checks
-whichever one xatc currently sees is actually picking up sound.
+The panel also lists your **microphones** (the default is marked; **Refresh** rescans
+for one plugged in after xatc started) and **joysticks** (with button counts, for
+reference only, not a saved setting). **Test** next to the microphones list checks that
+whichever device is picked -- even unsaved -- is actually picking up sound.
 
 **AWS account.** A separate block shows a plain-language status line for whether AWS is
 actually reachable right now, and a **Sign in to AWS** button that runs the real `aws
@@ -147,6 +149,10 @@ Rarely needed. Every change needs a **restart**.
 | **Debrief folder** (`advanced.debrief_dir`) | blank (off) | `--debrief-dir` | Record every session here: a JSONL log plus a Markdown summary with a timeline, deviations, readbacks and radio events. See [Debrief](features/debrief.md). |
 | **Panel address** (`advanced.panel_host`) | `127.0.0.1` | `--host` | Where the radio panel is served. Use `0.0.0.0` to open it from a tablet on your network. |
 | **Panel port** (`advanced.panel_port`) | `8000` | `--port` | The radio panel's port: `http://localhost:8000`. |
+
+**Log file.** Not a setting -- a read-only path here (and in `xatc doctor`) to the
+rotating log file everything the console shows also goes to, for sending after a
+flight. See [Log file](features/voice.md#log-file).
 
 ---
 

@@ -89,12 +89,31 @@ This covers three intents today: an IFR clearance request, a taxi request, and
 "ready for departure." Anything else on a wrong-but-staffed frequency currently falls
 through to silence rather than a redirect.
 
-## Directory ordering
+## Directory ordering (F14)
 
-The [radio panel](radio-panel.md)'s frequency directory is sorted by a small
-per-phase table -- e.g. on the ground before taxi it's ATIS, Clearance, Ground, Tower;
-once you're holding short or cleared for takeoff, Tower moves to the top. It's a static
-table keyed on `Phase`, not a real distance/relevance calculation.
+The [radio panel](radio-panel.md)'s frequency directory follows the aircraft, most
+relevant first:
+
+1. **The controller working you now** (marked), then **the one you're expected to check
+   in with next** (marked, with the one-click "Load & swap" from [Handoffs](#handoffs)
+   above) -- Center included, so a handoff between two sectors of the same ARTCC still
+   gets its own row even though both share one callsign/id.
+2. **The departure airport's positions** while you're within 40 nm of it, and **the
+   destination's** within 60 nm (both groups show if both are close; the destination's
+   group comes first once you've arrived), each in the same per-phase order as before
+   (ATIS, Clearance, Ground, Tower before taxi; Tower first once holding short or
+   cleared for takeoff).
+3. **The Center sector you're actually in**, once you're above ~3,000 ft AGL or en route
+   -- this is what fills in the gap the old static table left once you're too far from
+   either airport for its own positions to show.
+4. **Other airports' Tower, CTAF/UNICOM and ATIS/ASOS/AWOS** within 30 nm, nearest
+   first, each row showing its distance ("12 nm"). Only land airports -- heliports and
+   seaplane bases are never listed. These load in the background (a fresh apt.dat parse
+   the first time an airport's frequencies are needed), so they can take a few seconds
+   to actually appear rather than showing instantly with the rest of the directory.
+
+Rebuilt at most every 5 seconds of sim time, or at once when the phase or the
+working/next controller changes.
 
 ## Configuration
 
