@@ -6,6 +6,7 @@ plan, and marked by what actually runs today.
 | Feature | Status |
 |---|---|
 | [Radio panel](radio-panel.md) | Available now |
+| [Native window](native-window.md) | Available now |
 | [Controller positions & frequencies](controller-positions.md) | Available now |
 | [ATIS & weather](atis-weather.md) | Available now |
 | [Runway selection](runway-selection.md) | Available now |

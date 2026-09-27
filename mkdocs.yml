@@ -48,6 +48,7 @@ nav:
   - Features:
       - features/index.md
       - Radio panel: features/radio-panel.md
+      - Native window: features/native-window.md
       - Controller positions & frequencies: features/controller-positions.md
       - Flight state across restarts: features/flight-state.md
       - Live-sim robustness: features/live-sim-robustness.md
