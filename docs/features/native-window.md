@@ -44,8 +44,11 @@ why.
 | macOS | `~/Library/Application Support/xatc/window.json` |
 | Linux | `~/.config/xatc/window.json` |
 
-Written on every resize/move (and on minimize/restore), next to `settings.json`. A
-missing or unreadable file just means the window opens at its default size and position
+Written once, when the window closes -- not on every resize or move -- next to
+`settings.json`. Skipped if the window is minimized at the time (a minimized window's
+reported size and position are bogus, not its real, restored geometry), so the last good
+size and position are kept instead. A missing or unreadable file just means the window
+opens at its default size and position
 -- it's never required for xatc to start.
 
 ## Configuration
