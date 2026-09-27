@@ -1661,11 +1661,11 @@
 <p><strong>Available now: <code>xatc</code> flies any airport its scenery (or the bundled fixtures) covers,
 not just KSEA.</strong></p>
 <p>The MVP was scoped to KSEA only, with <code>xatc</code> developed and run from a Mac, reaching
-X-Plane's Web API on a separate Windows PC over an SSH tunnel. The owner approved making
-<code>xatc</code> fly any airport its scenery covers, which needs real airport data (apt.dat) and
-real Center airspace data (atc.dat) for wherever the aircraft actually is -- data that
-only exists inside a real X-Plane installation, not in this repo's small fixture set.
-See ADR 0006 in the repository for the full decision record.</p>
+X-Plane's Web API on a separate Windows PC over an SSH tunnel. <code>xatc</code> was then extended
+to fly any airport its scenery covers, which needs real airport data (apt.dat) and real
+Center airspace data (atc.dat) for wherever the aircraft actually is -- data that only
+exists inside a real X-Plane installation, not in this repo's small fixture set. See ADR
+0006 in the repository for the full decision record.</p>
 <h2 id="locating-and-reading-the-data">Locating and reading the data<a class="headerlink" href="#locating-and-reading-the-data" title="Permanent link">&para;</a></h2>
 <p><code>xatc.world.xplane_data</code> -- read-only and side-effect-free except for its own cache
 directory, never touches anything inside the X-Plane installation itself:</p>

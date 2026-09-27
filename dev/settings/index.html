@@ -2107,6 +2107,11 @@ see <a href="../features/voice/#when-voice-cant-start">Voice</a> for exactly wha
 counts), so you can see what xatc detects. <strong>Test</strong> next to the AWS profile checks it (even
 unsaved) resolves real, non-expired credentials; <strong>Test</strong> next to the microphones list checks
 whichever one xatc currently sees is actually picking up sound.</p>
+<p><strong>AWS account.</strong> Below the fields above, a separate block shows the profile and region
+<em>actually in use</em> right now (which can differ from what's typed above -- see <a href="../features/voice/#how-the-aws-profile-is-resolved">how the
+profile is resolved</a>), a plain-language
+status line, and a <strong>Sign in to AWS</strong> button that runs the real <code>aws login</code> for you. See
+<a href="../features/voice/#aws-sign-in-and-status">AWS sign-in and status</a>.</p>
 <h2 id="atc">ATC<a class="headerlink" href="#atc" title="Permanent link">&para;</a></h2>
 <p>How strict ATC is, and how it understands you. Every change is <strong>live</strong>.</p>
 <table>

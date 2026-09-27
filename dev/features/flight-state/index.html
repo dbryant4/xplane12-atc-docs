@@ -1733,6 +1733,12 @@ are never part of the saved state; the freshly built engine's own copies of thos
 always used, so a restart still picks up a code fix to any of them even while resuming
 the same flight. The <a href="../radio-panel/">radio panel's transcript</a> is saved and restored
 alongside the flight state itself (the most recent 500 entries).</p>
+<p><strong>The ATIS plays again after a restart, too.</strong> The <a href="../voice/">voice session</a> only
+remembers a broadcast from an actual <code>speak()</code> call, which the engine makes just once,
+when the information letter changes -- not something a restore alone would trigger. The
+restored engine re-broadcasts its current letter to the freshly built voice session on
+that first tick, so you're not left with a resumed flight and no ATIS playing at all
+until the letter happens to change again.</p>
 <h2 id="starting-over-on-purpose">Starting over on purpose<a class="headerlink" href="#starting-over-on-purpose" title="Permanent link">&para;</a></h2>
 <p><code>xatc run --fresh-flight</code> ignores whatever's saved and starts over, even if a matching
 flight's state is sitting right there. The <strong>Reset flight</strong> button on the <a href="../radio-panel/">radio

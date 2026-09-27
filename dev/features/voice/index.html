@@ -991,6 +991,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#aws-sign-in-and-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS sign-in and status
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AWS sign-in and status">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-the-aws-profile-is-resolved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the AWS profile is resolved
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1696,6 +1724,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#aws-sign-in-and-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS sign-in and status
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AWS sign-in and status">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-the-aws-profile-is-resolved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the AWS profile is resolved
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1781,6 +1837,10 @@ provider, plus the radio behavior that sits above both:</p>
   the same controller always sounds the same and a handoff always changes voice; <strong>single</strong>
   uses one voice for every position. ATIS always gets its own dedicated voice either way.
   See <a href="../../settings/">Settings</a>.</li>
+<li><strong>AWS sign-in status</strong>, right in the panel -- a header pill and a Settings → Voice
+  block show whether voice's AWS credentials actually work right now, with a guided
+  "Sign in to AWS" button when they don't. See <a href="#aws-sign-in-and-status">AWS sign-in and
+  status</a> below.</li>
 </ul>
 <h2 id="how-a-transmission-actually-flows">How a transmission actually flows<a class="headerlink" href="#how-a-transmission-actually-flows" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code>PTT down  -&gt;  mic audio streamed to Transcribe, 16 kHz mono PCM, live
@@ -1834,6 +1894,52 @@ block or crash startup -- xatc always starts, in whatever state voice ends up in
 fall into. A missing dependency, specifically, should never actually happen after a
 normal <code>uv sync</code> (they're ordinary dependencies now), but the same check and the same
 fallback still cover a broken or partial install rather than crashing on it.</p>
+<h2 id="aws-sign-in-and-status">AWS sign-in and status<a class="headerlink" href="#aws-sign-in-and-status" title="Permanent link">&para;</a></h2>
+<p>The radio panel's <strong>AWS</strong> <a href="../radio-panel/#status-pills">status pill</a> reflects whether
+voice's AWS credentials actually work right now, not just whether they did at startup:
+checked at startup, every 60 seconds after that, whenever you save anything on the Voice
+tab, and on demand (a <strong>Check again</strong> button). It's a free <code>sts:GetCallerIdentity</code> call
+-- nothing this check does ever reads, stores or displays the actual access key, secret,
+account id or ARN.</p>
+<p>Clicking the pill opens the <strong>Voice</strong> tab's <strong>AWS account</strong> block, which shows:</p>
+<ul>
+<li>The <strong>profile</strong> and <strong>region</strong> actually in use right now -- not necessarily
+  <code>voice.aws_profile</code> as typed; see <a href="#how-the-aws-profile-is-resolved">profile resolution</a> below.</li>
+<li>A plain-language <strong>status line</strong> (e.g. <em>"signed in"</em>, <em>"AWS credentials have
+  expired"</em>, <em>"AWS profile 'xatc' doesn't exist"</em>), with a hint on what to do about it
+  when there's something to do.</li>
+<li>A <strong>"Sign in to AWS"</strong> button, replaced by <strong>Cancel</strong> while a sign-in is running, and
+  by <strong>Check again</strong> once it isn't signed in cleanly. It stays available even while
+  everything's fine, but only reappears automatically once the session has under 15
+  minutes left, so you can refresh before it actually lapses rather than after.</li>
+</ul>
+<p><strong>Signing in</strong> runs the real AWS CLI v2 command for you: <code>aws login --profile &lt;resolved&gt;
+--region &lt;region&gt;</code> as a background process on the same PC xatc is running on -- it opens
+a browser window there, waits for you to finish signing in, and streams each line of the
+CLI's own progress into the panel as it happens (a fresh <strong>AWS</strong> status broadcast follows
+once it's done). <strong>Cancel</strong> stops it outright; left alone, it times out after 5 minutes
+with a message showing the exact command so you can run it yourself in a terminal
+instead. If the AWS CLI itself isn't installed, sign-in fails immediately with a link to
+install it, and <strong>Check again</strong> lets you retry once it is.</p>
+<p><strong>Only a panel opened on the PC itself can start a sign-in</strong> -- a client connected over
+anything but loopback (127.0.0.1/<code>::1</code>, i.e. not a phone or another machine on the LAN)
+is refused outright, since running an arbitrary local command on someone else's request
+would be a real security hole. Checking the status, and cancelling an already-running
+sign-in, both work from any connected panel -- only <em>starting</em> one is restricted.</p>
+<h3 id="how-the-aws-profile-is-resolved">How the AWS profile is resolved<a class="headerlink" href="#how-the-aws-profile-is-resolved" title="Permanent link">&para;</a></h3>
+<p>The same rule applies everywhere AWS is touched -- this status check, the actual
+Transcribe/Polly/Bedrock calls, and the sign-in command above all agree on exactly one
+profile:</p>
+<ol>
+<li>An <code>AWS_PROFILE</code> environment variable already set before xatc started, if there is one.</li>
+<li>Otherwise, <code>voice.aws_profile</code> from Settings → Voice, but only if a profile by that
+   name actually exists (an unrecognized name falls through to the next step instead of
+   failing outright, with a hint saying so).</li>
+<li>Otherwise, boto3's own default (the <code>default</code> profile, or plain environment
+   credentials) -- the same thing that happens if you never configure a profile at all.</li>
+</ol>
+<p><code>xatc doctor</code> reports this same status under <strong>"AWS sign-in status"</strong> -- the identical
+check, the identical hint, whether you're reading the panel or a terminal.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <p>A few flags still matter, independent of the always-on change above:</p>
 <table>

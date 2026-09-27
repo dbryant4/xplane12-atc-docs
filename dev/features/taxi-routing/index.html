@@ -914,10 +914,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#runway-requests-to-ground" class="md-nav__link">
+  <a href="#requesting-a-different-runway" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Runway requests to Ground
+        Requesting a different runway
       
     </span>
   </a>
@@ -1659,10 +1659,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#runway-requests-to-ground" class="md-nav__link">
+  <a href="#requesting-a-different-runway" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Runway requests to Ground
+        Requesting a different runway
       
     </span>
   </a>
@@ -1761,12 +1761,31 @@ taxi."</em></p>
 meters of the route's last node -- this is proximity detection for advancing the flight
 phase, not conformance monitoring (it doesn't check whether you actually followed the
 assigned route to get there).</p>
-<h3 id="runway-requests-to-ground">Runway requests to Ground<a class="headerlink" href="#runway-requests-to-ground" title="Permanent link">&para;</a></h3>
-<p>You can ask Ground for a specific departure runway instead of taking the one already
-selected. If the wind still allows it -- within the same tailwind/crosswind limits <a href="../runway-selection/">runway
-selection</a> itself enforces -- Ground approves it and issues a fresh
-taxi route to the new runway. If the wind doesn't allow it, you get <em>"unable runway
-two five left, wind"</em> instead and keep the runway you already had.</p>
+<h3 id="requesting-a-different-runway">Requesting a different runway<a class="headerlink" href="#requesting-a-different-runway" title="Permanent link">&para;</a></h3>
+<p>You can ask for a specific departure runway instead of taking the one already selected --
+on the ground at the departure airport, by Ground, Clearance (once it's cleared you) or
+Tower: <em>"is it possible to get two eight left?"</em>, and enough other phrasings ("would it
+be possible", "may we", "any chance") that a natural ask isn't missed. It's checked
+before any pending readback, redirect or clearance request, so asking right after a taxi
+instruction is never marked as a wrong readback, and it's your own aircraft's runway
+that changes -- the ATIS keeps announcing the airport's own runway in use.</p>
+<p>If the wind still allows it -- within the same tailwind/crosswind limits <a href="../runway-selection/">runway
+selection</a> itself enforces -- it's approved:</p>
+<ul>
+<li><strong>Ground</strong> re-issues the taxi route to the new runway from wherever you are right now,
+  replacing any taxi readback still pending. Already holding short of the old runway?
+  You're taxiing again until you reach the new hold short, and the eventual takeoff
+  clearance names the new runway.</li>
+<li><strong>Clearance or Tower</strong> send you to Ground instead -- <em>"contact Portland Ground one two
+  one point niner for runway two eight left"</em> -- since they don't taxi aircraft
+  themselves; Ground gives the actual taxi on your next call.</li>
+</ul>
+<p>If the wind doesn't allow it, you get <em>"unable runway two five left, wind"</em> and keep the
+runway you already had. A runway the airport doesn't have at all gets <em>"unable, runway
+three four not available"</em>; with no taxi route to the new one, the old clearance simply
+stands. <a href="../intent-parsing/#conversational-atc-f17">Conversational ATC</a> recognizes an
+unusual phrasing as the same <code>runway</code> action, checked exactly the same way as the rules
+parser's own.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <p>None -- routing is entirely derived from the airport's own taxiway data.</p>
 <h2 id="limitations">Limitations<a class="headerlink" href="#limitations" title="Permanent link">&para;</a></h2>

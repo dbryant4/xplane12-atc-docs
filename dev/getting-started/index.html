@@ -1896,6 +1896,13 @@ needed:</p>
 </code></pre></div>
 <p>If your shell already has <code>AWS_ACCESS_KEY_ID</code>, <code>AWS_SECRET_ACCESS_KEY</code> or
 <code>AWS_SESSION_TOKEN</code> exported, <code>unset</code> them first -- they take priority over the profile.</p>
+<p><strong>Day to day, you shouldn't need a terminal for this at all.</strong> The radio panel's <strong>AWS</strong>
+status pill reflects whether these credentials are actually working right now, and
+Settings → Voice has a <strong>Sign in to AWS</strong> button that runs <code>aws login</code> for you and
+streams its progress into the panel -- see <a href="../features/voice/#aws-sign-in-and-status">AWS sign-in and
+status</a>. The <code>aws login</code>/CLI setup above is
+still there if you'd rather run it yourself from a terminal, or you're setting this up
+somewhere without a browser handy on the same machine.</p>
 <h2 id="4-reach-x-plane">4. Reach X-Plane<a class="headerlink" href="#4-reach-x-plane" title="Permanent link">&para;</a></h2>
 <p>X-Plane's Web API only listens on its own machine. If X-Plane runs on a different
 computer than xatc, forward the port over SSH:</p>
