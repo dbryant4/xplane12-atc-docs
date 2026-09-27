@@ -40,9 +40,10 @@ network:
 - **Reset flight button** -- clears the saved [flight state](flight-state.md) and starts
   over parked, where the aircraft is, without needing to restart xatc itself.
 - **Transcript** -- every transmission, tagged by frequency and station, plus a
-  type-to-transmit box for text mode.
+  type-to-transmit box that's always there alongside voice.
 - **Push-to-talk** -- an on-screen button, or holding Space while the page has focus
-  (ignored while typing in a text field). See [Voice](voice.md).
+  (ignored while typing in a text field). Always on -- disabled with a plain reason,
+  rather than erroring, whenever [voice itself can't start](voice.md#when-voice-cant-start).
 - **Settings** -- a gear icon opens a full Settings page covering everything xatc needs
   to fly: flight plan, connection, voice, ATC behavior, and advanced overrides. See
   [Settings](#settings) below.
@@ -50,11 +51,13 @@ network:
   which replay file is playing and whether it's still moving or holding at the end of
   the recording.
 
-## Text mode
+## Type-to-transmit
 
-Everything works with no voice and no AWS account: type a transmission into the box
-instead of speaking it, and the panel's the primary UI. This is also how the project
-develops and tests without needing a live sim.
+Not a separate mode to switch into -- the transcript's own text box works all the time,
+alongside voice, not instead of it. Type a transmission and it's handled exactly like a
+spoken one. This is what keeps a flight going with no AWS account at all, or whenever
+[voice can't start](voice.md#when-voice-cant-start) (bad credentials, no mic), and it's
+also how the project develops and tests without needing a live sim.
 
 ## Two-way COM sync
 
@@ -77,7 +80,7 @@ changing one doesn't touch the others:
 | **Flight** | Flight plan source, callsign, aircraft type, departure/destination, route, cruise altitude |
 | **Connection** | X-Plane host/port, and an X-Plane installation folder override |
 | **Display** | Show/hide COM1 and COM2 on the panel |
-| **Voice** | Push-to-talk on/off, AWS profile/region, Transcribe vocabulary, [radio effect](radio-fx.md) preset, joystick PTT |
+| **Voice** | AWS profile/region, Transcribe vocabulary, [radio effect](radio-fx.md) preset, hardware PTT source. Always on -- see [Voice](voice.md#when-voice-cant-start) for what happens if it can't start |
 | **ATC** | [Intent parsing mode](intent-parsing.md), altitude source, conformance strictness, and the 14 CFR 91.117(d) heavy-speed exception |
 | **Advanced** | `apt.dat`/`atc.dat` overrides, the debrief folder, and the panel's own host/port |
 
@@ -102,10 +105,12 @@ command line for this run."* underneath -- the flag wins for the run, so there's
 useful to edit.
 
 **Some changes need a restart.** X-Plane connection settings, the panel's own host/port,
-and the voice on/off switch, AWS profile/region and vocabulary only take effect on the
-next launch -- saving one of those shows a banner: *"&#8635; Restart xatc to apply:
-&lt;the changed keys&gt;."* Everything else (ATC behavior, the radio effect preset,
-joystick PTT) applies immediately.
+and the AWS profile/region and vocabulary only take effect on the next launch -- saving
+one of those shows a banner: *"&#8635; Restart xatc to apply: &lt;the changed keys&gt;."*
+Everything else (ATC behavior, the radio effect preset, joystick PTT) applies
+immediately. Saving anything on the Voice tab, whether or not it needs a restart, also
+triggers a fresh attempt to start voice if it wasn't already running -- see
+[Voice](voice.md#when-voice-cant-start).
 
 **Where it's saved.** Settings live in `settings.json` in your OS's standard config
 directory -- `%LOCALAPPDATA%\xatc\settings.json` on Windows, `~/Library/Application

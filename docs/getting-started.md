@@ -11,19 +11,20 @@
   run on a different machine than xatc itself -- see [Reach X-Plane](#4-reach-x-plane)
   below.
 - **Python 3.14+** and [uv](https://docs.astral.sh/uv/) -- the only supported version (ADR 0011).
-- **An AWS account**, for voice only -- Amazon Transcribe and Polly in `us-east-1`, plus
-  the AWS CLI v2.
+- **An AWS account** -- Amazon Transcribe and Polly in `us-east-1`, plus the AWS CLI v2.
+  Voice is always on (ADR 0012): without working AWS credentials xatc still starts, but
+  voice won't, and the panel says why -- see [Voice](features/voice.md#when-voice-cant-start).
 - **Node.js 22+** and the AWS CDK CLI (`npm install -g aws-cdk`), only to deploy the
   voice infrastructure once.
 
-Everything except the AWS account is optional if you only want text mode: type
-transmissions instead of speaking them, against a replayed flight, with no X-Plane and
-no AWS at all.
+Everything except the AWS account can be skipped for a quick look: `--replay` a recorded
+flight and type your transmissions in the panel instead of speaking them, with no
+X-Plane and no AWS at all -- see step 5 below.
 
 ## 1. Install
 
 ```bash
-uv sync --extra voice        # drop --extra voice if you only want text mode
+uv sync                      # installs everything, including voice's dependencies
 uv run pytest                # optional: check that everything passes
 ```
 
@@ -99,8 +100,8 @@ scripts\setup-windows.ps1
 
 This installs [uv](https://docs.astral.sh/uv/) if it isn't already on your `PATH`
 (printing the official install command rather than running it for you, so it never
-silently installs anything without you seeing it first), runs `uv sync --extra voice`,
-and finishes by running `xatc doctor` -- see below.
+silently installs anything without you seeing it first), runs `uv sync`, and finishes by
+running `xatc doctor` -- see below.
 
 **Every time you fly**, double-click `scripts\xatc-run.cmd`. It sets `AWS_PROFILE=xatc`
 (you still need that profile configured once, per step 3 above) and runs `xatc` with
@@ -111,7 +112,7 @@ automatically; configure the flight plan, voice and everything else from the
 a one-off override, e.g. from a terminal:
 
 ```powershell
-scripts\xatc-run.cmd run --live --voice --dest KPDX --cruise 35000
+scripts\xatc-run.cmd run --live --dest KPDX --cruise 35000
 ```
 
 ### `xatc doctor`
@@ -150,9 +151,11 @@ few seconds so you can confirm which button index your yoke or joystick actually
 X-Plane source reads live, and useful alongside its `xatc ptt-probe` too. With
 `--voice`, it also sends one real phrase
 through Polly and the VHF radio effect to your actual speakers -- Polly and the effect
-chain only, no Transcribe or microphone involved. Like `xatc doctor`, it prints a
-pass/warn/fail report and never builds an `AtcEngine` -- it's a connectivity and
-data-availability check, not a flight.
+chain only, no Transcribe or microphone involved. It also samples the TCAS target
+datarefs (`--tcas-seconds`, default 5.0), resolving each one by its exact name -- a
+missing dataref just reports as a `WARN` for that one check, never a `FAIL` for the whole
+run. Like `xatc doctor`, it prints a pass/warn/fail report and never builds an
+`AtcEngine` -- it's a connectivity and data-availability check, not a flight.
 
 ## 5. Run it
 
@@ -174,11 +177,17 @@ button**; see [Push-to-talk from hardware](features/joystick-ptt.md)). If the pa
 doesn't respond after an update, hard-refresh it (Cmd+Shift+R). The first time you use
 push-to-talk, macOS asks for microphone permission for your terminal app.
 
+Voice is always on (ADR 0012) -- there's nothing to turn on. If it can't actually start
+(AWS credentials not signed in or expired, no microphone), xatc still runs: the panel
+says why and PTT is disabled with that reason instead of erroring, and you can keep
+flying by typing into the panel's transmit box. See [Voice](features/voice.md#when-voice-cant-start)
+for exactly what that looks like and how to recover.
+
 **Flags still work**, for development or a one-off override without touching
 `settings.json`:
 
 ```bash
-uv run xatc run --live --voice \
+uv run xatc run --live \
   --callsign N547GA --aircraft-type GLF5 --dest KPDX --cruise 35000
 ```
 
@@ -213,7 +222,9 @@ uv run pytest                          # the full suite, including the MVP accep
 uv run xatc record --out flight.jsonl  # record a live X-Plane session as a replay fixture
 ```
 
-CI runs the suite on Python 3.14 (the only supported version, ADR 0011), with the voice
-extra, on Windows, and synthesizes the `infra/` CDK app.
+CI runs the suite on Python 3.14 (the only supported version, ADR 0011) in one job --
+voice's dependencies are ordinary dependencies now (ADR 0012), so there's no separate
+voice-extra job to run -- plus a Windows run on push to main, and it synthesizes the
+`infra/` CDK app.
 
 Every option is described in the **[Settings reference](settings.md)**.
