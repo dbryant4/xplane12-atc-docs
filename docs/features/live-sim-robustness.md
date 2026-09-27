@@ -25,7 +25,7 @@ While X-Plane is playing back a replay (`sim/time/is_in_replay`), ATC does nothi
 all -- the last live state is kept exactly as it was, so the flight picks up from there
 once the replay ends, and the replay's own time (which can run backwards, or jump) never
 reaches any timer. Live traffic snapshots are ignored during a replay too, since
-[traffic advisories](enroute-requests.md) should reflect real other aircraft, not
+[traffic advisories](traffic-advisories.md) should reflect real other aircraft, not
 whatever the replay happens to show.
 
 ## Repositioning

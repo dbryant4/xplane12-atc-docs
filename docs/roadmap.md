@@ -16,7 +16,7 @@ covers, with a deterministic engine deciding every word ATC says.
 | **M4: arrival** | ✅ done | [Descent via a STAR, approach clearance, landing clearance, taxi-in, go-around and parking](features/arrival.md) |
 | **M5: realism** | ✅ done | ATIS-letter checks, en-route pilot requests, emergencies and special squawks, pushback (details below) |
 | **M6: VFR** | ✅ done | Pattern work (M6-1), flight following (M6-2), and Class B/C/D airspace entry (M6-3), details below |
-| **M7: traffic awareness** | 🔶 in progress | Advisory, sequencing (M7-3) and wake turbulence (F11, F12) logic all built and tested -- none live until the X-Plane traffic feed lands |
+| **M7: traffic awareness** | 🔶 in progress | Advisory, sequencing (M7-3) and wake turbulence (F11, F12) logic, now fed by a live X-Plane traffic feed -- not yet confirmed against real AI traffic on a running 12.4.3 |
 
 ### M5: the most common "real ATC" interactions
 - **ATIS-letter check.** Report an old letter on first contact with Clearance, Ground or
@@ -96,8 +96,11 @@ covers, with a deterministic engine deciding every word ATC says.
   "caution wake turbulence" -- close parallel runways under 2,500 ft apart count as one
   for this, crossing runways don't. See [Traffic
   advisories](features/traffic-advisories.md#wake-turbulence-cautions-f11-f12).
-- **Not live yet, any of it** -- there's no X-Plane traffic feed wired up today, so all
-  three only run against test data.
+- **The live X-Plane traffic feed** reads the shared TCAS target arrays that AI traffic,
+  multiplayer plugins and X-Plane's own TCAS all write to, about once a second, and is
+  what actually turns on all three of the above in a real flight. Parked aircraft on the
+  ground are ignored throughout. Not yet confirmed against real AI traffic on a running
+  X-Plane 12.4.3 -- see [Traffic advisories](features/traffic-advisories.md).
 - **F10** also gave KBFI's Class D real Laminar Research atc.dat data in its test
   coverage, replacing a synthetic placeholder.
 - **A real bug, fixed**: an `apt.dat` file that spells a runway inconsistently between
@@ -154,10 +157,9 @@ See [Features](features/index.md) for the per-feature "available now" breakdown.
 
 ## What's next
 
-1. **The live X-Plane traffic feed**: `SimBridge.traffic()` and the `xatc run --live`
-   wiring that feeds it into the engine, once the TCAS datarefs are confirmed live (ADR
-   0010) -- this is what actually turns on [traffic
-   advisories](features/traffic-advisories.md), sequencing and wake turbulence cautions.
+1. **Confirming the live traffic feed** against real AI traffic on a running X-Plane
+   12.4.3 -- `xatc smoke --live --tcas-seconds 5` is how; see [Traffic
+   advisories](features/traffic-advisories.md).
 2. **F18: AWS sign-in and status.** A guided AWS CLI sign-in walkthrough and a clearer
    picture of what's actually connected, from the panel.
 3. **Minimum vectoring altitudes.** A follow-up to [approach
@@ -180,8 +182,6 @@ the pilot said (Nova Lite). The deterministic engine decides every word ATC says
 
 ## Longer term
 
-- **AI or multiplayer traffic**, once there's a live feed to sequence against (M7-3 and
-  beyond).
 - **ICAO (non-US) phraseology.**
 - **A one-click Windows installer.**
 - **Per-facility altimeter settings and airspace speed limits** (91.117(b) and (c)).
