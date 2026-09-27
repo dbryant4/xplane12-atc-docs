@@ -11,7 +11,7 @@ a change takes effect, and the command-line flag that can override it for a sing
   by default (`--browser`, or Display → Window, keeps the old browser-tab behavior). There's nothing
   to type.
 - **First time**, a welcome banner on the Settings page walks through Connection (test it),
-  Voice (test your AWS profile and microphone), and Flight (set your destination), then Save.
+  Voice (sign in to AWS if the pill isn't green, test your microphone), and Flight (set your destination), then Save.
   Dismiss it once you don't need it -- it stays dismissed on that browser.
 - **Where they're saved:** one `settings.json` file.
 
@@ -104,8 +104,6 @@ see [Voice](features/voice.md#when-voice-cant-start) for exactly what that looks
 
 | Setting | Default | Flag | When | What it does |
 |---|---|---|---|---|
-| **AWS profile** (`voice.aws_profile`) | `xatc` | — (`AWS_PROFILE`) | restart | The AWS CLI profile to use. Only the name is stored. |
-| **AWS region** (`voice.aws_region`) | `us-east-1` | `--aws-region` | restart | Where Transcribe, Polly and Bedrock are called. |
 | **Custom vocabulary** (`voice.vocabulary`) | `xatc-aviation-en-US` | `--vocabulary` / `--no-vocabulary` | restart | A Transcribe custom vocabulary name, deployed with `cdk deploy`. It improves recognition of callsigns, fixes and procedure names. **Blank, or `--no-vocabulary`, means none.** |
 | **Push-to-talk source** (`voice.ptt_source`) | `xplane` on Windows, `off` elsewhere | — | **live** | `xplane` reads X-Plane's own joystick dataref (Windows and macOS); `joystick` uses pygame directly (Windows only); `off` disables hardware PTT. See [Push-to-talk from hardware](features/joystick-ptt.md). |
 | **X-Plane PTT button** (`voice.ptt_xplane_button`) | `-1` (not set) | — | **live** | The `sim/joystick/joystick_button_values` index for your PTT button, only used when the source above is `xplane`. Use **Learn PTT button** and press it within 10 s. |
@@ -115,15 +113,15 @@ see [Voice](features/voice.md#when-voice-cant-start) for exactly what that looks
 | **ATIS playback** (`voice.atis_start`) | `broadcast` | — | **live** | `broadcast` tunes in wherever the loop is right now, like a real ATIS; `beginning` always starts from "...information Alpha..." on tune-in. Either way, retuning away cuts the broadcast off within one audio block. |
 
 The panel also lists your **microphones** (the default is marked) and **joysticks** (with button
-counts), so you can see what xatc detects. **Test** next to the AWS profile checks it (even
-unsaved) resolves real, non-expired credentials; **Test** next to the microphones list checks
+counts), so you can see what xatc detects. **Test** next to the microphones list checks
 whichever one xatc currently sees is actually picking up sound.
 
-**AWS account.** Below the fields above, a separate block shows the profile and region
-*actually in use* right now (which can differ from what's typed above -- see [how the
-profile is resolved](features/voice.md#how-the-aws-profile-is-resolved)), a plain-language
-status line, and a **Sign in to AWS** button that runs the real `aws login` for you. See
-[AWS sign-in and status](features/voice.md#aws-sign-in-and-status).
+**AWS account.** A separate block shows a plain-language status line for whether AWS is
+actually reachable right now, and a **Sign in to AWS** button that runs the real `aws
+login` for you -- most pilots never need to touch anything else here, since one-click
+sign-in from the header's **AWS** pill (or this button) resolves everything on its own.
+See [AWS sign-in and status](features/voice.md#aws-sign-in-and-status). The AWS **profile**
+and **region** fields themselves moved to [Advanced](#advanced) -- see there.
 
 ## ATC
 
@@ -142,6 +140,8 @@ Rarely needed. Every change needs a **restart**.
 
 | Setting | Default | Flag | What it does |
 |---|---|---|---|
+| **AWS profile** (`voice.aws_profile`) | blank | — (`AWS_PROFILE`) | Only needed with more than one AWS account/profile on this PC -- blank means the default credential chain (an `AWS_PROFILE` env var if set, else the `[default]` profile). Most pilots never set this; sign in from the **AWS** pill instead. A saved name that stops existing is silently cleared back to blank the next time xatc starts (logged once), not shown as broken. |
+| **AWS region** (`voice.aws_region`) | `us-east-1` | `--aws-region` | Where Transcribe, Polly and Bedrock are called. |
 | **apt.dat override** (`advanced.apt_dat`) | blank | `--apt-dat` | A specific apt.dat file. Blank uses your X-Plane install, else the bundled KSEA/KPDX fixtures. If set, also set **Departure**. |
 | **atc.dat override** (`advanced.atc_dat`) | blank | `--atc-dat` | A specific atc.dat for Center airspace and frequencies. Blank uses your X-Plane install, else the bundled excerpt. |
 | **Debrief folder** (`advanced.debrief_dir`) | blank (off) | `--debrief-dir` | Record every session here: a JSONL log plus a Markdown summary with a timeline, deviations, readbacks and radio events. See [Debrief](features/debrief.md). |
@@ -173,7 +173,7 @@ Rarely needed. Every change needs a **restart**.
     "heavy_speed_exception": true
   },
   "voice": {
-    "aws_profile": "xatc",
+    "aws_profile": "",
     "aws_region": "us-east-1",
     "vocabulary": "xatc-aviation-en-US",
     "ptt_source": "xplane",

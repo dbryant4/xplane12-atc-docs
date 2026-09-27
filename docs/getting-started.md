@@ -73,12 +73,11 @@ If your shell already has `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` or
 `AWS_SESSION_TOKEN` exported, `unset` them first -- they take priority over the profile.
 
 **Day to day, you shouldn't need a terminal for this at all.** The radio panel's **AWS**
-status pill reflects whether these credentials are actually working right now, and
-Settings → Voice has a **Sign in to AWS** button that runs `aws login` for you and
-streams its progress into the panel -- see [AWS sign-in and
-status](features/voice.md#aws-sign-in-and-status). The `aws login`/CLI setup above is
-still there if you'd rather run it yourself from a terminal, or you're setting this up
-somewhere without a browser handy on the same machine.
+status pill reflects whether these credentials are actually working right now -- click
+it and it runs `aws login` for you right there, no profile to set up first -- see
+[AWS sign-in and status](features/voice.md#aws-sign-in-and-status). The `aws login`/CLI
+setup above is still there if you'd rather run it yourself from a terminal, or you're
+setting this up somewhere without a browser handy on the same machine.
 
 ## 4. Reach X-Plane
 
@@ -111,9 +110,12 @@ This installs [uv](https://docs.astral.sh/uv/) if it isn't already on your `PATH
 silently installs anything without you seeing it first), runs `uv sync`, and finishes by
 running `xatc doctor` -- see below.
 
-**Every time you fly**, double-click `scripts\xatc-run.cmd`. It sets `AWS_PROFILE=xatc`
-(you still need that profile configured once, per step 3 above) and runs `xatc` with
-whatever arguments you give it -- none, for the normal double-click case. With no
+**Every time you fly**, double-click `scripts\xatc-run.cmd`. It runs `xatc` with
+whatever arguments you give it -- none, for the normal double-click case. It doesn't set
+`AWS_PROFILE` for you: xatc resolves which AWS credentials to use on its own (an
+`AWS_PROFILE` env var already set wins, else Settings → Advanced's AWS profile if you've
+configured one, else the default credential chain) -- most pilots never need step 3
+above at all, and can just sign in from the panel's **AWS** pill. With no
 arguments, xatc runs live from `settings.json` and opens the panel in its own [native
 window](features/native-window.md) automatically; configure the flight plan, voice and
 everything else from the [Settings page](features/radio-panel.md#settings) there, not
